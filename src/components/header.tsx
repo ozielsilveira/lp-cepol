@@ -1,5 +1,5 @@
+import { AppBar, Tab, Tabs, Toolbar } from "@mui/material";
 import React from "react";
-import { AppBar, Toolbar, Tabs, Tab } from "@mui/material";
 import { Link, useLocation } from "react-router-dom";
 import { routes } from "../routes/routes";
 

@@ -1,5 +1,7 @@
-import { useMemo } from "react";
+import BookOpenIcon from "@mui/icons-material/MenuBook";
+import SearchIcon from "@mui/icons-material/Search";
 import {
+  Box,
   Button,
   Card,
   CardContent,
@@ -7,11 +9,10 @@ import {
   Container,
   TextField,
   Typography,
-  Box,
 } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
-import BookOpenIcon from "@mui/icons-material/MenuBook";
-import mainImg from "../../public/images/cepolSVG.svg";
+import { useMemo } from "react";
+
+const mainImg = "/images/cepolSVG.svg?url";
 
 // Dados fictícios
 interface Article {
@@ -107,7 +108,7 @@ export function Home() {
                 </Button>
               </Box>
             </Box>
-            <Box component={"image"} href={mainImg} width={300} height={300} />
+            <Box component={"img"} src={mainImg} width={300} height={300} />
           </Box>
 
           {/* Articles */}
