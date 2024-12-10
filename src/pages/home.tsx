@@ -100,13 +100,14 @@ export function Home() {
                   variant="outlined"
                   placeholder="Search research..."
                   fullWidth
+                  sx={{ borderRadius: "15px" }}
                 />
                 <Button variant="contained" startIcon={<SearchIcon />}>
                   Search
                 </Button>
               </Box>
             </Box>
-            <image href={mainImg} width={300} height={300} />
+            <Box component={"image"} href={mainImg} width={300} height={300} />
           </Box>
 
           {/* Articles */}
@@ -146,7 +147,7 @@ export function Home() {
           >
             Featured Research
           </Typography>
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+          <Box sx={{ display: "flex", flexDirection: "row", gap: 3 }}>
             {researchs.map((research) => (
               <Card key={research.id}>
                 <CardContent>

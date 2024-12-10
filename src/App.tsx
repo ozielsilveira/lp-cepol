@@ -5,6 +5,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import Header from "./components/header";
 import { routes } from "./routes/routes";
 import { Footer } from "./components/footers";
+import { Box } from "@mui/material";
 
 // Criação do tema Material-UI
 const theme = createTheme();
@@ -14,11 +15,17 @@ const AppRoutes: React.FC = () => {
   const element = useRoutes(routes);
 
   return (
-    <>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        minHeight: "100vh",
+      }}
+    >
       <Header />
       {element}
       <Footer />
-    </>
+    </Box>
   );
 };
 

@@ -18,8 +18,14 @@ const Header: React.FC = () => {
     }));
 
   return (
-    <AppBar position="static">
-      <Toolbar>
+    <AppBar position="static" sx={{}}>
+      <Toolbar
+        sx={{
+          display: "flex",
+          justifyContent: "center", // Centraliza horizontalmente
+          alignItems: "center", // Centraliza verticalmente
+        }}
+      >
         <Tabs
           value={location.pathname}
           indicatorColor="secondary"
