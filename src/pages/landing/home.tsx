@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import BookOpenIcon from "@mui/icons-material/MenuBook";
-import mainImg from "../../public/images/cepolSVG.svg";
+import mainImg from "../../../public/images/cepolSVG.svg";
 
 // Dados fictícios
 interface Article {
