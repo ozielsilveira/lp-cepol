@@ -1,11 +1,9 @@
+import { Box } from "@mui/material";
+import CssBaseline from "@mui/material/CssBaseline";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
 import React from "react";
 import { BrowserRouter as Router, useRoutes } from "react-router-dom";
-import { ThemeProvider, createTheme } from "@mui/material/styles";
-import CssBaseline from "@mui/material/CssBaseline";
-import Header from "./components/header";
 import { routes } from "./routes/routes";
-import { Footer } from "./components/footers";
-import { Box } from "@mui/material";
 
 // Criação do tema Material-UI
 const theme = createTheme();
@@ -22,9 +20,7 @@ const AppRoutes: React.FC = () => {
         minHeight: "100vh",
       }}
     >
-      <Header />
       {element}
-      <Footer />
     </Box>
   );
 };
