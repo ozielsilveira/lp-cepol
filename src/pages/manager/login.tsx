@@ -3,7 +3,7 @@ import {
     Lock as LockIcon,
     Login as LoginIcon,
     Visibility,
-    VisibilityOff
+    VisibilityOff,
 } from "@mui/icons-material";
 import {
     Alert,
@@ -18,6 +18,7 @@ import {
     Typography,
     createTheme,
 } from "@mui/material";
+import axios from "axios";
 import React, { useState } from "react";
 
 const theme = createTheme({
@@ -34,35 +35,40 @@ export const Login: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
     const [showPassword, setShowPassword] = useState(false);
 
+    const apiUrl = process.env.API_URL || "http://localhost:8787";
+
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         setError(null);
 
-        const apiUrl = process.env.REACT_APP_API_URL;
-
         try {
-            const response = await fetch(`${apiUrl}/auth/signin`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, password }),
+            const response = await axios.post(`${apiUrl}/auth/signin`, {
+                email,
+                password,
             });
 
-            const result = await response.json();
-            console.log("result", result);
-            if (!response.ok) {
-                setError(result.message || "An error occurred. Please try again.");
-            } else if (result.access_token) {
-                localStorage.setItem("authToken", result.access_token);
-                console.log("access_token", result.access_token);
-                window.location.href = "/manager";
+            if (response.data && response.status === 200) {
+                const { result } = response.data;
+                const { access_token } = result;
+                if (access_token) {
+                    localStorage.setItem("authToken", access_token);
+
+                    window.location.href = "/manager";
+                }
+            } else {
+                setError(response.data.message || "Invalid credentials.");
             }
-        } catch {
-            setError("An error occurred. Please try again.");
+        } catch (err) {
+            setError(
+                axios.isAxiosError(err) && err.response?.data?.message
+                    ? err.response.data.message
+                    : "An error occurred. Please try again."
+            );
         }
     };
 
     const handleTogglePasswordVisibility = () => {
-        setShowPassword(!showPassword);
+        setShowPassword((prev) => !prev);
     };
 
     return (
@@ -152,4 +158,3 @@ export const Login: React.FC = () => {
         </ThemeProvider>
     );
 };
-
