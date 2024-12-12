@@ -1,49 +1,103 @@
 import { ReactElement } from "react";
 import { RouteObject } from "react-router-dom";
-import { Home } from "../pages/landing/home";
-import { Research } from "../pages/landing/research";
-import { Professionals } from "../pages/landing/professionals";
-import { Articles } from "../pages/landing/articles";
+import { Footer } from "../components/footers";
+import Header from "../components/header";
+import ProtectedRoute from "../components/protectedRoutes";
 import { AboutUs } from "../pages/landing/aboutUs";
-import { Equipment } from "../pages/landing/equipments";
+import { Articles } from "../pages/landing/articles";
 import { Contact } from "../pages/landing/contact";
+import { Equipment } from "../pages/landing/equipments";
+import { Home } from "../pages/landing/home";
+import { Professionals } from "../pages/landing/professionals";
+import { Research } from "../pages/landing/research";
+import { Login } from "../pages/manager/login";
+import { Manager } from "../pages/manager/manager";
 
 type CustomRouteObject = RouteObject & {
   path: string;
+  type: "public" | "private" | "auth";
   element: ReactElement;
 };
 
 export const routes: CustomRouteObject[] = [
   {
     path: "/",
-    element: <Home />,
+    type: "public",
+    element:
+      <div>
+        <Header />
+        <Home />
+        <Footer />
+      </div>,
   },
   {
     path: "/research",
-    element: <Research />,
+    type: "public",
+    element:
+      <div>
+        <Header />
+        <Research />
+        <Footer />
+      </div>,
   },
   {
     path: "/professionals",
-    element: <Professionals />,
+    type: "public",
+    element:
+      <div>
+        <Header />
+        <Professionals />
+        <Footer />
+      </div>,
   },
   {
     path: "/articles",
-    element: <Articles />,
+    type: "public",
+    element:
+      <div>
+        <Header />
+        <Articles />
+        <Footer />
+      </div>,
   },
   {
     path: "/about",
-    element: <AboutUs />,
+    type: "public",
+    element:
+      <div>
+        <Header />
+        <AboutUs />
+        <Footer />
+      </div>,
   },
   {
     path: "/equipment",
-    element: <Equipment />,
+    type: "public",
+    element:
+      <div>
+        <Header />
+        <Equipment />
+        <Footer />
+      </div>,
   },
   {
     path: "/contact",
-    element: <Contact />,
+    type: "public",
+    element:
+      <div>
+        <Header />
+        <Contact />
+        <Footer />
+      </div>,
   },
   {
-    path: "/login",
+    path: "/manager",
+    type: "private",
+    element: <ProtectedRoute><Manager /></ProtectedRoute>,
+  },
+  {
+    path: "/auth",
+    type: "auth",
     element: <Login />,
   },
 ];

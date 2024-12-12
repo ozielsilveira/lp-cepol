@@ -8,7 +8,7 @@ const Header: React.FC = () => {
 
   // Filtrar e mapear rotas
   const tabs = routes
-    .filter((route) => route.path) // Filtra rotas sem path
+    .filter((route) => route.path && route.type === "public") // Filtra rotas sem path
     .map((route) => ({
       label:
         route.path === "/"

@@ -6,6 +6,7 @@ import {
     VisibilityOff
 } from "@mui/icons-material";
 import {
+    Alert,
     Box,
     Button,
     Container,
@@ -13,9 +14,19 @@ import {
     InputAdornment,
     Paper,
     TextField,
-    Typography
+    ThemeProvider,
+    Typography,
+    createTheme,
 } from "@mui/material";
 import React, { useState } from "react";
+
+const theme = createTheme({
+    palette: {
+        primary: {
+            main: "#1976d2",
+        },
+    },
+});
 
 export const Login: React.FC = () => {
     const [email, setEmail] = useState("");
@@ -24,35 +35,27 @@ export const Login: React.FC = () => {
     const [showPassword, setShowPassword] = useState(false);
 
     const handleLogin = async (e: React.FormEvent) => {
-        const apiUrl = process.env.REACT_APP_API_URL;
-
         e.preventDefault();
         setError(null);
 
-        try {
-            const response = await fetch(
-                `${apiUrl}/auth/signin`,
-                {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ email, password }),
-                }
-            );
+        const apiUrl = process.env.REACT_APP_API_URL;
 
-            if (!response.ok) {
-                const errorData = await response.json();
-                setError(errorData.message || "An error occurred.");
-            }
+        try {
+            const response = await fetch(`${apiUrl}/auth/signin`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password }),
+            });
 
             const result = await response.json();
-
-            if (response.ok && result.access_token) {
-                // Cookies.set("authToken", result.access_token, { expires: 1 });
-                console.log("access_token", result.access_token);
+            console.log("result", result);
+            if (!response.ok) {
+                setError(result.message || "An error occurred. Please try again.");
+            } else if (result.access_token) {
                 localStorage.setItem("authToken", result.access_token);
-                // document.cookie = `token=${result.access_token}; path=/`;
+                console.log("access_token", result.access_token);
+                window.location.href = "/manager";
             }
-
         } catch {
             setError("An error occurred. Please try again.");
         }
@@ -63,20 +66,23 @@ export const Login: React.FC = () => {
     };
 
     return (
-        <Container maxWidth="xs" >
-            <Paper elevation={3} sx={{ mt: 8, p: 4 }}>
-                <Box
+        <ThemeProvider theme={theme}>
+            <Container component="main" maxWidth="xs">
+                <Paper
+                    elevation={6}
                     sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
+                        marginTop: 8,
+                        padding: 4,
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
                     }}
                 >
-                    <LoginIcon sx={{ fontSize: 48, mb: 2, color: 'primary.main' }} />
-                    <Typography variant="h4" gutterBottom>
+                    <LoginIcon sx={{ fontSize: 48, mb: 2, color: "primary.main" }} />
+                    <Typography component="h1" variant="h4" gutterBottom>
                         Login
                     </Typography>
-                    <Box component="form" onSubmit={handleLogin} sx={{ mt: 1 }}>
+                    <Box component="form" onSubmit={handleLogin} sx={{ mt: 1, width: "100%" }}>
                         <TextField
                             margin="normal"
                             required
@@ -91,7 +97,7 @@ export const Login: React.FC = () => {
                             InputProps={{
                                 startAdornment: (
                                     <InputAdornment position="start">
-                                        <EmailIcon />
+                                        <EmailIcon color="primary" />
                                     </InputAdornment>
                                 ),
                             }}
@@ -110,7 +116,7 @@ export const Login: React.FC = () => {
                             InputProps={{
                                 startAdornment: (
                                     <InputAdornment position="start">
-                                        <LockIcon />
+                                        <LockIcon color="primary" />
                                     </InputAdornment>
                                 ),
                                 endAdornment: (
@@ -126,6 +132,11 @@ export const Login: React.FC = () => {
                                 ),
                             }}
                         />
+                        {error && (
+                            <Alert severity="error" sx={{ mt: 2, width: "100%" }}>
+                                {error}
+                            </Alert>
+                        )}
                         <Button
                             type="submit"
                             fullWidth
@@ -135,15 +146,10 @@ export const Login: React.FC = () => {
                         >
                             Login
                         </Button>
-                        {error && (
-                            <Typography color="error" align="center" sx={{ mt: 2 }}>
-                                {error}
-                            </Typography>
-                        )}
                     </Box>
-                </Box>
-            </Paper>
-        </Container>
+                </Paper>
+            </Container>
+        </ThemeProvider>
     );
 };
 
