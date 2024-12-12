@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import { useMemo } from "react";
 
-const mainImg = "/images/cepolSVG.svg?url";
+import mainImg from "../../../public/images/cepolSVG.svg";
 
 // Dados fictícios
 interface Article {

@@ -1,13 +1,12 @@
 import { ReactElement } from "react";
 import { RouteObject } from "react-router-dom";
-import { AboutUs } from "../pages/aboutUs";
-import { Articles } from "../pages/articles";
-import { Contact } from "../pages/contact";
-import { Equipment } from "../pages/equipments";
-import { Home } from "../pages/home";
-import { Login } from "../pages/login";
-import { Professionals } from "../pages/professionals";
-import { Research } from "../pages/research";
+import { Home } from "../pages/landing/home";
+import { Research } from "../pages/landing/research";
+import { Professionals } from "../pages/landing/professionals";
+import { Articles } from "../pages/landing/articles";
+import { AboutUs } from "../pages/landing/aboutUs";
+import { Equipment } from "../pages/landing/equipments";
+import { Contact } from "../pages/landing/contact";
 
 type CustomRouteObject = RouteObject & {
   path: string;
