@@ -11,16 +11,17 @@ import {
   Typography,
 } from "@mui/material";
 import { useMemo } from "react";
+import { Carousel } from "../../components/carousel.tsx";
 
 import mainImg from "../../../public/images/cepolSVG.svg";
 
 // Dados fictícios
-interface Article {
-  id: number;
-  title: string;
-  abstract: string;
-  professional: string;
-}
+// interface Article {
+//   id: number;
+//   title: string;
+//   abstract: string;
+//   professional: string;
+// }
 
 const articles = [
   {
@@ -37,6 +38,18 @@ const articles = [
   },
   {
     id: 3,
+    title: "Development of New Sustainable Materials",
+    abstract: "We present a new class of biodegradable polymers...",
+    professional: "Dr. Alice",
+  },
+  {
+    id: 4,
+    title: "Development of New Sustainable Materials",
+    abstract: "We present a new class of biodegradable polymers...",
+    professional: "Dr. Alice",
+  },
+  {
+    id: 5,
     title: "Development of New Sustainable Materials",
     abstract: "We present a new class of biodegradable polymers...",
     professional: "Dr. Alice",
@@ -62,14 +75,14 @@ const researchs = [
 ];
 
 export function Home() {
-  const groupedArticles = useMemo(() => {
-    return articles.reduce((acc, article, index) => {
-      const groupIndex = Math.floor(index / 3);
-      if (!acc[groupIndex]) acc[groupIndex] = [];
-      acc[groupIndex].push(article);
-      return acc;
-    }, [] as Article[][]);
-  }, []);
+  // const groupedArticles = useMemo(() => {
+  //   return articles.reduce((acc, article, index) => {
+  //     const groupIndex = Math.floor(index / 3);
+  //     if (!acc[groupIndex]) acc[groupIndex] = [];
+  //     acc[groupIndex].push(article);
+  //     return acc;
+  //   }, [] as Article[][]);
+  // }, []);
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
@@ -125,7 +138,8 @@ export function Home() {
             >
               Featured Articles
             </Typography>
-            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 3 }}>
+            <Carousel items={articles} />
+            {/* <Box sx={{ display: "flex", flexWrap: "wrap", gap: 3 }}>
               {groupedArticles.map((group, groupIndex) => (
                 <Box key={groupIndex} sx={{ display: "flex", gap: 2 }}>
                   {group.map((article) => (
@@ -147,7 +161,7 @@ export function Home() {
                   ))}
                 </Box>
               ))}
-            </Box>
+            </Box> */}
           </Box>
           <Box
             display={"flex"}
