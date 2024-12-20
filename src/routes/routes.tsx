@@ -12,6 +12,8 @@ import { Professionals } from "../pages/landing/professionals";
 import { Research } from "../pages/landing/research";
 import { Login } from "../pages/manager/login";
 import { Manager } from "../pages/manager/manager";
+import { Box } from "@mui/material";
+import { LayoutContainer } from "../components/layoutBox";
 
 type CustomRouteObject = RouteObject & {
   path: string;
@@ -23,77 +25,102 @@ export const routes: CustomRouteObject[] = [
   {
     path: "/",
     type: "public",
-    element:
-      <div>
+    element: (
+      <LayoutContainer>
         <Header />
-        <Home />
+        <Box sx={{ flex: 1 }}>
+          <Home />
+        </Box>
         <Footer />
-      </div>,
+      </LayoutContainer>
+    ),
   },
   {
     path: "/research",
     type: "public",
-    element:
-      <div>
+    element: (
+      <LayoutContainer>
         <Header />
-        <Research />
+        <Box sx={{ flex: 1 }}>
+          <Research />
+        </Box>
         <Footer />
-      </div>,
+      </LayoutContainer>
+    ),
   },
   {
     path: "/professionals",
     type: "public",
-    element:
-      <div>
+    element: (
+      <LayoutContainer>
         <Header />
-        <Professionals />
+        <Box sx={{ flex: 1 }}>
+          <Professionals />
+        </Box>
         <Footer />
-      </div>,
+      </LayoutContainer>
+    ),
   },
   {
     path: "/articles",
     type: "public",
-    element:
-      <div>
+    element: (
+      <LayoutContainer>
         <Header />
-        <Articles />
+        <Box sx={{ flex: 1 }}>
+          <Articles />
+        </Box>
         <Footer />
-      </div>,
+      </LayoutContainer>
+    ),
   },
   {
     path: "/about",
     type: "public",
-    element:
-      <div>
+    element: (
+      <LayoutContainer>
         <Header />
-        <AboutUs />
+        <Box sx={{ flex: 1 }}>
+          <AboutUs />
+        </Box>
         <Footer />
-      </div>,
+      </LayoutContainer>
+    ),
   },
   {
     path: "/equipment",
     type: "public",
-    element:
-      <div>
+    element: (
+      <LayoutContainer>
         <Header />
-        <Equipment />
+        <Box sx={{ flex: 1 }}>
+          <Equipment />
+        </Box>
         <Footer />
-      </div>,
+      </LayoutContainer>
+    ),
   },
   {
     path: "/contact",
     type: "public",
-    element:
-      <div>
+    element: (
+      <LayoutContainer>
         <Header />
-        <Contact />
+        <Box sx={{ flex: 1 }}>
+          <Contact />
+        </Box>
         <Footer />
-      </div>,
+      </LayoutContainer>
+    ),
   },
   {
     path: "/manager",
     type: "private",
-    element: <ProtectedRoute><Manager /></ProtectedRoute>,
+    element: (
+      <ProtectedRoute>
+        <Manager />
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/auth",
