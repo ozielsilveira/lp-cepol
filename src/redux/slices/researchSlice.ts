@@ -19,7 +19,7 @@ export const fetchResearch = createAsyncThunk('research/fetch', async () => {
 });
 
 export const createResearch = createAsyncThunk('research/create', async (newArticle: any) => {
-  const response = await apiClient.post('/research', newArticle);
+  const response = await apiClient.post('/research/create', newArticle);
   return response.data;
 });
 

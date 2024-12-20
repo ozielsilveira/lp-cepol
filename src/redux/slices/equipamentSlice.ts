@@ -19,7 +19,7 @@ export const fetchEquipaments = createAsyncThunk('equipaments/fetch', async () =
 });
 
 export const createEquipament = createAsyncThunk('equipaments/create', async (newArticle: any) => {
-  const response = await apiClient.post('/equipaments', newArticle);
+  const response = await apiClient.post('/equipaments/create', newArticle);
   return response.data;
 });
 

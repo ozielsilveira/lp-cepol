@@ -18,7 +18,7 @@ const initialState: AboutUsState = {
 
 // Thunks para operações assíncronas
 export const fetchAboutUs = createAsyncThunk('aboutUs/fetch_aboutUs', async () => {
-  const response = await apiClient.get('/aboutus?');
+  const response = await apiClient.get('/aboutus');
   return response.data;
 });
 

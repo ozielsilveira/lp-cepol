@@ -85,7 +85,9 @@ export function Home() {
               flexDirection: { xs: "column", md: "row" },
               gap: 4,
               alignItems: "center",
+              justifyContent: "center",
               mb: 6,
+              mt: 4,
             }}
           >
             <Box sx={{ flex: 1 }}>
@@ -110,63 +112,76 @@ export function Home() {
             </Box>
             <Box component={"img"} src={mainImg} width={300} height={300} />
           </Box>
-
-          {/* Articles */}
-          <Typography variant="h4" fontWeight="bold" gutterBottom>
-            Featured Articles
-          </Typography>
-          <Box sx={{ display: "flex", flexWrap: "wrap", gap: 3 }}>
-            {groupedArticles.map((group, groupIndex) => (
-              <Box key={groupIndex} sx={{ display: "flex", gap: 2 }}>
-                {group.map((article) => (
-                  <Card key={article.id} sx={{ width: 300 }}>
-                    <CardHeader
-                      avatar={<BookOpenIcon fontSize="large" />}
-                      title={article.title}
-                      subheader={`By ${article.professional}`}
-                    />
-                    <CardContent>
-                      <Typography variant="body2" color="textSecondary">
-                        {article.abstract}
-                      </Typography>
-                      <Button variant="outlined" sx={{ mt: 2 }}>
-                        Read More
-                      </Button>
-                    </CardContent>
-                  </Card>
-                ))}
-              </Box>
-            ))}
-          </Box>
-
-          {/* Research */}
-          <Typography
-            variant="h4"
-            fontWeight="bold"
-            gutterBottom
-            sx={{ mt: 6 }}
+          <Box
+            display={"flex"}
+            sx={{ alignItems: "center", flexDirection: "column", mt: 6 }}
           >
-            Featured Research
-          </Typography>
-          <Box sx={{ display: "flex", flexDirection: "row", gap: 3 }}>
-            {researchs.map((research) => (
-              <Card key={research.id}>
-                <CardContent>
-                  <Typography variant="h6" gutterBottom>
-                    {research.title}
-                  </Typography>
-                  <Typography variant="body2" color="textSecondary" paragraph>
-                    {research.description}
-                  </Typography>
-                  <Typography variant="caption">
-                    Partners: {research.partners}
-                  </Typography>
-                  <Typography variant="caption">
-                    Period: {research.period}
-                  </Typography>
-                </CardContent>
-              </Card>
-            ))}
+            {/* Articles */}
+            <Typography
+              sx={{ mb: 4, mt: 2 }}
+              variant="h4"
+              fontWeight="bold"
+              gutterBottom
+            >
+              Featured Articles
+            </Typography>
+            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 3 }}>
+              {groupedArticles.map((group, groupIndex) => (
+                <Box key={groupIndex} sx={{ display: "flex", gap: 2 }}>
+                  {group.map((article) => (
+                    <Card key={article.id} sx={{ width: 300 }}>
+                      <CardHeader
+                        avatar={<BookOpenIcon fontSize="large" />}
+                        title={article.title}
+                        subheader={`By ${article.professional}`}
+                      />
+                      <CardContent>
+                        <Typography variant="body2" color="textSecondary">
+                          {article.abstract}
+                        </Typography>
+                        <Button variant="outlined" sx={{ mt: 2 }}>
+                          Read More
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </Box>
+              ))}
+            </Box>
+          </Box>
+          <Box
+            display={"flex"}
+            sx={{ alignItems: "center", flexDirection: "column", mt: 6, mb: 6 }}
+          >
+            {/* Research */}
+            <Typography
+              variant="h4"
+              fontWeight="bold"
+              gutterBottom
+              sx={{ mt: 6, mb: 4 }}
+            >
+              Featured Research
+            </Typography>
+            <Box sx={{ display: "flex", flexDirection: "row", gap: 3 }}>
+              {researchs.map((research) => (
+                <Card key={research.id}>
+                  <CardContent>
+                    <Typography variant="h6" gutterBottom>
+                      {research.title}
+                    </Typography>
+                    <Typography variant="body2" color="textSecondary" paragraph>
+                      {research.description}
+                    </Typography>
+                    <Typography variant="caption">
+                      Partners: {research.partners}
+                    </Typography>
+                    <Typography variant="caption">
+                      Period: {research.period}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              ))}
+            </Box>
           </Box>
         </Container>
       </Box>

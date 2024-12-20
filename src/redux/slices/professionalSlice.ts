@@ -19,7 +19,7 @@ export const fetchProfessional = createAsyncThunk('professional/fetch', async ()
 });
 
 export const createProfessional = createAsyncThunk('professional/create', async (newArticle: any) => {
-  const response = await apiClient.post('/professional', newArticle);
+  const response = await apiClient.post('/professional/create', newArticle);
   return response.data;
 });
 
