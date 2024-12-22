@@ -1,16 +1,13 @@
-import BookOpenIcon from "@mui/icons-material/MenuBook";
 import SearchIcon from "@mui/icons-material/Search";
 import {
   Box,
   Button,
   Card,
   CardContent,
-  CardHeader,
   Container,
   TextField,
-  Typography,
+  Typography
 } from "@mui/material";
-import { useMemo } from "react";
 import { Carousel } from "../../components/carousel.tsx";
 
 import mainImg from "../../../public/images/cepolSVG.svg";

@@ -14,6 +14,7 @@ import { Login } from "../pages/manager/login";
 import { Manager } from "../pages/manager/manager";
 import { Box } from "@mui/material";
 import { LayoutContainer } from "../components/layoutBox";
+import ErrorBoundary from "../components/errorBoundary";
 
 type CustomRouteObject = RouteObject & {
   path: string;
@@ -125,6 +126,9 @@ export const routes: CustomRouteObject[] = [
   {
     path: "/auth",
     type: "auth",
-    element: <Login />,
+    element:
+      <ErrorBoundary>
+        <Login />
+      </ErrorBoundary>,
   },
 ];

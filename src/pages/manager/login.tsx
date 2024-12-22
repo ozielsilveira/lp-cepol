@@ -1,10 +1,4 @@
-import {
-    Email as EmailIcon,
-    Lock as LockIcon,
-    Login as LoginIcon,
-    Visibility,
-    VisibilityOff,
-} from "@mui/icons-material";
+import { Email as EmailIcon, Lock as LockIcon, Login as LoginIcon, Visibility, VisibilityOff } from "@mui/icons-material";
 import {
     Alert,
     Box,
@@ -35,25 +29,24 @@ export const Login: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
     const [showPassword, setShowPassword] = useState(false);
 
-    const apiUrl = process.env.API_URL || "http://localhost:8787";
+    const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8787";
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         setError(null);
 
+        console.log("Attempting login with", { email, password, apiUrl });
+
         try {
-            const response = await axios.post(`${apiUrl}/auth/signin`, {
-                email,
-                password,
-            });
+            const response = await axios.post(`${apiUrl}/auth/signin`, { email, password });
 
             if (response.data && response.status === 200) {
-                const { result } = response.data;
-                const { access_token } = result;
+                const { access_token } = response.data.result || {};
                 if (access_token) {
                     localStorage.setItem("authToken", access_token);
-
                     window.location.href = "/manager";
+                } else {
+                    throw new Error("Access token is missing.");
                 }
             } else {
                 setError(response.data.message || "Invalid credentials.");
@@ -62,7 +55,7 @@ export const Login: React.FC = () => {
             setError(
                 axios.isAxiosError(err) && err.response?.data?.message
                     ? err.response.data.message
-                    : "An error occurred. Please try again."
+                    : (err as Error).message || "An error occurred. Please try again."
             );
         }
     };
