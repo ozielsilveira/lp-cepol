@@ -49,14 +49,21 @@ export const Professionals: React.FC = () => {
   return (
     <Box
       sx={{
-        padding: 4,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
       }}
     >
-      <Typography variant="h4" gutterBottom sx={{ mt: 6, mb: 4 }}>
-        Professionals
+      <Typography
+        sx={{ mb: 4, mt: 2 }}
+        variant="h4"
+        fontWeight="bold"
+        gutterBottom
+      >
+        Meet the Team
+      </Typography>
+      <Typography color="text.secondary" sx={{ textAlign: "center", mb: 4 }}>
+        Our dedicated team works tirelessly to deliver exceptional results.
       </Typography>
       <Grid container spacing={4}>
         {professionals.map((professional) => (

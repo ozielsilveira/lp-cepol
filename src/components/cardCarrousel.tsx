@@ -16,7 +16,7 @@ export const CardCarousel: React.FC<CardProps> = ({ article }) => {
     <Paper
       elevation={3}
       sx={{
-        width: "200px",
+        width: "250px",
         height: "300px",
         padding: 2,
         display: "flex",

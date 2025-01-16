@@ -1,54 +1,161 @@
+// import React from "react";
+// import { Box, Card, CardContent, Container, Typography } from "@mui/material";
+// import ArticleOutlinedIcon from "@mui/icons-material/ArticleOutlined"; // Ícone do MUI
+
+// export const AboutUs: React.FC = () => {
+//   const content = `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`;
+
+//   return (
+//     <Box
+//       component="section"
+//       sx={{
+//         width: "100%",
+//         py: { xs: 12, md: 24, lg: 32 },
+//         bgcolor: "grey.100",
+//       }}
+//     >
+//       <Container maxWidth="md" sx={{ px: { xs: 4, md: 6 }, maxWidth: "sm" }}>
+//         <Typography
+//           variant="h2"
+//           component="h2"
+//           align="center"
+//           sx={{
+//             fontWeight: "bold",
+//             fontSize: { xs: "2rem", sm: "3rem" },
+//             lineHeight: "1.2",
+//             mb: 8,
+//           }}
+//         >
+//           About Us
+//         </Typography>
+//         <Card>
+//           <CardContent sx={{ pt: 6 }}>
+//             <ArticleOutlinedIcon
+//               sx={{
+//                 fontSize: "3rem",
+//                 color: "primary.main",
+//                 display: "block",
+//                 mb: 4,
+//                 mx: "auto",
+//               }}
+//             />
+//             <Typography
+//               variant="body1"
+//               align="center"
+//               sx={{ color: "grey.700", whiteSpace: "pre-line" }}
+//             >
+//               {content}
+//             </Typography>
+//           </CardContent>
+//         </Card>
+//       </Container>
+//     </Box>
+//   );
+// };
+
+// icones
+
 import React from "react";
-import { Box, Card, CardContent, Container, Typography } from "@mui/material";
-import ArticleOutlinedIcon from "@mui/icons-material/ArticleOutlined"; // Ícone do MUI
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Grid from "@mui/material/Grid";
+import Container from "@mui/material/Container";
+import Avatar from "@mui/material/Avatar";
+import TeamIcon from "@mui/icons-material/Group";
+import MissionIcon from "@mui/icons-material/Flag";
+import VisionIcon from "@mui/icons-material/Visibility";
 
-export const AboutUs: React.FC = () => {
-  const content = `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`;
+const teamMembers = [
+  { name: "John Doe", role: "CEO", image: "https://via.placeholder.com/150" },
+  { name: "Jane Smith", role: "CTO", image: "https://via.placeholder.com/150" },
+  { name: "Michael Brown", role: "Lead Developer", image: "https://via.placeholder.com/150" },
+];
 
+export const AboutUs = () => {
   return (
-    <Box
-      component="section"
-      sx={{
-        width: "100%",
-        py: { xs: 12, md: 24, lg: 32 },
-        bgcolor: "grey.100",
-      }}
-    >
-      <Container maxWidth="md" sx={{ px: { xs: 4, md: 6 }, maxWidth: "sm" }}>
-        <Typography
-          variant="h2"
-          component="h2"
-          align="center"
-          sx={{
-            fontWeight: "bold",
-            fontSize: { xs: "2rem", sm: "3rem" },
-            lineHeight: "1.2",
-            mb: 8,
-          }}
-        >
+    <Container maxWidth="lg" sx={{ marginBottom: 4 }}>
+      {/* Header Section */}
+      <Box sx={{ textAlign: "center", marginBottom: 4 }}>
+        <Typography sx={{ mb: 4, mt: 2 }}
+            variant="h4"
+            fontWeight="bold"
+            gutterBottom>
           About Us
         </Typography>
-        <Card>
-          <CardContent sx={{ pt: 6 }}>
-            <ArticleOutlinedIcon
-              sx={{
-                fontSize: "3rem",
-                color: "primary.main",
-                display: "block",
-                mb: 4,
-                mx: "auto",
-              }}
-            />
-            <Typography
-              variant="body1"
-              align="center"
-              sx={{ color: "grey.700", whiteSpace: "pre-line" }}
-            >
-              {content}
+        <Typography variant="h6" color="text.secondary">
+          Learn more about our mission, vision, and the team behind our success.
+        </Typography>
+      </Box>
+
+      {/* Mission, Vision, Values Section */}
+      <Grid container spacing={4} sx={{ marginBottom: 4 }}>
+        <Grid item xs={12} md={4}>
+          <Box textAlign="center">
+            <MissionIcon sx={{ fontSize: 40, color: "primary.main" }} />
+            <Typography variant="h5" component="h3" gutterBottom>
+              Our Mission
             </Typography>
-          </CardContent>
-        </Card>
-      </Container>
-    </Box>
+            <Typography color="text.secondary">
+              To provide innovative solutions that empower businesses to achieve
+              their goals.
+            </Typography>
+          </Box>
+        </Grid>
+
+        <Grid item xs={12} md={4}>
+          <Box textAlign="center">
+            <VisionIcon sx={{ fontSize: 40, color: "primary.main" }} />
+            <Typography variant="h5" component="h3" gutterBottom>
+              Our Vision
+            </Typography>
+            <Typography color="text.secondary">
+              To be a global leader in technology and innovation, making a
+              positive impact worldwide.
+            </Typography>
+          </Box>
+        </Grid>
+
+        <Grid item xs={12} md={4}>
+          <Box textAlign="center">
+            <TeamIcon sx={{ fontSize: 40, color: "primary.main" }} />
+            <Typography variant="h5" component="h3" gutterBottom>
+              Our Values
+            </Typography>
+            <Typography color="text.secondary">
+              Integrity, innovation, and customer-centricity are at the core of
+              everything we do.
+            </Typography>
+          </Box>
+        </Grid>
+      </Grid>
+
+      {/* Team Section
+      <Box sx={{ textAlign: "center", marginBottom: 4 }}>
+        <Typography variant="h4" component="h2" gutterBottom>
+          Meet the Team
+        </Typography>
+        <Typography color="text.secondary">
+          Our dedicated team works tirelessly to deliver exceptional results.
+        </Typography>
+      </Box>
+
+      <Grid container spacing={4} justifyContent="center">
+        {teamMembers.map((member) => (
+          <Grid item xs={12} sm={6} md={4} key={member.name}>
+            <Box textAlign="center">
+              <Avatar
+                alt={member.name}
+                src={member.image}
+                sx={{ width: 100, height: 100, margin: "0 auto", marginBottom: 2 }}
+              />
+              <Typography variant="h6" component="h3">
+                {member.name}
+              </Typography>
+              <Typography color="text.secondary">{member.role}</Typography>
+            </Box>
+          </Grid>
+        ))}
+      </Grid> */}
+    </Container>
   );
 };

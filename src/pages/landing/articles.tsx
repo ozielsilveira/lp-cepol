@@ -1,4 +1,4 @@
-import { Container, Grid } from "@mui/material";
+import { Box, Container, Grid, Typography } from "@mui/material";
 import { Card, CardContent } from "@mui/material";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 // import { BookOpen } from "@mui/icons-material";
@@ -34,19 +34,38 @@ export const Articles: React.FC = () => {
       author: "Dr. Jane Doe",
       publishedDate: "2021-10-15",
     },
+    {
+      id: 3,
+      title: "Development of New Sustainable Materials",
+      abstract: "We present a new class of biodegradable polymers...",
+      author: "Dr. Jane Doe",
+      publishedDate: "2021-10-15",
+    },
+    {
+      id: 3,
+      title: "Development of New Sustainable Materials",
+      abstract: "We present a new class of biodegradable polymers...",
+      author: "Dr. Jane Doe",
+      publishedDate: "2021-10-15",
+    },
   ];
   return (
     <Container>
       <section className="w-full py-12 md:py-24 lg:py-32 bg-gray-50">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-4xl font-bold tracking-tight sm:text-5xl text-center text-gray-800 mb-10">
+        <Box sx={{ textAlign: "center" }}>
+          <Typography
+            sx={{ mb: 4, mt: 2 }}
+            variant="h4"
+            fontWeight="bold"
+            gutterBottom
+          >
             Published Articles
-          </h2>
+          </Typography>
           <p className="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
             Explore our latest research articles and stay updated with
             innovative scientific insights.
           </p>
-          <Grid container spacing={4}>
+          <Grid container spacing={4} mb={2}>
             {" "}
             {/* Similar ao gap-8 */}
             {articles.map((article) => (
@@ -88,7 +107,7 @@ export const Articles: React.FC = () => {
               </Grid>
             ))}
           </Grid>
-        </div>
+        </Box>
       </section>
     </Container>
   );

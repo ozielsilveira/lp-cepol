@@ -6,7 +6,7 @@ import {
   CardContent,
   Container,
   TextField,
-  Typography
+  Typography,
 } from "@mui/material";
 import { Carousel } from "../../components/carousel.tsx";
 
@@ -51,6 +51,12 @@ const articles = [
     abstract: "We present a new class of biodegradable polymers...",
     professional: "Dr. Alice",
   },
+  {
+    id: 6,
+    title: "Development of New Sustainable Materials",
+    abstract: "We present a new class of biodegradable polymers...",
+    professional: "Dr. Alice",
+  },
   // Outros artigos...
 ];
 
@@ -83,7 +89,7 @@ export function Home() {
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
-      <Box component="main" sx={{ flex: 1, p: 3 }}>
+      <Box component="main" sx={{ flex: 1, }}>
         <Container
           sx={{
             width: "100%",
@@ -124,7 +130,11 @@ export function Home() {
           </Box>
           <Box
             display={"flex"}
-            sx={{ alignItems: "center", flexDirection: "column", mt: 6 }}
+            sx={{
+              alignItems: "center",
+              flexDirection: "column",
+              mt: 6,
+            }}
           >
             {/* Articles */}
             <Typography
@@ -175,7 +185,7 @@ export function Home() {
             </Typography>
             <Box sx={{ display: "flex", flexDirection: "row", gap: 3 }}>
               {researchs.map((research) => (
-                <Card key={research.id}>
+                <Card key={research.id} sx={{ width:"450px", height:"250px" }}>
                   <CardContent>
                     <Typography variant="h6" gutterBottom>
                       {research.title}
