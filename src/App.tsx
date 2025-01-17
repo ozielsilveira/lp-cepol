@@ -1,8 +1,9 @@
-import { Box } from "@mui/material";
-import CssBaseline from "@mui/material/CssBaseline";
-import { ThemeProvider, createTheme } from "@mui/material/styles";
+import { Box, CssBaseline, ThemeProvider } from "@mui/material";
+import { createTheme } from "@mui/material/styles";
 import React from "react";
+import { Provider } from "react-redux";
 import { BrowserRouter as Router, useRoutes } from "react-router-dom";
+import { store } from "./redux/store";
 import { routes } from "./routes/routes";
 
 // Criação do tema Material-UI
@@ -29,9 +30,11 @@ const App: React.FC = () => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Router>
-        <AppRoutes />
-      </Router>
+      <Provider store={store}>
+        <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+          <AppRoutes />
+        </Router>
+      </Provider>
     </ThemeProvider>
   );
 };

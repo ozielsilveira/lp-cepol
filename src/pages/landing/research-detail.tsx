@@ -21,10 +21,10 @@
 
 // export const ResearchDetailed = () => {
 //     const dispatch = useAppDispatch();
-    
+
 //     const detailedResearch = useAppSelector((state: IRootState) => state.research.detailedResearch);
 //     const loading = useAppSelector((state: IRootState) => state.research.loading);
-    
+
 //     const { id } = useParams<{ id: string }>();
 
 //     if (!detailedResearch) {
@@ -35,7 +35,7 @@
 //     //     if (id) {
 //     //       dispatch(fetchResearchDetail(id));
 //     //     }
-    
+
 //     //     return () => {
 //     //       dispatch(clearDetailedResearch());
 //     //     };
@@ -88,17 +88,16 @@
 //     </Box>
 //   );
 // };
-import React, { useEffect } from "react";
 import {
   Box,
-  Typography,
-  Grid,
   Card,
-  CardMedia,
   CardContent,
+  CardMedia,
+  Grid,
+  Typography,
 } from "@mui/material";
+import React from "react";
 import { useParams } from "react-router-dom";
-import { Subtitles } from "@mui/icons-material";
 
 // Mock para os detalhes das pesquisas
 const mockResearchDetails = {
@@ -126,7 +125,7 @@ const mockResearchDetails = {
   },
   3: {
     title: "Quantum Materials for Computing",
-    Subtitles:"Quantum Computing for Materials lorm Lorem ipsum dolor sit amet consectetur adipisicing elit.",
+    Subtitles: "Quantum Computing for Materials lorm Lorem ipsum dolor sit amet consectetur adipisicing elit.",
     texts: [
       "Nanoporous polymeric materials are porous materials with pore sizes in the nanometer range (that is, below 500 nm), processed as bulk or film materials, and from a wide set of polymers. Over the last several years, research and development on these novel materials have progressed significantly, because it is believed that the reduction of the pore size to the nanometer range could strongly influence some of the properties of porous polymers, providing unexpected and improved properties compared to conventional porous and microporous polymers and non-porous solids.",
       "In the last years, CellMat Laboratory has become a reference in this topic. The investigations carried out in CellMat have permitted to prove for the first time, the presence of the Knudsen effect in this type of breathtaking materials, to evidence the possibility of producing transparent foams and to prove the improved mechanical properties of these novel materials."
@@ -149,56 +148,56 @@ export const ResearchDetailed: React.FC = () => {
   }
 
   return (
-    <Box sx={{ pb: 5 , pl: 20, pr: 20}}>
-  {/* Título principal */}
-  <Box sx={{ textAlign: "center", marginBottom: 4 }}>
-    <Typography variant="h4" sx={{ fontWeight: "bold" }}>
-      {detailedResearch.title}
-    </Typography>
-    <Typography variant="h6" sx={{ mt: 2 }}>
-      {detailedResearch.Subtitles}
-    </Typography>
-  </Box>
+    <Box sx={{ pb: 5, pl: 20, pr: 20 }}>
+      {/* Título principal */}
+      <Box sx={{ textAlign: "center", marginBottom: 4 }}>
+        <Typography variant="h4" sx={{ fontWeight: "bold" }}>
+          {detailedResearch.title}
+        </Typography>
+        <Typography variant="h6" sx={{ mt: 2 }}>
+          {detailedResearch.Subtitles}
+        </Typography>
+      </Box>
 
-  <Grid container spacing={4}>
-    {/* Coluna de textos */}
-    <Grid item xs={12} md={6}>
-      {detailedResearch.texts.map((text, index) => (
-        <Box
-          key={`text-${index}`}
-          sx={{
-            // border: "2px solid #e0e0e0",
-            borderRadius: 2,
-            padding: 2,
-            marginBottom: 2,
-            // backgroundColor: "#f9f9f9",
-          }}
-        >
-          <Typography variant="body1">{text}</Typography>
-          
-        </Box>
-      ))}
-    </Grid>
+      <Grid container spacing={4}>
+        {/* Coluna de textos */}
+        <Grid item xs={12} md={6}>
+          {detailedResearch.texts.map((text, index) => (
+            <Box
+              key={`text-${index}`}
+              sx={{
+                // border: "2px solid #e0e0e0",
+                borderRadius: 2,
+                padding: 2,
+                marginBottom: 2,
+                // backgroundColor: "#f9f9f9",
+              }}
+            >
+              <Typography variant="body1">{text}</Typography>
 
-    {/* Coluna de imagens */}
-    <Grid item xs={12} md={6}>
-      {detailedResearch.images.map((image, index) => (
-        <Card key={`image-${index}`} sx={{ marginBottom: 2 }}>
-          <CardMedia
-            component="img"
-            height="200"
-            image={image.src}
-            alt={image.alt}
-          />
-          <CardContent>
-            <Typography variant="caption" align="center">
-              {image.caption}
-            </Typography>
-          </CardContent>
-        </Card>
-      ))}
-    </Grid>
-  </Grid>
-</Box>
+            </Box>
+          ))}
+        </Grid>
+
+        {/* Coluna de imagens */}
+        <Grid item xs={12} md={6}>
+          {detailedResearch.images.map((image, index) => (
+            <Card key={`image-${index}`} sx={{ marginBottom: 2 }}>
+              <CardMedia
+                component="img"
+                height="200"
+                image={image.src}
+                alt={image.alt}
+              />
+              <CardContent>
+                <Typography variant="caption" align="center">
+                  {image.caption}
+                </Typography>
+              </CardContent>
+            </Card>
+          ))}
+        </Grid>
+      </Grid>
+    </Box>
   );
 };

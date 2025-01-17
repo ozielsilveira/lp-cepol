@@ -2,10 +2,10 @@ import axios from 'axios';
 
 // Criação de uma instância Axios
 const apiClient = axios.create({
-  baseURL: process.env.REACT_APP_API_BASE_URL || 'http://localhost:3000/api', // URL base da API
-  timeout: 10000, 
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000/api', // URL base da API
+  timeout: 10000,
   headers: {
-    'Content-Type': 'application/json', 
+    'Content-Type': 'application/json',
   },
 });
 
@@ -25,7 +25,7 @@ apiClient.interceptors.request.use(
 
 // Interceptor para lidar com respostas ou erros globais
 apiClient.interceptors.response.use(
-  (response) => response, 
+  (response) => response,
   (error) => {
     if (error.response) {
       if (error.response.status === 401) {
@@ -37,7 +37,7 @@ apiClient.interceptors.response.use(
     } else {
       console.error('Erro na conexão com o servidor. Verifique sua rede.');
     }
-    return Promise.reject(error); 
+    return Promise.reject(error);
   }
 );
 

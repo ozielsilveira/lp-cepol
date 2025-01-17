@@ -55,21 +55,19 @@
 
 // icones
 
-import React from "react";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Grid from "@mui/material/Grid";
-import Container from "@mui/material/Container";
-import Avatar from "@mui/material/Avatar";
-import TeamIcon from "@mui/icons-material/Group";
 import MissionIcon from "@mui/icons-material/Flag";
+import TeamIcon from "@mui/icons-material/Group";
 import VisionIcon from "@mui/icons-material/Visibility";
+import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
+import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
 
-const teamMembers = [
-  { name: "John Doe", role: "CEO", image: "https://via.placeholder.com/150" },
-  { name: "Jane Smith", role: "CTO", image: "https://via.placeholder.com/150" },
-  { name: "Michael Brown", role: "Lead Developer", image: "https://via.placeholder.com/150" },
-];
+// const teamMembers = [
+//   { name: "John Doe", role: "CEO", image: "https://via.placeholder.com/150" },
+//   { name: "Jane Smith", role: "CTO", image: "https://via.placeholder.com/150" },
+//   { name: "Michael Brown", role: "Lead Developer", image: "https://via.placeholder.com/150" },
+// ];
 
 export const AboutUs = () => {
   return (
@@ -77,9 +75,9 @@ export const AboutUs = () => {
       {/* Header Section */}
       <Box sx={{ textAlign: "center", marginBottom: 4 }}>
         <Typography sx={{ mb: 4, mt: 2 }}
-            variant="h4"
-            fontWeight="bold"
-            gutterBottom>
+          variant="h4"
+          fontWeight="bold"
+          gutterBottom>
           About Us
         </Typography>
         <Typography variant="h6" color="text.secondary">

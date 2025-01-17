@@ -1,6 +1,7 @@
 import { ReactElement } from "react";
 import { RouteObject } from "react-router-dom";
-import ProtectedRoute from "../components/protectedRoutes";
+import ErrorBoundary from "../components/errorBoundary";
+import { LayoutContainer } from "../components/layoutBox";
 import { AboutUs } from "../pages/landing/aboutUs";
 import { Articles } from "../pages/landing/articles";
 import { Contact } from "../pages/landing/contact";
@@ -8,11 +9,9 @@ import { Equipment } from "../pages/landing/equipments";
 import { Home } from "../pages/landing/home";
 import { Professionals } from "../pages/landing/professionals";
 import { Research } from "../pages/landing/research";
+import { ResearchDetailed } from "../pages/landing/research-detail";
 import { Login } from "../pages/manager/login";
 import { Manager } from "../pages/manager/manager";
-import { LayoutContainer } from "../components/layoutBox";
-import ErrorBoundary from "../components/errorBoundary";
-import { ResearchDetailed } from "../pages/landing/research-detail";
 
 type CustomRouteObject = RouteObject & {
   path: string;
@@ -97,9 +96,7 @@ export const routes: CustomRouteObject[] = [
     path: "/manager",
     type: "private",
     element: (
-      <ProtectedRoute>
-        <Manager />
-      </ProtectedRoute>
+      <Manager />
     ),
   },
   {
