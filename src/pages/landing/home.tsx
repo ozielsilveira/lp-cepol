@@ -193,12 +193,14 @@ export function Home() {
                     <Typography variant="body2" color="textSecondary" paragraph>
                       {research.description}
                     </Typography>
+                    <Box sx={{ marginTop:"7rem", display: "flex", flexDirection: "column" }}>
                     <Typography variant="caption">
                       Partners: {research.partners}
                     </Typography>
                     <Typography variant="caption">
                       Period: {research.period}
                     </Typography>
+                    </Box>
                   </CardContent>
                 </Card>
               ))}

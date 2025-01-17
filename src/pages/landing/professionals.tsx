@@ -20,7 +20,7 @@ const professionals: Professional[] = [
   {
     id: 1,
     name: "Dr. Alice Johnson",
-    photo: "https://via.placeholder.com/150",
+    photo: "https://s2.glbimg.com/D7ouiVhAn1BVaU3wfp-zSgvWDTg=/600x0/filters:quality(70)/i.s3.glbimg.com/v1/AUTH_da025474c0c44edd99332dddb09cabe8/internal_photos/bs/2022/d/v/kFDwF0T3q2wkwvGH0DjA/whatsapp-image-2022-10-03-at-15.34.37.jpeg",
     research: ["Genetics", "Molecular Biology"],
     articles: [
       "Understanding DNA Replication",
@@ -31,15 +31,15 @@ const professionals: Professional[] = [
     id: 2,
     name: "Dr. Robert Smith",
     photo:
-      "https://cdn.pixabay.com/photo/2024/01/23/18/55/ai-generated-8528080_1280.jpg",
+      "https://www.qualityformationsblog.co.uk/wp-content/uploads/2019/07/who-can-be-a-company-director.jpg",
     research: ["Neuroscience", "Cognitive Psychology"],
     articles: ["The Brain and Behavior", "Advances in Neural Networks"],
   },
   {
     id: 3,
-    name: "Dr. Robert Smith",
+    name: "Dr. Robert Peterson",
     photo:
-      "https://cdn.pixabay.com/photo/2024/01/23/18/55/ai-generated-8528080_1280.jpg",
+      "https://www.1stformationsblog.co.uk/wp-content/uploads/2022/09/Shutterstock_1361250623-2.jpg",
     research: ["Neuroscience", "Cognitive Psychology"],
     articles: ["The Brain and Behavior", "Advances in Neural Networks"],
   },

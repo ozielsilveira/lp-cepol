@@ -98,6 +98,7 @@ import {
   CardContent,
 } from "@mui/material";
 import { useParams } from "react-router-dom";
+import { Subtitles } from "@mui/icons-material";
 
 // Mock para os detalhes das pesquisas
 const mockResearchDetails = {
@@ -125,6 +126,7 @@ const mockResearchDetails = {
   },
   3: {
     title: "Quantum Materials for Computing",
+    Subtitles:"Quantum Computing for Materials lorm Lorem ipsum dolor sit amet consectetur adipisicing elit.",
     texts: [
       "Nanoporous polymeric materials are porous materials with pore sizes in the nanometer range (that is, below 500 nm), processed as bulk or film materials, and from a wide set of polymers. Over the last several years, research and development on these novel materials have progressed significantly, because it is believed that the reduction of the pore size to the nanometer range could strongly influence some of the properties of porous polymers, providing unexpected and improved properties compared to conventional porous and microporous polymers and non-porous solids.",
       "In the last years, CellMat Laboratory has become a reference in this topic. The investigations carried out in CellMat have permitted to prove for the first time, the presence of the Knudsen effect in this type of breathtaking materials, to evidence the possibility of producing transparent foams and to prove the improved mechanical properties of these novel materials."
@@ -153,6 +155,9 @@ export const ResearchDetailed: React.FC = () => {
     <Typography variant="h4" sx={{ fontWeight: "bold" }}>
       {detailedResearch.title}
     </Typography>
+    <Typography variant="h6" sx={{ mt: 2 }}>
+      {detailedResearch.Subtitles}
+    </Typography>
   </Box>
 
   <Grid container spacing={4}>
@@ -162,14 +167,15 @@ export const ResearchDetailed: React.FC = () => {
         <Box
           key={`text-${index}`}
           sx={{
-            border: "2px solid #e0e0e0",
+            // border: "2px solid #e0e0e0",
             borderRadius: 2,
             padding: 2,
             marginBottom: 2,
-            backgroundColor: "#f9f9f9",
+            // backgroundColor: "#f9f9f9",
           }}
         >
           <Typography variant="body1">{text}</Typography>
+          
         </Box>
       ))}
     </Grid>
