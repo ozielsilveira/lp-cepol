@@ -1,8 +1,7 @@
 import { ReactElement } from "react";
 import { RouteObject } from "react-router-dom";
-import { Footer } from "../components/footers";
-import Header from "../components/header";
-import ProtectedRoute from "../components/protectedRoutes";
+import ErrorBoundary from "../components/errorBoundary";
+import { LayoutContainer } from "../components/layoutBox";
 import { AboutUs } from "../pages/landing/aboutUs";
 import { Articles } from "../pages/landing/articles";
 import { Contact } from "../pages/landing/contact";
@@ -10,11 +9,9 @@ import { Equipment } from "../pages/landing/equipments";
 import { Home } from "../pages/landing/home";
 import { Professionals } from "../pages/landing/professionals";
 import { Research } from "../pages/landing/research";
+import { ResearchDetailed } from "../pages/landing/research-detail";
 import { Login } from "../pages/manager/login";
 import { Manager } from "../pages/manager/manager";
-import { Box } from "@mui/material";
-import { LayoutContainer } from "../components/layoutBox";
-import ErrorBoundary from "../components/errorBoundary";
 
 type CustomRouteObject = RouteObject & {
   path: string;
@@ -28,11 +25,7 @@ export const routes: CustomRouteObject[] = [
     type: "public",
     element: (
       <LayoutContainer>
-        <Header />
-        <Box sx={{ flex: 1 }}>
-          <Home />
-        </Box>
-        <Footer />
+        <Home />
       </LayoutContainer>
     ),
   },
@@ -41,11 +34,7 @@ export const routes: CustomRouteObject[] = [
     type: "public",
     element: (
       <LayoutContainer>
-        <Header />
-        <Box sx={{ flex: 1 }}>
-          <Research />
-        </Box>
-        <Footer />
+        <Research />
       </LayoutContainer>
     ),
   },
@@ -54,11 +43,7 @@ export const routes: CustomRouteObject[] = [
     type: "public",
     element: (
       <LayoutContainer>
-        <Header />
-        <Box sx={{ flex: 1 }}>
-          <Professionals />
-        </Box>
-        <Footer />
+        <Professionals />
       </LayoutContainer>
     ),
   },
@@ -67,11 +52,7 @@ export const routes: CustomRouteObject[] = [
     type: "public",
     element: (
       <LayoutContainer>
-        <Header />
-        <Box sx={{ flex: 1 }}>
-          <Articles />
-        </Box>
-        <Footer />
+        <Articles />
       </LayoutContainer>
     ),
   },
@@ -80,11 +61,7 @@ export const routes: CustomRouteObject[] = [
     type: "public",
     element: (
       <LayoutContainer>
-        <Header />
-        <Box sx={{ flex: 1 }}>
-          <AboutUs />
-        </Box>
-        <Footer />
+        <AboutUs />
       </LayoutContainer>
     ),
   },
@@ -93,11 +70,7 @@ export const routes: CustomRouteObject[] = [
     type: "public",
     element: (
       <LayoutContainer>
-        <Header />
-        <Box sx={{ flex: 1 }}>
-          <Equipment />
-        </Box>
-        <Footer />
+        <Equipment />
       </LayoutContainer>
     ),
   },
@@ -106,11 +79,16 @@ export const routes: CustomRouteObject[] = [
     type: "public",
     element: (
       <LayoutContainer>
-        <Header />
-        <Box sx={{ flex: 1 }}>
-          <Contact />
-        </Box>
-        <Footer />
+        <Contact />
+      </LayoutContainer>
+    ),
+  },
+  {
+    path: "/research/:id",
+    type: "public",
+    element: (
+      <LayoutContainer>
+        <ResearchDetailed />
       </LayoutContainer>
     ),
   },
@@ -118,17 +96,16 @@ export const routes: CustomRouteObject[] = [
     path: "/manager",
     type: "private",
     element: (
-      <ProtectedRoute>
-        <Manager />
-      </ProtectedRoute>
+      <Manager />
     ),
   },
   {
     path: "/auth",
     type: "auth",
-    element:
+    element: (
       <ErrorBoundary>
         <Login />
-      </ErrorBoundary>,
+      </ErrorBoundary>
+    ),
   },
 ];

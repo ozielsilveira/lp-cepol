@@ -106,8 +106,7 @@ export const Footer: React.FC = () => {
         {/* Direitos Autorais */}
         <Box sx={{ mt: 4, textAlign: "center" }}>
           <Typography variant="body2" color="inherit">
-            © {new Date().getFullYear()} Sua Empresa. Todos os direitos
-            reservados.
+            © {new Date().getFullYear()} Your Company. All rights reserved.
           </Typography>
         </Box>
       </Container>

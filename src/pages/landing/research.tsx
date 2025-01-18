@@ -1,3 +1,84 @@
+// import React from "react";
+// import {
+//   Box,
+//   Card,
+//   CardContent,
+//   CardHeader,
+//   Container,
+//   Grid,
+//   Typography,
+// } from "@mui/material";
+// import { useNavigate } from "react-router-dom";
+// import { link } from "fs";
+
+// export const Research: React.FC = () => {
+//   const researchs = [
+//     {
+//       id: 1,
+//       title: "Development of Next-Generation Vaccines",
+//       description: "We are working on a revolutionary approach...",
+//       link: "/researchDetailed",
+//     },
+//     {
+//       id: 2,
+//       title: "Restoration of Degraded Ecosystems",
+//       description: "Our team is developing innovative techniques...",
+//       link: "/researchDetailed",
+//     },
+//     {
+//       id: 3,
+//       title: "Quantum Materials for Computing",
+//       description: "We investigate new materials with quantum properties...",
+//       link: "/researchDetailed",
+//     },
+//   ];
+//   const navigate = useNavigate();
+//   return (
+//     <Container>
+//       <Box
+//         role="tabpanel"
+//         hidden={false}
+//         id="research-tab"
+//         aria-labelledby="research-tab-label"
+//         sx={{ py: { xs: 3, md: 6, lg: 8 }, bgcolor: "white" }}
+//       >
+//         <Box sx={{ textAlign: "center", mb: 4 }}>
+//           <Typography
+//             sx={{ mb: 4, mt: 2 }}
+//             variant="h4"
+//             fontWeight="bold"
+//             gutterBottom
+//           >
+//             Ongoing Research
+//           </Typography>
+//         </Box>
+//         <Grid container spacing={3} justifyContent="center">
+//           {researchs.map((research) => (
+//             <Grid item xs={12} sm={6} lg={4} key={research.id}>
+//               <Card onClick={() => navigate(research.link)}>
+//                 <CardHeader
+//                   // avatar={<AtomIcon style={{ fontSize: "3rem", color: "#1e88e5" }} />}
+//                   title={
+//                     <Typography variant="h6" component="h3">
+//                       {research.title}
+//                     </Typography>
+//                   }
+//                   sx={{ textAlign: "center", pb: 0 }}
+//                 />
+//                 <CardContent>
+//                   <Typography variant="body2" color="textSecondary">
+//                     {research.description}
+//                   </Typography>
+//                 </CardContent>
+//               </Card>
+//             </Grid>
+//           ))}
+//         </Grid>
+//       </Box>
+//     </Container>
+//   );
+// };
+
 import React from "react";
 import {
   Box,
@@ -8,6 +89,7 @@ import {
   Grid,
   Typography,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 export const Research: React.FC = () => {
   const researchs = [
@@ -27,6 +109,9 @@ export const Research: React.FC = () => {
       description: "We investigate new materials with quantum properties...",
     },
   ];
+
+  const navigate = useNavigate();
+
   return (
     <Container>
       <Box
@@ -34,12 +119,12 @@ export const Research: React.FC = () => {
         hidden={false}
         id="research-tab"
         aria-labelledby="research-tab-label"
-        sx={{ py: { xs: 3, md: 6, lg: 8 }, bgcolor: "white" }}
+        // sx={{ py: { xs: 3, md: 6, lg: 8 }, bgcolor: "white" }}
       >
         <Box sx={{ textAlign: "center", mb: 4 }}>
           <Typography
-            variant="h3"
-            component="h2"
+            sx={{ mb: 4, mt: 2 }}
+            variant="h4"
             fontWeight="bold"
             gutterBottom
           >
@@ -49,9 +134,8 @@ export const Research: React.FC = () => {
         <Grid container spacing={3} justifyContent="center">
           {researchs.map((research) => (
             <Grid item xs={12} sm={6} lg={4} key={research.id}>
-              <Card>
+              <Card onClick={() => navigate(`/research/${research.id}`)}>
                 <CardHeader
-                  // avatar={<AtomIcon style={{ fontSize: "3rem", color: "#1e88e5" }} />}
                   title={
                     <Typography variant="h6" component="h3">
                       {research.title}
