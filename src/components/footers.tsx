@@ -1,15 +1,14 @@
-import React from "react";
+import EmailIcon from '@mui/icons-material/Email';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
 import {
   Box,
-  Typography,
-  Link,
-  IconButton,
-  Grid,
   Container,
+  Grid,
+  IconButton,
+  Link,
+  Typography,
 } from "@mui/material";
-import { Facebook, Twitter, LinkedIn, Instagram } from "@mui/icons-material";
-import LocationOnIcon from '@mui/icons-material/LocationOn';
-import EmailIcon from '@mui/icons-material/Email';
+import React from "react";
 export const Footer: React.FC = () => {
   return (
     <Box
@@ -77,8 +76,8 @@ export const Footer: React.FC = () => {
                 <LocationOnIcon />
               </IconButton>
               <Typography variant="h6" gutterBottom fontSize={"small"}>
-              Rod. Gov. Jorge Lacerda, 3800 - Sangao, Criciúma - SC, 88807-600
-            </Typography>
+                Rod. Gov. Jorge Lacerda, 3800 - Sangao, Criciúma - SC, 88807-600
+              </Typography>
             </Box>
             <Box display={"flex"} alignItems={"center"}>
               <IconButton
@@ -90,10 +89,10 @@ export const Footer: React.FC = () => {
                 <EmailIcon />
               </IconButton>
               <Typography variant="h6" gutterBottom fontSize={"small"}>
-              matheus.vgz@unesc.net
-            </Typography>
+                matheus.vgz@unesc.net
+              </Typography>
             </Box>
-           
+
           </Grid>
         </Grid>
 

@@ -1,10 +1,9 @@
-import React from 'react';
-import ProfessionalManager from './professionalsManager';
 import { Box } from '@mui/material';
+import React from 'react';
 
 export const Manager: React.FC = () => {
     return (
-       <Box>teste</Box>
+        <Box>teste</Box>
     );
 }
 
