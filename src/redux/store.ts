@@ -2,14 +2,14 @@ import { AnyAction, configureStore, ThunkAction } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import aboutUsReducer from './slices/aboutUsSlice';
 import articlesReducer from './slices/articlesSlice';
-import equipamentReducer from './slices/equipamentSlice';
+import equipmentReducer from './slices/equipamentSlice';
 import professionalReducer from './slices/professionalSlice';
 import researchReducer from './slices/researchSlice';
 export const store = configureStore({
   reducer: {
     aboutUs: aboutUsReducer,
     articles: articlesReducer,
-    equipament: equipamentReducer,
+    equipment: equipmentReducer,
     professional: professionalReducer,
     research: researchReducer,
   },

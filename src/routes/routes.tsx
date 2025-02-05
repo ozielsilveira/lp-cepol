@@ -1,7 +1,10 @@
 import { ReactElement } from "react";
 import { RouteObject } from "react-router-dom";
 import ErrorBoundary from "../components/errorBoundary";
-import { LayoutContainer } from "../components/layoutBox";
+import {
+  LayoutContainer,
+  LayoutContainerPrivate,
+} from "../components/layoutBox";
 import { AboutUs } from "../pages/landing/aboutUs";
 import { Articles } from "../pages/landing/articles";
 import { Contact } from "../pages/landing/contact";
@@ -12,6 +15,9 @@ import { Research } from "../pages/landing/research";
 import { ResearchDetailed } from "../pages/landing/research-detail";
 import { Login } from "../pages/manager/login";
 import { Manager } from "../pages/manager/manager";
+import { ArticleDetailed } from "../pages/landing/articles-detail";
+import ProfessionalManager from "../pages/manager/professionalsManager";
+import { EquipmentslManager } from "../pages/manager/equipamentManager";
 
 type CustomRouteObject = RouteObject & {
   path: string;
@@ -57,6 +63,15 @@ export const routes: CustomRouteObject[] = [
     ),
   },
   {
+    path: "/articles/:id",
+    type: "public",
+    element: (
+      <LayoutContainer>
+        <ArticleDetailed />
+      </LayoutContainer>
+    ),
+  },
+  {
     path: "/about",
     type: "public",
     element: (
@@ -96,7 +111,27 @@ export const routes: CustomRouteObject[] = [
     path: "/manager",
     type: "private",
     element: (
-      <Manager />
+      <LayoutContainerPrivate>
+        <Manager />
+      </LayoutContainerPrivate>
+    ),
+  },
+  {
+    path: "/manager/professionals",
+    type: "private",
+    element: (
+      <LayoutContainerPrivate>
+        <ProfessionalManager />
+      </LayoutContainerPrivate>
+    ),
+  },
+  {
+    path: "/manager/equipments",
+    type: "private",
+    element: (
+      <LayoutContainerPrivate>
+        <EquipmentslManager />
+      </LayoutContainerPrivate>
     ),
   },
   {

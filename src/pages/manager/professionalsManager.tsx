@@ -71,6 +71,7 @@ const ProfessionalManager: React.FC = () => {
         setValue('name', professional.name);
         setValue('role', professional.role);
         setValue('bio', professional.bio);
+        setValue('hierarchy', professional.hierarchy);
         setValue('imageUrl', professional.imageUrl);
         setValue('createdAt', professional.createdAt);
     };
@@ -103,6 +104,8 @@ const ProfessionalManager: React.FC = () => {
                             <TableCell>Cargo</TableCell>
                             <TableCell>Descrição</TableCell>
                             <TableCell>Image URL</TableCell>
+                            <TableCell>Hierarchy</TableCell>
+
                             <TableCell>Criado em</TableCell>
                             <TableCell align="right">Ações</TableCell>
                         </TableRow>
@@ -114,6 +117,8 @@ const ProfessionalManager: React.FC = () => {
                                 <TableCell>{professional.role}</TableCell>
                                 <TableCell>{professional.bio}</TableCell>
                                 <TableCell>{professional.imageUrl}</TableCell>
+                                <TableCell>{professional.hierarchy}</TableCell>
+
                                 <TableCell>
                                     {new Date(professional.createdAt).toLocaleString('pt-BR', {
                                         day: '2-digit',
@@ -175,6 +180,15 @@ const ProfessionalManager: React.FC = () => {
                             fullWidth
                             margin="normal"
                             required
+                        />
+                        <TextField
+                            {...register('hierarchy', { valueAsNumber: true })}
+                            label="hierarchy"
+                            fullWidth
+                            margin="normal"
+                            required
+                            type="number"
+                            
                         />
                         <TextField
                             {...register('createdAt')}

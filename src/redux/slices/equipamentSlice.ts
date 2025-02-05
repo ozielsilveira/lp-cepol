@@ -1,30 +1,56 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import apiClient from '../../services/api/axiosConfig';
 
-interface EquipamentState {
-  data: any[];
-  loading: boolean;
+export interface Equipment {
+  id: string;
+  name: string;
+  description: string;
+  type: string;
+  imageUrl: string | null;
+}
+interface EquipmentsState {
+  list: Equipment[];
+  status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
 }
 
-const initialState: EquipamentState = {
-  data: [],
-  loading: false,
+const initialState: EquipmentsState = {
+  list: [],
+  status: "idle",
   error: null,
 };
 
-export const fetchEquipaments = createAsyncThunk('equipaments/fetch', async () => {
-  const response = await apiClient.get('/equipaments');
-  return response.data;
+export const fetchEquipments = createAsyncThunk('equipaments/fetch', async () => {
+  const response = await apiClient.get('public/equipment');
+  return response.data.result;
 });
 
-export const createEquipament = createAsyncThunk('equipaments/create', async (newArticle: any) => {
+export const createEquipment = createAsyncThunk('equipaments/create', async (newArticle: any) => {
   const response = await apiClient.post('/equipaments/create', newArticle);
   return response.data;
 });
 
-const equipamentSlice = createSlice({
-  name: 'equipaments',
+export const updateEquipment = createAsyncThunk<Equipment, Equipment>(
+  "professionals/update",
+  async (data) => {
+    const response = await apiClient.put<Equipment>(
+      `/equipment/${data.id}`,
+      data
+    );
+    return response.data;
+  }
+);
+
+export const deleteEquipment = createAsyncThunk<string, string>(
+  "equipment/delete",
+  async (id) => {
+    await apiClient.delete(`/equipment/${id}`);
+    return id;
+  }
+);
+
+const equipmentSlice = createSlice({
+  name: 'equipments',
   initialState,
   reducers: {
     clearError(state) {
@@ -32,23 +58,72 @@ const equipamentSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder
-      .addCase(fetchEquipaments.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(fetchEquipaments.fulfilled, (state, action: PayloadAction<any[]>) => {
-        state.loading = false;
-        state.data = action.payload;
-      })
-      .addCase(fetchEquipaments.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message || 'Erro ao buscar artigos';
-      })
-      .addCase(createEquipament.fulfilled, (state, action: PayloadAction<any>) => {
-        state.data.push(action.payload);
-      });
-  },
-});
+     builder
+       .addCase(
+        fetchEquipments.fulfilled,
+         (state, action: PayloadAction<Equipment[]>) => {
+           state.list = action.payload;
+           state.status = "succeeded";
+         }
+       )
+       .addCase(fetchEquipments.rejected, (state, action) => {
+         state.status = "failed";
+         state.error =
+           typeof action.payload === "string"
+             ? action.payload
+             : action.error.message || null;
+       })
+       .addCase(
+         createEquipment.fulfilled,
+         (state, action: PayloadAction<Equipment>) => {
+           state.list.push(action.payload);
+           state.status = "succeeded";
+         }
+       )
+       .addCase(createEquipment.pending, (state) => {
+         state.status = "loading";
+       })
+       .addCase(createEquipment.rejected, (state, action) => {
+         state.status = "failed";
+         state.error = action.error.message || null;
+       })
+       .addCase(
+         updateEquipment.fulfilled,
+         (state, action: PayloadAction<Equipment>) => {
+           const index = state.list.findIndex(
+             (equipament) => equipament.id === action.payload.id
+           );
+           if (index !== -1) {
+             state.list[index] = action.payload;
+           }
+           state.status = "succeeded";
+         }
+       )
+       .addCase(updateEquipment.pending, (state) => {
+         state.status = "loading";
+       })
+       .addCase(updateEquipment.rejected, (state, action) => {
+         state.status = "failed";
+         state.error = action.error.message || null;
+       })
+       .addCase(
+          deleteEquipment.fulfilled,
+         (state, action: PayloadAction<string>) => {
+           state.list = state.list.filter(
+             (professional) => professional.id !== action.payload
+           );
+           state.status = "succeeded";
+         }
+       )
+       .addCase(deleteEquipment.pending, (state) => {
+         state.status = "loading";
+       })
+       .addCase(deleteEquipment.rejected, (state, action) => {
+         state.status = "failed";
+         state.error = action.error.message || null;
+       });
+   },
+ });
 
-export const { clearError } = equipamentSlice.actions;
-export default equipamentSlice.reducer;
+export const { clearError } = equipmentSlice.actions;
+export default equipmentSlice.reducer;

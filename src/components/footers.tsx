@@ -8,7 +8,8 @@ import {
   Container,
 } from "@mui/material";
 import { Facebook, Twitter, LinkedIn, Instagram } from "@mui/icons-material";
-
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import EmailIcon from '@mui/icons-material/Email';
 export const Footer: React.FC = () => {
   return (
     <Box
@@ -64,42 +65,35 @@ export const Footer: React.FC = () => {
           </Grid>
           <Grid item xs={12} sm={4}>
             <Typography variant="h6" gutterBottom>
-              Social Media
+              Location
             </Typography>
-            <Box>
+            <Box display={"flex"} alignItems={"center"}>
               <IconButton
-                href="https://facebook.com"
+                href="https://maps.app.goo.gl/YF9BhUaZYx529acJ9"
                 target="_blank"
                 rel="noopener noreferrer"
                 color="inherit"
               >
-                <Facebook />
+                <LocationOnIcon />
               </IconButton>
-              <IconButton
-                href="https://twitter.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                color="inherit"
-              >
-                <Twitter />
-              </IconButton>
-              <IconButton
-                href="https://linkedin.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                color="inherit"
-              >
-                <LinkedIn />
-              </IconButton>
-              <IconButton
-                href="https://instagram.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                color="inherit"
-              >
-                <Instagram />
-              </IconButton>
+              <Typography variant="h6" gutterBottom fontSize={"small"}>
+              Rod. Gov. Jorge Lacerda, 3800 - Sangao, Criciúma - SC, 88807-600
+            </Typography>
             </Box>
+            <Box display={"flex"} alignItems={"center"}>
+              <IconButton
+                href="mailto:matheus.vgz@unesc.net"
+                target="_blank"
+                rel="noopener noreferrer"
+                color="inherit"
+              >
+                <EmailIcon />
+              </IconButton>
+              <Typography variant="h6" gutterBottom fontSize={"small"}>
+              matheus.vgz@unesc.net
+            </Typography>
+            </Box>
+           
           </Grid>
         </Grid>
 
