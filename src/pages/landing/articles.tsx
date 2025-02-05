@@ -1,6 +1,7 @@
 import { Box, Container, Grid, Typography } from "@mui/material";
 import { Card, CardContent } from "@mui/material";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
+import { useNavigate } from "react-router-dom";
 // import { BookOpen } from "@mui/icons-material";
 
 interface Article {
@@ -49,6 +50,8 @@ export const Articles: React.FC = () => {
       publishedDate: "2021-10-15",
     },
   ];
+    const navigate = useNavigate();
+  
   return (
     <Container>
       <section className="w-full py-12 md:py-24 lg:py-32 bg-gray-50">
@@ -79,6 +82,7 @@ export const Articles: React.FC = () => {
                     "&:hover": { boxShadow: 6, cursor: "pointer" },
                     transition: "all 0.3s",
                   }}
+                  onClick={() => navigate(`/articles/${article.id}`)}
                 >
                   <CardContent>
                     <MenuBookIcon
