@@ -190,7 +190,7 @@ const ProfessionalManager: React.FC = () => {
                             type="number"
                             
                         />
-                        <TextField
+                        {/* <TextField
                             {...register('createdAt')}
                             label="Created At"
                             fullWidth
@@ -202,7 +202,7 @@ const ProfessionalManager: React.FC = () => {
                                     shrink: true,
                                 },
                             }}
-                        />
+                        /> */}
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={handleClose}>Cancel</Button>

@@ -20,29 +20,22 @@ import {
 import React, { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-    
-    deleteProfessional,
-    
-    Professional,
-   
-} from '../../redux/slices/professionalSlice';
 import { AppDispatch, IRootState } from '../../redux/store';
-import { createResearch, deleteResearch, fetchResearch, Research, updateResearch } from '../../redux/slices/researchSlice';
+import { Article, createArticle, deleteArticle, fetchArticles, updateArticle } from '../../redux/slices/articlesSlice';
 
-export const ResearchManager: React.FC = () => {
+export const ArticlesManager: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
-    const { list } = useSelector((state: IRootState) => state.research);
+    const { list } = useSelector((state: IRootState) => state.articles);
     console.log(list);
-    const { register, handleSubmit, reset, setValue } = useForm<Research>();
+    const { register, handleSubmit, reset, setValue } = useForm<Article>();
     const [open, setOpen] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
 
     useEffect(() => {
-        
-            dispatch(fetchResearch());
-        
-    }, [dispatch]);
+        if (list.length === 0) {
+            dispatch(fetchArticles());
+        }
+    }, [dispatch, list.length]);
 
     const handleOpen = () => {
         setOpen(true);
@@ -55,46 +48,47 @@ export const ResearchManager: React.FC = () => {
         reset();
     };
 
-    const onSubmit: SubmitHandler<Research> = (data) => {
+    const onSubmit: SubmitHandler<Article> = (data) => {
         if (isEditing) {
             if (data.id) {
-                dispatch(updateResearch(data as Required<Research>));
+                dispatch(updateArticle(data as Required<Article>));
             }
         } else {
-            dispatch(createResearch(data));
+            dispatch(createArticle(data));
         }
         handleClose();
     };
 
-    const handleEdit = (research: Research) => {
+    const handleEdit = (article: Article) => {
         setIsEditing(true);
         setOpen(true);
-        setValue('id', research.id);
-        setValue('title', research.title);
-        setValue('description', research.description);
-        setValue('bodyText', research.bodyText);
-        setValue('secondText', research.secondText);
-        // setValue('imageUrl', research.imageUrl);
-        // setValue('createdAt', research.createdAt);
+        setValue('id', article.id);
+        setValue('title', article.title);
+        setValue('description', article.description);
+        setValue('author', article.author);
+        setValue('publishedDate', article.publishedDate);
+        setValue('bodyText', article.bodyText);
+        setValue('secondText', article.secondText);
+        setValue('images', article.images);
     };
 
     const handleDelete = (id: string) => {
-        if (window.confirm('Are you sure you want to delete this research?')) {
-            dispatch(deleteResearch(id));
+        if (window.confirm('Are you sure you want to delete this professional?')) {
+            dispatch(deleteArticle(id));
         }
     };
 
     return (
         <Box p={3}>
             <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-                <Typography variant="h4">Research Manager</Typography>
+                <Typography variant="h4">Article Manager</Typography>
                 <Button
                     variant="contained"
                     color="primary"
                     startIcon={<Add />}
                     onClick={handleOpen}
                 >
-                    Add Research
+                    Add Article
                 </Button>
             </Box>
 
@@ -104,43 +98,38 @@ export const ResearchManager: React.FC = () => {
                         <TableRow>
                             <TableCell>Title</TableCell>
                             <TableCell>description</TableCell>
+                            <TableCell>author</TableCell>
+                            <TableCell>publishedDate</TableCell>
                             <TableCell>bodyText</TableCell>
                             <TableCell>secondText</TableCell>
-                           
 
-                           
+                            <TableCell>Professional</TableCell>
                             <TableCell align="right">Ações</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {Array.isArray(list) && list.map((research) => (
-                            <TableRow key={research.id}>
-                                <TableCell>{research.title}</TableCell>
-                                <TableCell>{research.description}</TableCell>
-                                <TableCell>{research.bodyText}</TableCell>
-                                <TableCell>{research.secondText}</TableCell>
-                               
+                        {Array.isArray(list) && list.map((articles) => (
+                            <TableRow key={articles.id}>
+                                <TableCell>{articles.title}</TableCell>
+                                <TableCell>{articles.description}</TableCell>
+                                <TableCell>{articles.author}</TableCell>
+                                <TableCell>{articles.publishedDate}</TableCell>
+                                <TableCell>{articles.bodyText}</TableCell>
+                                <TableCell>{articles.secondText}</TableCell>
+                                <TableCell>{articles.professional.name}</TableCell>
 
-                                {/* <TableCell>
-                                    {new Date(research.createdAt).toLocaleString('pt-BR', {
-                                        day: '2-digit',
-                                        month: '2-digit',
-                                        year: 'numeric',
-                                        hour: '2-digit',
-                                        minute: '2-digit',
-                                        second: '2-digit',
-                                    })}
-                                </TableCell> */}
+
+                    
                                 <TableCell align="right">
                                     <IconButton
                                         color="primary"
-                                        onClick={() => handleEdit(research)}
+                                        onClick={() => handleEdit(articles)}
                                     >
                                         <Edit />
                                     </IconButton>
                                     <IconButton
                                         color="error"
-                                        onClick={() => handleDelete(research.id)}
+                                        onClick={() => handleDelete(articles.id)}
                                     >
                                         <Delete />
                                     </IconButton>
@@ -170,22 +159,31 @@ export const ResearchManager: React.FC = () => {
                             required
                         />
                         <TextField
-                            {...register('bodyText')}
-                            label="BodyText"
+                            {...register('author')}
+                            label="Author"
                             fullWidth
                             margin="normal"
                             required
                         />
                         <TextField
-                            {...register('secondText')}
-                            label="SecondText "
+                            {...register('publishedDate')}
+                            label="Published Date"
                             fullWidth
                             margin="normal"
                             required
                         />
-                        {/* <TextField
-                            {...register('hierarchy', { valueAsNumber: true })}
-                            label="hierarchy"
+                        <TextField
+                            {...register('bodyText')}
+                            label="Body text"
+                            fullWidth
+                            margin="normal"
+                            required
+                            type="number"
+                            
+                        />
+                          <TextField
+                            {...register('secondText')}
+                            label="Second Text"
                             fullWidth
                             margin="normal"
                             required
@@ -193,8 +191,8 @@ export const ResearchManager: React.FC = () => {
                             
                         />
                         <TextField
-                            {...register('createdAt')}
-                            label="Created At"
+                            {...register('images')}
+                            label="Images url"
                             fullWidth
                             margin="normal"
                             required
@@ -204,7 +202,7 @@ export const ResearchManager: React.FC = () => {
                                     shrink: true,
                                 },
                             }}
-                        /> */}
+                        />
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={handleClose}>Cancel</Button>

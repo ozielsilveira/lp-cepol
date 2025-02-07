@@ -9,7 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Carousel } from "../../components/carousel.tsx";
-
+// import PolimerImg from "../../../public/images/poliBack.jpg";
 import mainImg from "../../../public/images/cepolSVG.svg";
 
 // Dados fictícios
@@ -89,13 +89,13 @@ export function Home() {
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
-      <Box component="main" sx={{ flex: 1, }}>
+      <Box component="main" sx={{ flex: 1 }}>
         <Container
           sx={{
             width: "100%",
           }}
         >
-          <Box
+          {/* <Box
             sx={{
               display: "flex",
               flexDirection: { xs: "column", md: "row" },
@@ -104,9 +104,48 @@ export function Home() {
               justifyContent: "center",
               mb: 6,
               mt: 4,
+             
             }}
           >
             <Box sx={{ flex: 1 }}>
+              <Typography variant="h3" fontWeight="bold" gutterBottom>
+                Discover the Advances of Science
+              </Typography>
+              <Typography variant="body1" color="textSecondary" paragraph>
+                Explore the latest research and innovations from our laboratory.
+                Stay updated with the most recent discoveries.
+              </Typography>
+              <Box sx={{ display: "flex", gap: 2 }}>
+                <TextField
+                  variant="outlined"
+                  placeholder="Search research..."
+                  fullWidth
+                  sx={{ borderRadius: "15px" }}
+                />
+                <Button variant="contained" startIcon={<SearchIcon />}>
+                  Search
+                </Button>
+              </Box>
+            </Box>
+            <Box component={"img"} src={mainImg} width={300} height={300} />
+          </Box> */}
+          <Box
+            sx={{
+              position: "relative",
+              display: "flex",
+              flexDirection: { xs: "column", md: "row" },
+              gap: 4,
+              alignItems: "center",
+              justifyContent: "center",
+              mb: 6,
+              mt: 4,
+              padding: "4rem 2rem",
+              textAlign: "center",
+              overflow: "hidden",
+             
+            }}
+          >
+            <Box sx={{ flex: 1, zIndex: 1 }}>
               <Typography variant="h3" fontWeight="bold" gutterBottom>
                 Discover the Advances of Science
               </Typography>
@@ -185,7 +224,10 @@ export function Home() {
             </Typography>
             <Box sx={{ display: "flex", flexDirection: "row", gap: 3 }}>
               {researchs.map((research) => (
-                <Card key={research.id} sx={{ width:"450px", height:"250px" }}>
+                <Card
+                  key={research.id}
+                  sx={{ width: "450px", height: "250px" }}
+                >
                   <CardContent>
                     <Typography variant="h6" gutterBottom>
                       {research.title}
@@ -193,13 +235,19 @@ export function Home() {
                     <Typography variant="body2" color="textSecondary" paragraph>
                       {research.description}
                     </Typography>
-                    <Box sx={{ marginTop:"7rem", display: "flex", flexDirection: "column" }}>
-                    <Typography variant="caption">
-                      Partners: {research.partners}
-                    </Typography>
-                    <Typography variant="caption">
-                      Period: {research.period}
-                    </Typography>
+                    <Box
+                      sx={{
+                        marginTop: "7rem",
+                        display: "flex",
+                        flexDirection: "column",
+                      }}
+                    >
+                      <Typography variant="caption">
+                        Partners: {research.partners}
+                      </Typography>
+                      <Typography variant="caption">
+                        Period: {research.period}
+                      </Typography>
                     </Box>
                   </CardContent>
                 </Card>

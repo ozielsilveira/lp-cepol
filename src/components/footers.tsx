@@ -42,6 +42,11 @@ export const Footer: React.FC = () => {
                 Contact
               </Link>
             </Box>
+            <Box>
+              <Link href="/auth" color="inherit" underline="hover">
+                Login
+              </Link>
+            </Box>
           </Grid>
           <Grid item xs={12} sm={4}>
             {/* <Typography variant="h6" gutterBottom>

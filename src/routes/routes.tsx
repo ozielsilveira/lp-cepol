@@ -18,6 +18,10 @@ import { Manager } from "../pages/manager/manager";
 import { ArticleDetailed } from "../pages/landing/articles-detail";
 import ProfessionalManager from "../pages/manager/professionalsManager";
 import { EquipmentslManager } from "../pages/manager/equipamentManager";
+import {  ArticlesManager } from "../pages/manager/articlesManager";
+import { ResearchManager } from "../pages/manager/researchManager";
+import { Box } from "@mui/material";
+import PolimerImg from "../../public/images/poliBack.jpg";
 
 type CustomRouteObject = RouteObject & {
   path: string;
@@ -31,7 +35,21 @@ export const routes: CustomRouteObject[] = [
     type: "public",
     element: (
       <LayoutContainer>
+        <Box sx={{ "&::before": {
+                content: '""',
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: "60%",
+                backgroundImage: `url(${PolimerImg})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                opacity: 0.2, // Define a transparência da imagem de fundo
+                zIndex: -1,
+              },}}>
         <Home />
+        </Box>
       </LayoutContainer>
     ),
   },
@@ -131,6 +149,24 @@ export const routes: CustomRouteObject[] = [
     element: (
       <LayoutContainerPrivate>
         <EquipmentslManager />
+      </LayoutContainerPrivate>
+    ),
+  },
+  {
+    path: "/manager/articles",
+    type: "private",
+    element: (
+      <LayoutContainerPrivate>
+        <ArticlesManager />
+      </LayoutContainerPrivate>
+    ),
+  },
+  {
+    path: "/manager/researchs",
+    type: "private",
+    element: (
+      <LayoutContainerPrivate>
+        <ResearchManager />
       </LayoutContainerPrivate>
     ),
   },

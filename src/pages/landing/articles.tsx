@@ -2,6 +2,9 @@ import { Box, Container, Grid, Typography } from "@mui/material";
 import { Card, CardContent } from "@mui/material";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 import { useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../redux/store";
+import { fetchArticles } from "../../redux/slices/articlesSlice";
+import { useEffect } from "react";
 // import { BookOpen } from "@mui/icons-material";
 
 interface Article {
@@ -51,7 +54,14 @@ export const Articles: React.FC = () => {
     },
   ];
     const navigate = useNavigate();
-  
+    const dispatch = useAppDispatch();
+    const articlesList = useAppSelector((state) => state.articles.list);
+
+      useEffect(() => {
+        if (articlesList.length === 0) {
+          dispatch(fetchArticles());
+        }
+      }, [dispatch, articlesList.length]);
   return (
     <Container>
       <section className="w-full py-12 md:py-24 lg:py-32 bg-gray-50">
@@ -71,7 +81,7 @@ export const Articles: React.FC = () => {
           <Grid container spacing={4} mb={2}>
             {" "}
             {/* Similar ao gap-8 */}
-            {articles.map((article) => (
+            {articlesList.map((article) => (
               <Grid item xs={12} md={6} key={article.id}>
                 {" "}
                 {/* xs=12 ocupa toda a linha em telas pequenas, md=6 divide em 2 colunas em telas médias */}
@@ -99,12 +109,12 @@ export const Articles: React.FC = () => {
                       {article.title}
                     </h3>
                     <p className="text-sm text-gray-700 mb-4 line-clamp-3">
-                      {article.abstract}
+                      {article.description}
                     </p>
                     <p className="text-xs text-gray-500 mb-4">
                       <strong>Author:</strong> {article.author} |{" "}
                       <strong>Published:</strong>{" "}
-                      {new Date(article.publishedDate).toLocaleDateString()}
+                      {/* {new Date(article.publishedDate).toLocaleDateString()} */}
                     </p>
                   </CardContent>
                 </Card>
