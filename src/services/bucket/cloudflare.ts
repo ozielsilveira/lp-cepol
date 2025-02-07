@@ -1,14 +1,15 @@
 import { GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
-import crypto from "crypto";
+import { Buffer } from "buffer";
+import CryptoJS from "crypto-js";
 
 // Obtém variáveis de ambiente e verifica se todas estão definidas
 const getEnvVariables = () => {
     const envVars = {
-        region: process.env.CLOUDFLARE_R2_REGION,
-        endpoint: process.env.CLOUDFLARE_R2_ENDPOINT,
-        accessKeyId: process.env.CLOUDFLARE_R2_ACCESS_KEY_ID,
-        secretAccessKey: process.env.CLOUDFLARE_R2_SECRET_ACCESS_KEY,
-        bucketName: process.env.CLOUDFLARE_R2_BUCKET_NAME,
+        region: import.meta.env.VITE_CLOUDFLARE_R2_REGION || '',
+        endpoint: import.meta.env.VITE_CLOUDFLARE_R2_ENDPOINT || '',
+        accessKeyId: import.meta.env.VITE_CLOUDFLARE_R2_ACCESS_KEY_ID || '',
+        secretAccessKey: import.meta.env.VITE_CLOUDFLARE_R2_SECRET_ACCESS_KEY || '',
+        bucketName: import.meta.env.VITE_CLOUDFLARE_R2_BUCKET_NAME || '',
     };
 
     const missingEnvVars = Object.entries(envVars)
@@ -34,15 +35,20 @@ const getS3Client = () => {
         s3Client = new S3Client({
             region,
             endpoint,
-            credentials: { accessKeyId, secretAccessKey },
+            credentials: {
+                accessKeyId,
+                secretAccessKey
+            },
         });
     }
+
     return s3Client;
 };
 
 // Função auxiliar para calcular o hash SHA-256 de um buffer usando crypto nativo
 const generateFileHash = async (buffer: Buffer): Promise<string> => {
-    return crypto.createHash("sha256").update(buffer).digest("hex");
+    const wordArray = CryptoJS.lib.WordArray.create(buffer);
+    return CryptoJS.SHA256(wordArray).toString(CryptoJS.enc.Hex);
 };
 
 // Upload de arquivo para R2
@@ -55,16 +61,23 @@ export const UploadFileToR2 = async (file: File, key: string): Promise<string> =
         const hash = await generateFileHash(buffer);
         const uniqueKey = `${key}-${hash}`;
 
+        const { bucketName } = getEnvVariables();
+
         const params = {
-            Bucket: getEnvVariables().bucketName,
+            Bucket: bucketName,
             Key: uniqueKey,
             Body: buffer,
             ContentType: file.type,
         };
 
-        await getS3Client().send(new PutObjectCommand(params));
+        const s3 = getS3Client();
+        await s3.send(new PutObjectCommand(params));
 
-        return `${getEnvVariables().endpoint}/${uniqueKey}`;
+        // Construir a URL no formato correto
+        const endpointParts = import.meta.env.VITE_CLOUDFLARE_R2_ENDPOINT.split('.');
+        const correctEndpoint = `${endpointParts[1]}.${endpointParts[2]}.${endpointParts[3]}`;
+
+        return `https://${correctEndpoint}/${bucketName}/${uniqueKey}`;
     } catch (error) {
         console.error("Erro no upload para R2:", error);
         throw new Error("Falha ao fazer upload do arquivo.");

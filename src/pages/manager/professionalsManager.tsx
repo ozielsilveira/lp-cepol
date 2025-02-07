@@ -28,6 +28,8 @@ import {
     updateProfessional,
 } from '../../redux/slices/professionalSlice';
 import { AppDispatch, IRootState } from '../../redux/store';
+import { GetFileFromR2, UploadFileToR2 } from '../../services/bucket/cloudflare';
+
 
 const ProfessionalManager: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -35,6 +37,7 @@ const ProfessionalManager: React.FC = () => {
     const { register, handleSubmit, reset, setValue } = useForm<Professional>();
     const [open, setOpen] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
     useEffect(() => {
         if (list.length === 0) {
@@ -51,20 +54,30 @@ const ProfessionalManager: React.FC = () => {
     const handleClose = () => {
         setOpen(false);
         reset();
+        setSelectedFile(null);
     };
 
-    const onSubmit: SubmitHandler<Professional> = (data) => {
-        if (isEditing) {
-            if (data.id) {
-                dispatch(updateProfessional(data as Required<Professional>));
+    const onSubmit: SubmitHandler<Professional> = async (data) => {
+        try {
+            if (selectedFile) {
+                const imageUrl = await UploadFileToR2(selectedFile, data.name);
+                data.imageUrl = imageUrl;
             }
-        } else {
-            dispatch(createProfessional(data));
+
+            if (isEditing) {
+                if (data.id) {
+                    dispatch(updateProfessional(data as Required<Professional>));
+                }
+            } else {
+                dispatch(createProfessional(data));
+            }
+            handleClose();
+        } catch (error) {
+            console.error("Erro ao fazer upload da imagem:", error);
         }
-        handleClose();
     };
 
-    const handleEdit = (professional: Professional) => {
+    const handleEdit = async (professional: Professional) => {
         setIsEditing(true);
         setOpen(true);
         setValue('id', professional.id);
@@ -74,6 +87,13 @@ const ProfessionalManager: React.FC = () => {
         setValue('hierarchy', professional.hierarchy);
         setValue('imageUrl', professional.imageUrl);
         setValue('createdAt', professional.createdAt);
+
+        try {
+            const file = await GetFileFromR2(professional.imageUrl);
+            setSelectedFile(file);
+        } catch (error) {
+            console.error("Erro ao buscar imagem do R2:", error);
+        }
     };
 
     const handleDelete = (id: string) => {
@@ -180,6 +200,7 @@ const ProfessionalManager: React.FC = () => {
                             fullWidth
                             margin="normal"
                             required
+                            disabled
                         />
                         <TextField
                             {...register('hierarchy', { valueAsNumber: true })}
@@ -188,21 +209,16 @@ const ProfessionalManager: React.FC = () => {
                             margin="normal"
                             required
                             type="number"
-                            
                         />
-                        {/* <TextField
-                            {...register('createdAt')}
-                            label="Created At"
-                            fullWidth
-                            margin="normal"
-                            required
-                            type="datetime-local"
-                            slotProps={{
-                                inputLabel: {
-                                    shrink: true,
-                                },
+                        <input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => {
+                                if (e.target.files && e.target.files[0]) {
+                                    setSelectedFile(e.target.files[0]);
+                                }
                             }}
-                        /> */}
+                        />
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={handleClose}>Cancel</Button>
