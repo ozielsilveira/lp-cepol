@@ -1,21 +1,35 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import apiClient from '../../services/api/axiosConfig';
 
-interface researchState {
-  data: any[];
-  detailedResearch: any | null;
-  loading: boolean;
+export interface Research {
+  id: string;
+  title: string;
+  description: string;
+  bodyText: string;
+  secondText: string | null;
+  images: [{
+    url: string,
+    title: string,
+    description: string
+  }];
+  professional:{
+    id: number,
+    name: string
+  }
+}
+interface ResearchState {
+  list: Research[];
+  status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
 }
 
-const initialState: researchState = {
-  data: [],
-  detailedResearch: null,
-  loading: false,
+const initialState: ResearchState = {
+  list: [],
+  status: "idle",
   error: null,
 };
 
-// AsyncThunk para buscar detalhes de uma pesquisa
+
 export const fetchResearchDetail = createAsyncThunk(
   'research/fetchDetail',
   async (id: string) => {
@@ -25,14 +39,33 @@ export const fetchResearchDetail = createAsyncThunk(
 );
 
 export const fetchResearch = createAsyncThunk('research/fetch', async () => {
-  const response = await apiClient.get('/research');
+  const response = await apiClient.get('public/research');
+  return response.data.result;
+});
+
+export const createResearch = createAsyncThunk('research/create', async (newResearch: any) => {
+  const response = await apiClient.post('/research/create', newResearch);
   return response.data;
 });
 
-export const createResearch = createAsyncThunk('research/create', async (newArticle: any) => {
-  const response = await apiClient.post('/research/create', newArticle);
-  return response.data;
-});
+export const updateResearch = createAsyncThunk<Research, Research>(
+  "research/update",
+  async (data) => {
+    const response = await apiClient.put<Research>(
+      `/research/${data.id}`,
+      data
+    );
+    return response.data;
+  }
+);
+
+export const deleteResearch = createAsyncThunk<string, string>(
+  "research/delete",
+  async (id) => {
+    await apiClient.delete(`/research/${id}`);
+    return id;
+  }
+);
 
 const researchSlice = createSlice({
   name: 'research',
@@ -41,44 +74,88 @@ const researchSlice = createSlice({
     clearError(state) {
       state.error = null;
     },
-    clearDetailedResearch(state) {
-      state.detailedResearch = null;
-    },
   },
   extraReducers: (builder) => {
-    builder
-     // Fetch Research List
-     .addCase(fetchResearch.pending, (state) => {
-      state.loading = true;
-    })
-    .addCase(fetchResearch.fulfilled, (state, action: PayloadAction<any[]>) => {
-      state.loading = false;
-      state.data = action.payload;
-    })
-    .addCase(fetchResearch.rejected, (state, action) => {
-      state.loading = false;
-      state.error = action.error.message || 'Erro ao buscar artigos';
-    })
+     builder
+       .addCase(
+        fetchResearch.fulfilled,
+         (state, action: PayloadAction<Research[]>) => {
+           state.list = action.payload;
+           state.status = "succeeded";
+         }
+       )
+       .addCase(fetchResearch.rejected, (state, action) => {
+         state.status = "failed";
+         state.error =
+           typeof action.payload === "string"
+             ? action.payload
+             : action.error.message || null;
+       })
+       .addCase(
+        fetchResearchDetail.fulfilled,
+         (state, action: PayloadAction<Research[]>) => {
+           state.list = action.payload;
+           state.status = "succeeded";
+         }
+       )
+       .addCase(fetchResearchDetail.rejected, (state, action) => {
+         state.status = "failed";
+         state.error =
+           typeof action.payload === "string"
+             ? action.payload
+             : action.error.message || null;
+       })
+       .addCase(
+         createResearch.fulfilled,
+         (state, action: PayloadAction<Research>) => {
+           state.list.push(action.payload);
+           state.status = "succeeded";
+         }
+       )
+       .addCase(createResearch.pending, (state) => {
+         state.status = "loading";
+       })
+       .addCase(createResearch.rejected, (state, action) => {
+         state.status = "failed";
+         state.error = action.error.message || null;
+       })
+       .addCase(
+         updateResearch.fulfilled,
+         (state, action: PayloadAction<Research>) => {
+           const index = state.list.findIndex(
+             (research) => research.id === action.payload.id
+           );
+           if (index !== -1) {
+             state.list[index] = action.payload;
+           }
+           state.status = "succeeded";
+         }
+       )
+       .addCase(updateResearch.pending, (state) => {
+         state.status = "loading";
+       })
+       .addCase(updateResearch.rejected, (state, action) => {
+         state.status = "failed";
+         state.error = action.error.message || null;
+       })
+       .addCase(
+          deleteResearch.fulfilled,
+         (state, action: PayloadAction<string>) => {
+           state.list = state.list.filter(
+             (professional) => professional.id !== action.payload
+           );
+           state.status = "succeeded";
+         }
+       )
+       .addCase(deleteResearch.pending, (state) => {
+         state.status = "loading";
+       })
+       .addCase(deleteResearch.rejected, (state, action) => {
+         state.status = "failed";
+         state.error = action.error.message || null;
+       });
+   },
+ });
 
-    // Create Research
-    .addCase(createResearch.fulfilled, (state, action: PayloadAction<any>) => {
-      state.data.push(action.payload);
-    })
-
-    // Fetch Research Detail
-    .addCase(fetchResearchDetail.pending, (state) => {
-      state.loading = true;
-    })
-    .addCase(fetchResearchDetail.fulfilled, (state, action: PayloadAction<any>) => {
-      state.loading = false;
-      state.detailedResearch = action.payload;
-    })
-    .addCase(fetchResearchDetail.rejected, (state, action) => {
-      state.loading = false;
-      state.error = action.error.message || 'Erro ao buscar detalhes da pesquisa';
-    });
-  },
-});
-
-export const { clearError, clearDetailedResearch } = researchSlice.actions;
+export const { clearError } = researchSlice.actions;
 export default researchSlice.reducer;

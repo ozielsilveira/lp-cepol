@@ -79,7 +79,7 @@
 //   );
 // };
 
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Box,
   Card,
@@ -90,27 +90,38 @@ import {
   Typography,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../redux/store";
+import { fetchResearch } from "../../redux/slices/researchSlice";
 
 export const Research: React.FC = () => {
-  const researchs = [
-    {
-      id: 1,
-      title: "Development of Next-Generation Vaccines",
-      description: "We are working on a revolutionary approach...",
-    },
-    {
-      id: 2,
-      title: "Restoration of Degraded Ecosystems",
-      description: "Our team is developing innovative techniques...",
-    },
-    {
-      id: 3,
-      title: "Quantum Materials for Computing",
-      description: "We investigate new materials with quantum properties...",
-    },
-  ];
+  // const researchs = [
+  //   {
+  //     id: 1,
+  //     title: "Development of Next-Generation Vaccines",
+  //     description: "We are working on a revolutionary approach...",
+  //   },
+  //   {
+  //     id: 2,
+  //     title: "Restoration of Degraded Ecosystems",
+  //     description: "Our team is developing innovative techniques...",
+  //   },
+  //   {
+  //     id: 3,
+  //     title: "Quantum Materials for Computing",
+  //     description: "We investigate new materials with quantum properties...",
+  //   },
+  // ];
 
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const researchList = useAppSelector((state) => state.research.list);
+  console.log(researchList);
+
+  useEffect(() => {
+    if (researchList.length === 0) {
+      dispatch(fetchResearch());
+    }
+  }, [dispatch, researchList.length]);
 
   return (
     <Container>
@@ -132,7 +143,7 @@ export const Research: React.FC = () => {
           </Typography>
         </Box>
         <Grid container spacing={3} justifyContent="center">
-          {researchs.map((research) => (
+          {researchList.map((research) => (
             <Grid item xs={12} sm={6} lg={4} key={research.id}>
               <Card onClick={() => navigate(`/research/${research.id}`)}>
                 <CardHeader

@@ -1,8 +1,7 @@
 import { GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
-import { Readable } from 'stream';
-import crypto from 'crypto';
+import crypto from "crypto";
 
-// GET ENV VARIABLES
+// Obtém variáveis de ambiente e verifica se todas estão definidas
 const getEnvVariables = () => {
     const envVars = {
         region: process.env.CLOUDFLARE_R2_REGION,
@@ -12,101 +11,92 @@ const getEnvVariables = () => {
         bucketName: process.env.CLOUDFLARE_R2_BUCKET_NAME,
     };
 
-    const missingEnvVars = Object.entries(envVars).filter(([value]) => !value).map(([key]) => key);
+    const missingEnvVars = Object.entries(envVars)
+        .filter(([_, value]) => !value)
+        .map(([key]) => key);
 
     if (missingEnvVars.length > 0) {
-        console.error("Missing environment variables:", missingEnvVars);
-        throw new Error(`Missing required environment variables: ${missingEnvVars.join(', ')}`);
+        throw new Error(`Missing required environment variables: ${missingEnvVars.join(", ")}`);
     }
 
-    return envVars;
+    return envVars as Required<typeof envVars>;
 };
 
-// SEND FILE TO R2
-export const UploadFileToR2 = async (file: File, key: string) => {
-    const { accessKeyId, bucketName, endpoint, region, secretAccessKey } = getEnvVariables();
+// Inicializa o cliente S3 apenas quando necessário
+let s3Client: S3Client | null = null;
 
-    if (!region || !endpoint || !accessKeyId || !secretAccessKey || !bucketName) {
-        console.error("Missing environment variables:", {
+const getS3Client = () => {
+    if (!s3Client) {
+        const { region, endpoint, accessKeyId, secretAccessKey } = getEnvVariables();
+        if (!accessKeyId || !secretAccessKey) {
+            throw new Error("Missing required AWS credentials");
+        }
+        s3Client = new S3Client({
             region,
             endpoint,
-            accessKeyId,
-            secretAccessKey,
-            bucketName,
+            credentials: { accessKeyId, secretAccessKey },
         });
-        throw new Error("Missing required environment variables.");
     }
+    return s3Client;
+};
 
-    const s3Client = new S3Client({
-        region,
-        endpoint,
-        credentials: {
-            accessKeyId,
-            secretAccessKey,
-        },
-    });
+// Função auxiliar para calcular o hash SHA-256 de um buffer usando crypto nativo
+const generateFileHash = async (buffer: Buffer): Promise<string> => {
+    return crypto.createHash("sha256").update(buffer).digest("hex");
+};
 
-    const arrayBuffer = await file.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
-
-    // Create a unique hash for the file
-    const hash = crypto.createHash('sha256').update(buffer).digest('hex');
-    const uniqueKey = `${key}-${hash}`;
-
-    const params = {
-        Bucket: bucketName,
-        Key: uniqueKey,
-        Body: buffer,
-        ContentType: file.type,
-    };
-
+// Upload de arquivo para R2
+export const UploadFileToR2 = async (file: File, key: string): Promise<string> => {
     try {
-        const s3 = await s3Client.send(new PutObjectCommand(params));
-        console.log(`Upload para R2 bem-sucedido: ${s3}`);
-        const fileUrl = `${endpoint}/${uniqueKey}`;
-        return fileUrl;
+        const arrayBuffer = await file.arrayBuffer();
+        const buffer = Buffer.from(arrayBuffer);
+
+        // Gera um hash único baseado no conteúdo do arquivo
+        const hash = await generateFileHash(buffer);
+        const uniqueKey = `${key}-${hash}`;
+
+        const params = {
+            Bucket: getEnvVariables().bucketName,
+            Key: uniqueKey,
+            Body: buffer,
+            ContentType: file.type,
+        };
+
+        await getS3Client().send(new PutObjectCommand(params));
+
+        return `${getEnvVariables().endpoint}/${uniqueKey}`;
     } catch (error) {
         console.error("Erro no upload para R2:", error);
-        throw new Error("Upload falhou.");
+        throw new Error("Falha ao fazer upload do arquivo.");
     }
 };
 
-// GET FILE FROM R2
+// Recupera um arquivo do R2
 export const GetFileFromR2 = async (key: string): Promise<File> => {
-    const { accessKeyId, bucketName, endpoint, region, secretAccessKey } = getEnvVariables();
-
-    const s3Client = new S3Client({
-        region: region!,
-        endpoint: endpoint!,
-        credentials: {
-            accessKeyId: accessKeyId!,
-            secretAccessKey: secretAccessKey!,
-        },
-    });
-
-    const params = {
-        Bucket: bucketName!,
-        Key: key,
-    };
-
     try {
-        const { Body } = await s3Client.send(new GetObjectCommand(params));
+        const params = { Bucket: getEnvVariables().bucketName, Key: key };
+        const { Body } = await getS3Client().send(new GetObjectCommand(params));
 
-        if (!(Body instanceof Readable)) {
-            throw new Error("Received body is not a readable stream.");
+        if (!Body || !(Body instanceof ReadableStream)) {
+            throw new Error("Resposta inválida do servidor.");
         }
 
-        const chunks: Buffer[] = [];
-        for await (const chunk of Body) {
-            chunks.push(chunk);
+        // Convertendo ReadableStream para Buffer
+        const reader = Body.getReader();
+        const chunks: Uint8Array[] = [];
+
+        let done = false;
+        while (!done) {
+            const { value, done: chunkDone } = await reader.read();
+            if (value) chunks.push(value);
+            done = chunkDone;
         }
 
-        const buffer = Buffer.concat(chunks);
-        const blob = new Blob([buffer]);
-        return new File([blob], key);
+        const buffer = Buffer.concat(chunks.map(chunk => Buffer.from(chunk)));
+
+        return new File([buffer], key);
     } catch (error) {
-        console.error("Error fetching file from R2:", error);
-        throw new Error(`File fetch failed: ${error instanceof Error ? error.message : "Unknown error"}`);
+        console.error("Erro ao buscar arquivo do R2:", error);
+        throw new Error("Falha ao recuperar arquivo.");
     }
 };
-

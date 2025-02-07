@@ -1,31 +1,40 @@
-import React, { useState } from "react";
+import ArticleIcon from "@mui/icons-material/Article";
+import BiotechIcon from "@mui/icons-material/Biotech";
+import HomeIcon from "@mui/icons-material/Home";
+import HomeRepairServiceIcon from "@mui/icons-material/HomeRepairService";
+import MenuIcon from "@mui/icons-material/Menu";
+import PeopleIcon from "@mui/icons-material/People";
 import {
+  Box,
   Drawer,
+  IconButton,
   List,
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  IconButton,
-  Toolbar,
-  Box,
-  useMediaQuery,
   Theme,
+  Toolbar,
+  useMediaQuery,
 } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
-import HomeIcon from "@mui/icons-material/Home";
-import ArticleIcon from "@mui/icons-material/Article";
-import PeopleIcon from "@mui/icons-material/People";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import HomeRepairServiceIcon from "@mui/icons-material/HomeRepairService";
+import mainImg from "../../public/images/cepolSVG.svg";
 interface Page {
   name: string;
   path: string;
   icon: JSX.Element;
 }
-import mainImg from "../../public/images/cepolSVG.svg";
 const pages: Page[] = [
-  { name: "Home", path: "/", icon: <HomeIcon /> },
-  { name: "Artichles", path: "/manager/articles", icon: <ArticleIcon /> },
+  {
+    name: "Home",
+    path: "/",
+    icon: <HomeIcon />,
+  },
+  {
+    name: "Artichles",
+    path: "/manager/articles",
+    icon: <ArticleIcon />,
+  },
   {
     name: "Professionals",
     path: "/manager/professionals",
@@ -36,6 +45,11 @@ const pages: Page[] = [
     path: "/manager/equipments",
     icon: <HomeRepairServiceIcon />,
   },
+  {
+    name: "Researchs",
+    path: "/manager/researchs",
+    icon: <BiotechIcon />,
+  },
 ];
 
 export const SideBar: React.FC = () => {
@@ -45,7 +59,15 @@ export const SideBar: React.FC = () => {
 
   const drawerContent = (
     <Box>
-      <Box component={"img"} src={mainImg} sx={{ width: "140px" }}></Box>
+      <Box
+        component={"img"}
+        src={mainImg}
+        sx={{ width: "140px", cursor: "pointer" }}
+        onClick={() => {
+          navigate("/manager");
+          setOpen(false);
+        }}
+      ></Box>
       <List>
         {pages.map((page, index) => (
           <ListItemButton

@@ -1,11 +1,67 @@
-import { Box } from '@mui/material';
+// import React from 'react';
+// import ProfessionalManager from './professionalsManager';
+// import { Box } from '@mui/material';
+
+// export const Manager: React.FC = () => {
+//     return (
+//        <Box>teste</Box>
+//     );
+// }
+
 import React from 'react';
+import {
+  Box,
+  Card,
+  CardActionArea,
+  CardContent,
+  Typography,
+  Grid,
+} from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 export const Manager: React.FC = () => {
-    return (
-        <Box>teste</Box>
-    );
-}
+  const navigate = useNavigate();
+
+  // Definição dos cards com título e rota correspondente
+  const cards = [
+    { id: 1, title: 'Articles', route: '/manager/articles' },
+    { id: 2, title: 'Researchs', route: '/manager/researchs' },
+    { id: 3, title: 'Equipments', route: '/manager/equipments' },
+    { id: 4, title: 'Professionals', route: '/manager/professionals' },
+    { id: 5, title: 'About Us', route: '/manager/aboutUs' },
+  ];
+
+  // Função para navegar para a rota desejada
+  const handleNavigation = (route: string) => {
+    navigate(route);
+  };
+
+  return (
+    <Box sx={{ p: 4 }}>
+      <Typography variant="h4" gutterBottom>
+        Manager Dashboard
+      </Typography>
+      <Grid container spacing={3}>
+        {cards.map((card) => (
+          <Grid item xs={12} sm={6} md={4} key={card.id}>
+            <Card>
+              <CardActionArea onClick={() => handleNavigation(card.route)}>
+                <CardContent>
+                  <Typography variant="h5" component="div">
+                    {card.title}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Clique para acessar {card.title}.
+                  </Typography>
+                </CardContent>
+              </CardActionArea>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
+    </Box>
+  );
+};
 
 // import React, { useState } from "react";
 // import { Drawer, List, ListItem, ListItemText, Box, Button, Typography, Modal } from "@mui/material";
