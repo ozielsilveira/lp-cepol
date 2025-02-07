@@ -1,67 +1,66 @@
-import { Box, Container, Grid, Typography } from "@mui/material";
-import { Card, CardContent } from "@mui/material";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
-import { useNavigate } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../../redux/store";
-import { fetchArticles } from "../../redux/slices/articlesSlice";
+import { Box, Card, CardContent, Container, Grid, Typography } from "@mui/material";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { fetchArticles } from "../../redux/slices/articlesSlice";
+import { useAppDispatch, useAppSelector } from "../../redux/store";
 // import { BookOpen } from "@mui/icons-material";
 
-interface Article {
-  id: number;
-  title: string;
-  abstract: string;
-  author: string;
-  publishedDate: string;
-}
+// interface Article {
+//   id: number;
+//   title: string;
+//   abstract: string;
+//   author: string;
+//   publishedDate: string;
+// }
 
 export const Articles: React.FC = () => {
-  const articles: Article[] = [
-    {
-      id: 1,
-      title: "Advances in Stem Cell Research",
-      abstract: "lorem ipsum dolor sit amet, consectetur adipiscing elit...",
-      author: "Dr. Jane Doe",
-      publishedDate: "2021-10-15",
-    },
-    {
-      id: 2,
-      title: "Impact of Climate Change on Biodiversity",
-      abstract: "Our research reveals alarming patterns...",
-      author: "Dr. Jane Doe",
-      publishedDate: "2021-10-15",
-    },
-    {
-      id: 3,
-      title: "Development of New Sustainable Materials",
-      abstract: "We present a new class of biodegradable polymers...",
-      author: "Dr. Jane Doe",
-      publishedDate: "2021-10-15",
-    },
-    {
-      id: 3,
-      title: "Development of New Sustainable Materials",
-      abstract: "We present a new class of biodegradable polymers...",
-      author: "Dr. Jane Doe",
-      publishedDate: "2021-10-15",
-    },
-    {
-      id: 3,
-      title: "Development of New Sustainable Materials",
-      abstract: "We present a new class of biodegradable polymers...",
-      author: "Dr. Jane Doe",
-      publishedDate: "2021-10-15",
-    },
-  ];
-    const navigate = useNavigate();
-    const dispatch = useAppDispatch();
-    const articlesList = useAppSelector((state) => state.articles.list);
+  // const articles: Article[] = [
+  //   {
+  //     id: 1,
+  //     title: "Advances in Stem Cell Research",
+  //     abstract: "lorem ipsum dolor sit amet, consectetur adipiscing elit...",
+  //     author: "Dr. Jane Doe",
+  //     publishedDate: "2021-10-15",
+  //   },
+  //   {
+  //     id: 2,
+  //     title: "Impact of Climate Change on Biodiversity",
+  //     abstract: "Our research reveals alarming patterns...",
+  //     author: "Dr. Jane Doe",
+  //     publishedDate: "2021-10-15",
+  //   },
+  //   {
+  //     id: 3,
+  //     title: "Development of New Sustainable Materials",
+  //     abstract: "We present a new class of biodegradable polymers...",
+  //     author: "Dr. Jane Doe",
+  //     publishedDate: "2021-10-15",
+  //   },
+  //   {
+  //     id: 3,
+  //     title: "Development of New Sustainable Materials",
+  //     abstract: "We present a new class of biodegradable polymers...",
+  //     author: "Dr. Jane Doe",
+  //     publishedDate: "2021-10-15",
+  //   },
+  //   {
+  //     id: 3,
+  //     title: "Development of New Sustainable Materials",
+  //     abstract: "We present a new class of biodegradable polymers...",
+  //     author: "Dr. Jane Doe",
+  //     publishedDate: "2021-10-15",
+  //   },
+  // ];
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const articlesList = useAppSelector((state) => state.articles.list);
 
-      useEffect(() => {
-        if (articlesList.length === 0) {
-          dispatch(fetchArticles());
-        }
-      }, [dispatch, articlesList.length]);
+  useEffect(() => {
+    if (articlesList.length === 0) {
+      dispatch(fetchArticles());
+    }
+  }, [dispatch, articlesList.length]);
   return (
     <Container>
       <section className="w-full py-12 md:py-24 lg:py-32 bg-gray-50">

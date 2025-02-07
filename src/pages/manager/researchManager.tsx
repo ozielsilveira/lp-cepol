@@ -20,15 +20,8 @@ import {
 import React, { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-    
-    deleteProfessional,
-    
-    Professional,
-   
-} from '../../redux/slices/professionalSlice';
-import { AppDispatch, IRootState } from '../../redux/store';
 import { createResearch, deleteResearch, fetchResearch, Research, updateResearch } from '../../redux/slices/researchSlice';
+import { AppDispatch, IRootState } from '../../redux/store';
 
 export const ResearchManager: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -39,9 +32,9 @@ export const ResearchManager: React.FC = () => {
     const [isEditing, setIsEditing] = useState(false);
 
     useEffect(() => {
-        
-            dispatch(fetchResearch());
-        
+
+        dispatch(fetchResearch());
+
     }, [dispatch]);
 
     const handleOpen = () => {
@@ -106,9 +99,9 @@ export const ResearchManager: React.FC = () => {
                             <TableCell>description</TableCell>
                             <TableCell>bodyText</TableCell>
                             <TableCell>secondText</TableCell>
-                           
 
-                           
+
+
                             <TableCell align="right">Ações</TableCell>
                         </TableRow>
                     </TableHead>
@@ -119,7 +112,7 @@ export const ResearchManager: React.FC = () => {
                                 <TableCell>{research.description}</TableCell>
                                 <TableCell>{research.bodyText}</TableCell>
                                 <TableCell>{research.secondText}</TableCell>
-                               
+
 
                                 {/* <TableCell>
                                     {new Date(research.createdAt).toLocaleString('pt-BR', {

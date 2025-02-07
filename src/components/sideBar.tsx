@@ -1,30 +1,29 @@
-import React, { useState } from "react";
+import ArticleIcon from "@mui/icons-material/Article";
+import BiotechIcon from "@mui/icons-material/Biotech";
+import HomeIcon from "@mui/icons-material/Home";
+import HomeRepairServiceIcon from "@mui/icons-material/HomeRepairService";
+import MenuIcon from "@mui/icons-material/Menu";
+import PeopleIcon from "@mui/icons-material/People";
 import {
+  Box,
   Drawer,
+  IconButton,
   List,
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  IconButton,
-  Toolbar,
-  Box,
-  useMediaQuery,
   Theme,
+  Toolbar,
+  useMediaQuery,
 } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
-import HomeIcon from "@mui/icons-material/Home";
-import ArticleIcon from "@mui/icons-material/Article";
-import PeopleIcon from "@mui/icons-material/People";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import HomeRepairServiceIcon from "@mui/icons-material/HomeRepairService";
-import AssignmentIcon from "@mui/icons-material/Assignment";
-import BiotechIcon from "@mui/icons-material/Biotech";
+import mainImg from "../../public/images/cepolSVG.svg";
 interface Page {
   name: string;
   path: string;
   icon: JSX.Element;
 }
-import mainImg from "../../public/images/cepolSVG.svg";
 const pages: Page[] = [
   {
     name: "Home",
