@@ -53,15 +53,20 @@ const ProfessionalManager: React.FC = () => {
         reset();
     };
 
-    const onSubmit: SubmitHandler<Professional> = (data) => {
-        if (isEditing) {
-            if (data.id) {
-                dispatch(updateProfessional(data as Required<Professional>));
+    const onSubmit: SubmitHandler<Professional> = async (data) => {
+        try {
+            if (isEditing) {
+                if (data.id) {
+                    await dispatch(updateProfessional(data as Required<Professional>)).unwrap();
+                }
+            } else {
+                await dispatch(createProfessional(data)).unwrap();
             }
-        } else {
-            dispatch(createProfessional(data));
+            handleClose();
+            dispatch(fetchProfessionals()); // Atualiza a lista após a ação
+        } catch (error) {
+            console.error("Erro ao salvar profissional:", error);
         }
-        handleClose();
     };
 
     const handleEdit = (professional: Professional) => {

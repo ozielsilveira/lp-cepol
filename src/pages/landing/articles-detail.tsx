@@ -92,6 +92,17 @@ export const ArticleDetailed: React.FC = () => {
           >
             <Typography variant="body1">{detailedArticle.bodyText}</Typography>
           </Box>
+          <Box
+            sx={{
+              // border: "2px solid #e0e0e0",
+              borderRadius: 2,
+              padding: 2,
+              marginBottom: 2,
+              // backgroundColor: "#f9f9f9",
+            }}
+          >
+            <Typography variant="body1">{detailedArticle.secondText}</Typography>
+          </Box>
         </Grid>
 
         {/* Coluna de imagens */}

@@ -8,7 +8,10 @@ import {
   Typography,
 } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
-import { fetchProfessionals, Professional } from "../../redux/slices/professionalSlice";
+import {
+  fetchProfessionals,
+  Professional,
+} from "../../redux/slices/professionalSlice";
 
 // interface Professional {
 //   id: number;
@@ -156,6 +159,13 @@ export const Professionals: React.FC = () => {
                   <CardContent>
                     <Typography variant="h6" component="div">
                       {professional.name}
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                      sx={{ mt: 1 }}
+                    >
+                     { professional.role}
                     </Typography>
                     {/* <Typography
                       variant="body2"

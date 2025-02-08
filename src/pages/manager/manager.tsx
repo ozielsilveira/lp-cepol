@@ -28,7 +28,7 @@ export const Manager: React.FC = () => {
     { id: 2, title: 'Researchs', route: '/manager/researchs' },
     { id: 3, title: 'Equipments', route: '/manager/equipments' },
     { id: 4, title: 'Professionals', route: '/manager/professionals' },
-    { id: 5, title: 'About Us', route: '/manager/aboutUs' },
+    // { id: 5, title: 'About Us', route: '/manager/aboutUs' },
   ];
 
   // Função para navegar para a rota desejada
