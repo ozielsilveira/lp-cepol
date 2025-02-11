@@ -32,10 +32,10 @@ export const ArticlesManager: React.FC = () => {
     const [isEditing, setIsEditing] = useState(false);
 
     useEffect(() => {
-        if (list.length === 0) {
+        if (!list || list.length === 0) {
             dispatch(fetchArticles());
         }
-    }, [dispatch, list.length]);
+    }, [dispatch, list]);
 
     const handleOpen = () => {
         setOpen(true);
@@ -48,16 +48,24 @@ export const ArticlesManager: React.FC = () => {
         reset();
     };
 
-    const onSubmit: SubmitHandler<Article> = (data) => {
-        if (isEditing) {
-            if (data.id) {
-                dispatch(updateArticle(data as Required<Article>));
-            }
-        } else {
-            dispatch(createArticle(data));
+  const onSubmit: SubmitHandler<Article> = async (data) => {
+    try {
+      if (isEditing) {
+        if (data.id) {
+          dispatch(updateArticle(data as Required<Article>));
+          
         }
-        handleClose();
-    };
+      } else {
+        await dispatch(createArticle(data)).unwrap();
+        console.log("data", data);
+      }
+      handleClose();
+      dispatch(fetchArticles()); // Atualiza a lista após a ação
+    } catch (error) {
+      console.error("Erro ao salvar Article:", error);
+    }
+   
+  };
 
     const handleEdit = (article: Article) => {
         setIsEditing(true);
@@ -69,7 +77,11 @@ export const ArticlesManager: React.FC = () => {
         setValue('publishedDate', article.publishedDate);
         setValue('bodyText', article.bodyText);
         setValue('secondText', article.secondText);
-        setValue('images', article.images);
+        setValue('images.0.title', article.images?.[0]?.title || '');
+        setValue('images.0.description', article.images?.[0]?.description || '');
+        setValue('images.0.url', article.images?.[0]?.url || '');
+       
+
     };
 
     const handleDelete = (id: string) => {
@@ -98,10 +110,13 @@ export const ArticlesManager: React.FC = () => {
                         <TableRow>
                             <TableCell>Title</TableCell>
                             <TableCell>description</TableCell>
-                            <TableCell>author</TableCell>
-                            <TableCell>publishedDate</TableCell>
+                            {/* <TableCell>author</TableCell>
+                            <TableCell>publishedDate</TableCell> */}
                             <TableCell>bodyText</TableCell>
                             <TableCell>secondText</TableCell>
+                            <TableCell>Image Title</TableCell>
+                            <TableCell>Image Description</TableCell>
+                            <TableCell>Image url</TableCell>
 
                             <TableCell>Professional</TableCell>
                             <TableCell align="right">Ações</TableCell>
@@ -112,11 +127,16 @@ export const ArticlesManager: React.FC = () => {
                             <TableRow key={articles.id}>
                                 <TableCell>{articles.title}</TableCell>
                                 <TableCell>{articles.description}</TableCell>
-                                <TableCell>{articles.author}</TableCell>
-                                <TableCell>{articles.publishedDate}</TableCell>
+                                {/* <TableCell>{articles.author}</TableCell>
+                                <TableCell>{articles.publishedDate}</TableCell> */}
                                 <TableCell>{articles.bodyText}</TableCell>
                                 <TableCell>{articles.secondText}</TableCell>
-                                <TableCell>{articles.professional.name}</TableCell>
+                                <TableCell>{articles.images?.[0]?.title || 'No Image'}</TableCell>
+                                <TableCell>{articles.images?.[0]?.description || 'No Image'}</TableCell>
+                                <TableCell>{articles.images?.[0]?.url || 'No Image'}</TableCell>
+
+
+                                <TableCell>{articles.professional?.name}</TableCell>
 
 
                     
@@ -158,7 +178,7 @@ export const ArticlesManager: React.FC = () => {
                             margin="normal"
                             required
                         />
-                        <TextField
+                        {/* <TextField
                             {...register('author')}
                             label="Author"
                             fullWidth
@@ -171,14 +191,14 @@ export const ArticlesManager: React.FC = () => {
                             fullWidth
                             margin="normal"
                             required
-                        />
+                        /> */}
                         <TextField
                             {...register('bodyText')}
                             label="Body text"
                             fullWidth
                             margin="normal"
                             required
-                            type="number"
+                           
                             
                         />
                           <TextField
@@ -187,22 +207,34 @@ export const ArticlesManager: React.FC = () => {
                             fullWidth
                             margin="normal"
                             required
-                            type="number"
+                           
                             
                         />
                         <TextField
-                            {...register('images')}
-                            label="Images url"
+                            {...register('images.0.title')}
+                            label="Image Title"
                             fullWidth
                             margin="normal"
                             required
-                            type="datetime-local"
-                            slotProps={{
-                                inputLabel: {
-                                    shrink: true,
-                                },
-                            }}
+                           
                         />
+                           <TextField
+                            {...register('images.0.description')}
+                            label="Image Description"
+                            fullWidth
+                            margin="normal"
+                            required
+                           
+                        />
+                        <TextField
+                            {...register('images.0.url')}
+                            label="Image One url"
+                            fullWidth
+                            margin="normal"
+                            required
+                           
+                        />
+                      
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={handleClose}>Cancel</Button>
