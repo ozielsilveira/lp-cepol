@@ -276,12 +276,13 @@ import {
 } from "../../redux/slices/professionalSlice";
 import { AppDispatch, IRootState, useAppSelector } from "../../redux/store";
 import { ImageInput } from "../../components/imageInput";
+import { setImageUrls } from "../../redux/slices/fileUploadSlice";
 
 const ProfessionalManager: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { list } = useSelector((state: IRootState) => state.professional);
   const loading = useAppSelector((state) => state.professional.loading);
-  const {  imageOneUrl, loading: uploadLoading } = useAppSelector(
+  const { imageOneUrl, loading: uploadLoading } = useAppSelector(
     (state) => state.image
   );
 
@@ -309,11 +310,13 @@ const ProfessionalManager: React.FC = () => {
     setOpen(true);
     setIsEditing(false);
     reset();
+    dispatch(setImageUrls({ imageOneUrl: null, imageTwoUrl: null }));
   };
 
   const handleClose = () => {
     setOpen(false);
     reset();
+    dispatch(setImageUrls({ imageOneUrl: null, imageTwoUrl: null }));
   };
 
   const onSubmit: SubmitHandler<Professional> = async (data) => {
@@ -344,6 +347,12 @@ const ProfessionalManager: React.FC = () => {
     setValue("hierarchy", professional.hierarchy);
     setValue("imageUrl", professional.imageUrl);
     setValue("createdAt", professional.createdAt);
+
+    dispatch(
+      setImageUrls({
+        imageOneUrl: professional.imageUrl || null,
+      })
+    );
   };
 
   const handleDelete = (id: string) => {
@@ -401,7 +410,33 @@ const ProfessionalManager: React.FC = () => {
                     <TableCell>{professional.name}</TableCell>
                     <TableCell>{professional.role}</TableCell>
                     <TableCell>{professional.bio}</TableCell>
-                    <TableCell>{professional.imageUrl}</TableCell>
+                    <TableCell>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "center",
+                          flexDirection: "column",
+                          width: "120px",
+                        }}
+                      >
+                        <Box
+                          component={"img"}
+                          src={`${professional.imageUrl}`}
+                          sx={{ width: "130px" }}
+                        />
+                        <Typography
+                          variant="caption"
+                          sx={{
+                            textAlign: "center",
+                            textOverflow: "ellipsis",
+                            overflow: "hidden",
+                            whiteSpace: "nowrap",
+                          }}
+                        >
+                          {professional.imageUrl || "No Image"}
+                        </Typography>
+                      </Box>
+                    </TableCell>
                     <TableCell>{professional.hierarchy}</TableCell>
                     <TableCell>
                       {new Date(professional.createdAt).toLocaleString(
@@ -473,9 +508,12 @@ const ProfessionalManager: React.FC = () => {
                 readOnly: true,
               }}
             />
-            <ImageInput imageUrl={imageOneUrl }  imageType="imageOne"
-            // handleImage={handleImage} 
-            uploadLoading={uploadLoading}></ImageInput>
+            <ImageInput
+              imageUrl={imageOneUrl}
+              imageType="imageOne"
+              // handleImage={handleImage}
+              uploadLoading={uploadLoading}
+            ></ImageInput>
             {/* <Box display="flex" alignItems="center" justifyContent="center" gap={2} margin="normal">
               <Button
                 variant="outlined"

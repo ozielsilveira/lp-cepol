@@ -7,13 +7,7 @@ export interface Research {
   description: string;
   bodyText: string;
   secondText: string | null;
-  images: [
-    {
-      url: string;
-      title: string;
-      description: string;
-    }
-  ];
+  images?: { id: number; url: string; title: string; description: string }[];
   professional: {
     id: string;
     name: string;

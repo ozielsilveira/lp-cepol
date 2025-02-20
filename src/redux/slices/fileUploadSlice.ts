@@ -1,8 +1,10 @@
+
 // import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 // import apiClient from "../../services/api/axiosConfig";
 
 // interface FileUploadState {
-//   result: string | null; // URL retornada
+//   imageOneUrl: string | null; // URL para a primeira imagem
+//   imageTwoUrl: string | null; // URL para a segunda imagem
 //   success: boolean;
 //   status: "idle" | "loading" | "succeeded" | "failed";
 //   loading: boolean;
@@ -10,9 +12,13 @@
 // }
 
 // // Thunk para upload do arquivo
-// export const uploadFile = createAsyncThunk<{ success: boolean; result: string }, File>(
+// // Adiciona imageType no argumento, mas não altera a requisição
+// export const uploadFile = createAsyncThunk<
+//   { success: boolean; result: string },
+//   { file: File; imageType: "imageOne" | "imageTwo" }
+// >(
 //   "file/upload",
-//   async (file, { rejectWithValue }) => {
+//   async ({ file }, { rejectWithValue }) => {
 //     try {
 //       const formData = new FormData();
 //       formData.append("file", file);
@@ -42,7 +48,8 @@
 
 // // Estado inicial
 // const initialState: FileUploadState = {
-//   result: null,
+//   imageOneUrl: null,
+//   imageTwoUrl: null,
 //   success: false,
 //   status: "idle",
 //   loading: false,
@@ -55,7 +62,8 @@
 //   initialState,
 //   reducers: {
 //     resetState: (state) => {
-//       state.result = null;
+//       state.imageOneUrl = null;
+//       state.imageTwoUrl = null;
 //       state.success = false;
 //       state.status = "idle";
 //       state.loading = false;
@@ -73,14 +81,20 @@
 //         state.status = "succeeded";
 //         state.loading = false;
 //         state.success = action.payload.success;
-//         state.result = action.payload.result;
+//         // Usa o imageType do meta.arg para decidir onde armazenar o result
+//         const imageType = action.meta.arg.imageType;
+//         if (imageType === "imageOne") {
+//           state.imageOneUrl = action.payload.result;
+//         } else if (imageType === "imageTwo") {
+//           state.imageTwoUrl = action.payload.result;
+//         }
 //       })
 //       .addCase(uploadFile.rejected, (state, action) => {
 //         state.status = "failed";
 //         state.loading = false;
-//         state.error = 
-//           typeof action.payload === "string" 
-//             ? action.payload 
+//         state.error =
+//           typeof action.payload === "string"
+//             ? action.payload
 //             : action.error.message || "Upload failed";
 //       });
 //   },
@@ -92,16 +106,14 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import apiClient from "../../services/api/axiosConfig";
 
 interface FileUploadState {
-  imageOneUrl: string | null; // URL para a primeira imagem
-  imageTwoUrl: string | null; // URL para a segunda imagem
+  imageOneUrl: string | null;
+  imageTwoUrl: string | null;
   success: boolean;
   status: "idle" | "loading" | "succeeded" | "failed";
   loading: boolean;
   error: string | null;
 }
 
-// Thunk para upload do arquivo
-// Adiciona imageType no argumento, mas não altera a requisição
 export const uploadFile = createAsyncThunk<
   { success: boolean; result: string },
   { file: File; imageType: "imageOne" | "imageTwo" }
@@ -124,7 +136,7 @@ export const uploadFile = createAsyncThunk<
 
       return {
         success: response.data.success,
-        result: response.data.result, // URL retornada
+        result: response.data.result,
       };
     } catch (error) {
       if (error instanceof Error) {
@@ -135,7 +147,6 @@ export const uploadFile = createAsyncThunk<
   }
 );
 
-// Estado inicial
 const initialState: FileUploadState = {
   imageOneUrl: null,
   imageTwoUrl: null,
@@ -145,7 +156,6 @@ const initialState: FileUploadState = {
   error: null,
 };
 
-// Slice
 const fileUploadSlice = createSlice({
   name: "fileUpload",
   initialState,
@@ -157,6 +167,15 @@ const fileUploadSlice = createSlice({
       state.status = "idle";
       state.loading = false;
       state.error = null;
+    },
+    // Nova ação para definir as URLs manualmente
+    setImageUrls: (state, action: { payload: { imageOneUrl?: string | null; imageTwoUrl?: string | null } }) => {
+      if (action.payload.imageOneUrl !== undefined) {
+        state.imageOneUrl = action.payload.imageOneUrl;
+      }
+      if (action.payload.imageTwoUrl !== undefined) {
+        state.imageTwoUrl = action.payload.imageTwoUrl;
+      }
     },
   },
   extraReducers: (builder) => {
@@ -170,7 +189,6 @@ const fileUploadSlice = createSlice({
         state.status = "succeeded";
         state.loading = false;
         state.success = action.payload.success;
-        // Usa o imageType do meta.arg para decidir onde armazenar o result
         const imageType = action.meta.arg.imageType;
         if (imageType === "imageOne") {
           state.imageOneUrl = action.payload.result;
@@ -189,5 +207,5 @@ const fileUploadSlice = createSlice({
   },
 });
 
-export const { resetState } = fileUploadSlice.actions;
+export const { resetState, setImageUrls } = fileUploadSlice.actions;
 export default fileUploadSlice.reducer;

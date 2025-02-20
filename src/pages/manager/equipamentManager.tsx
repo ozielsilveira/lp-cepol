@@ -137,7 +137,14 @@ export const EquipmentslManager: React.FC = () => {
                     <TableCell>{equipment.name}</TableCell>
                     <TableCell>{equipment.description}</TableCell>
                     <TableCell>{equipment.type}</TableCell>
-                    <TableCell>{equipment.imageUrl}</TableCell>
+                    <TableCell>
+                      <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', width: '120px' }}>
+                          {equipment.imageUrl && <Box component={'img'} src={`${equipment.imageUrl}`} sx={{width:'130px'}}/>}
+                          <Typography variant="caption" sx={{textAlign: 'center', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap'}}>
+                            {equipment.imageUrl || "No Image"}
+                          </Typography>
+                      </Box>
+                    </TableCell>
 
                     <TableCell align="right">
                       <IconButton

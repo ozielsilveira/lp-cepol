@@ -87,8 +87,8 @@ export const Articles: React.FC = () => {
                         {article.description}
                       </p>
                       <p className="text-xs text-gray-500 mb-4">
-                        <strong>Author:</strong> {article.author} |{" "}
-                        <strong>Published:</strong>{" "}
+                        <strong>Author:</strong> {article.author} {" "}
+                        <strong>Published:</strong> {article.published} {" "}
                         {/* {new Date(article.publishedDate).toLocaleDateString()} */}
                       </p>
                     </CardContent>

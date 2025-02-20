@@ -9,17 +9,13 @@ import {
 import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
-import {
-  fetchArticles,
-} from "../../redux/slices/articlesSlice";
-
-
+import { fetchArticles } from "../../redux/slices/articlesSlice";
 
 export const ArticleDetailed: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const dispatch = useAppDispatch();
   const articlesList = useAppSelector((state) => state.articles.list);
-console.log("Lista", articlesList);
+  console.log("Lista", articlesList);
   useEffect(() => {
     if (articlesList.length === 0) {
       dispatch(fetchArticles());
@@ -45,6 +41,8 @@ console.log("Lista", articlesList);
         <Typography variant="h6" sx={{ mt: 2 }}>
           {detailedArticle.description}
         </Typography>
+       
+       
       </Box>
 
       <Grid container spacing={4}>
@@ -83,6 +81,11 @@ console.log("Lista", articlesList);
           ) : (
             detailedArticle.images.map((image, index) => (
               <Card key={`image-${index}`} sx={{ marginBottom: 2 }}>
+                <Box ml={"13px"}>
+                  <Typography variant="caption" align="center">
+                    {image.title}
+                  </Typography>
+                </Box>
                 <CardMedia
                   component="img"
                   height="200"
@@ -99,6 +102,15 @@ console.log("Lista", articlesList);
           )}
         </Grid>
       </Grid>
+      <Box display={'flex'}>
+        <Typography variant="h6" sx={{ mt: 2, mr:2 }}>
+          Author: {detailedArticle.author}
+        </Typography>
+        <Typography variant="h6" sx={{ mt: 2 , ml:2}}>
+          Published Date: {detailedArticle.published}
+        </Typography>
+
+        </Box>
     </Box>
   );
 };

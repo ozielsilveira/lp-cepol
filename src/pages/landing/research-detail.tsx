@@ -9,9 +9,7 @@ import {
 import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
-import {
-  fetchResearch,
-} from "../../redux/slices/researchSlice";
+import { fetchResearch } from "../../redux/slices/researchSlice";
 
 export const ResearchDetailed: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -83,6 +81,11 @@ export const ResearchDetailed: React.FC = () => {
           ) : (
             detailedResearch.images.map((image, index) => (
               <Card key={`image-${index}`} sx={{ marginBottom: 2 }}>
+                <Box ml={"13px"}>
+                  <Typography variant="caption" align="center">
+                    {image.title}
+                  </Typography>
+                </Box>
                 <CardMedia
                   component="img"
                   height="200"
@@ -99,6 +102,11 @@ export const ResearchDetailed: React.FC = () => {
           )}
         </Grid>
       </Grid>
+      <Box ml={"13px"}>
+        <Typography variant="caption" align="center">
+          Partner: {detailedResearch.professional?.name}
+        </Typography>
+      </Box>
     </Box>
   );
 };
