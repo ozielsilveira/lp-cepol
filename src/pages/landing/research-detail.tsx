@@ -88,7 +88,14 @@ export const ResearchDetailed: React.FC = () => {
                 </Box>
                 <CardMedia
                   component="img"
-                  height="200"
+                  // height="200"
+                  sx={{
+                    width: "400px",
+                    height: "auto",
+                    maxHeight: "350px",
+                    objectFit: "cover",
+                    margin: "auto",
+                  }}
                   image={image.url}
                   alt={image.title}
                 />

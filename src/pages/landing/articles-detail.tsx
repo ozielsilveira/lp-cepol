@@ -35,14 +35,12 @@ export const ArticleDetailed: React.FC = () => {
     <Box sx={{ pb: 5, pl: 20, pr: 20 }}>
       {/* Título principal */}
       <Box sx={{ textAlign: "center", marginBottom: 4 }}>
-        <Typography variant="h4" sx={{ fontWeight: "bold" }}>
+        <Typography variant="h5" sx={{ fontWeight: "bold" }}>
           {detailedArticle.title}
         </Typography>
         <Typography variant="h6" sx={{ mt: 2 }}>
           {detailedArticle.description}
         </Typography>
-       
-       
       </Box>
 
       <Grid container spacing={4}>
@@ -88,7 +86,14 @@ export const ArticleDetailed: React.FC = () => {
                 </Box>
                 <CardMedia
                   component="img"
-                  height="200"
+                  // height="200"
+                  sx={{
+                    width: "400px",
+                    height: "auto",
+                    maxHeight: "350px",
+                    objectFit: "cover",
+                    margin: "auto",
+                  }}
                   image={image.url}
                   alt={image.title}
                 />
@@ -102,15 +107,14 @@ export const ArticleDetailed: React.FC = () => {
           )}
         </Grid>
       </Grid>
-      <Box display={'flex'}>
-        <Typography variant="h6" sx={{ mt: 2, mr:2 }}>
+      <Box display={"flex"}>
+        <Typography  sx={{ mt: 2, mr: 2 }}>
           Author: {detailedArticle.author}
         </Typography>
-        <Typography variant="h6" sx={{ mt: 2 , ml:2}}>
+        <Typography  sx={{ mt: 2, ml: 2 }}>
           Published Date: {detailedArticle.published}
         </Typography>
-
-        </Box>
+      </Box>
     </Box>
   );
 };

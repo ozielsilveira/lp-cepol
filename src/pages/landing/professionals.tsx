@@ -157,11 +157,18 @@ export const Professionals: React.FC = () => {
                   key={professional.id}
                   sx={{ display: "flex", justifyContent: "center" }}
                 >
-                  <Card sx={{ width: {xs: 240, md:360} }}>
+                  <Card sx={{ width: { xs: 240, md: 360 } }}>
                     <CardMedia
+
                       component="img"
-                      height="140"
-                      image={professional.imageUrl ?? ''}
+                      sx={{
+                        width: "300px",
+                        height: "220px",
+                        objectFit: "cover",
+                        margin: "auto",
+                        borderRadius: '10px'
+                      }}
+                      image={professional.imageUrl ?? ""}
                       alt={professional.name}
                     />
                     <CardContent>
