@@ -59,21 +59,17 @@ const ProfessionalManager: React.FC = () => {
 
     const onSubmit: SubmitHandler<Professional> = async (data) => {
         try {
-            if (selectedFile) {
-                const imageUrl = await UploadFileToR2(selectedFile, data.name);
-                data.imageUrl = imageUrl;
-            }
-
             if (isEditing) {
                 if (data.id) {
-                    dispatch(updateProfessional(data as Required<Professional>));
+                    await dispatch(updateProfessional(data as Required<Professional>)).unwrap();
                 }
             } else {
-                dispatch(createProfessional(data));
+                await dispatch(createProfessional(data)).unwrap();
             }
             handleClose();
+            dispatch(fetchProfessionals()); // Atualiza a lista após a ação
         } catch (error) {
-            console.error("Erro ao fazer upload da imagem:", error);
+            console.error("Erro ao salvar profissional:", error);
         }
     };
 

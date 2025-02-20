@@ -102,13 +102,8 @@ import Stack from "@mui/material/Stack";
 import React, { useState } from "react";
 import { TransitionGroup } from "react-transition-group";
 import { CardCarousel } from "./cardCarrousel";
+import { Article } from "../redux/slices/articlesSlice";
 
-interface Article {
-  id: number;
-  title: string;
-  abstract: string;
-  professional: string;
-}
 
 interface CarouselProps {
   items: Article[]; // Lista de objetos para renderizar nos cards

@@ -9,21 +9,9 @@ export interface Article {
   publishedDate: string | null;
   bodyText: string;
   secondText: string | null;
-  images: [
-    {
-      id: number,
-      researchId: number,
-      url: string,
-      title: string,
-      description: string
-    }
-  ];
-  professional:{
-    id: number,
-    name: string
-
-  }
-     
+  images?: { id: number; url: string; title: string; description: string }[];
+  professional?: { id: number; name: string };
+  professionalId?: string
 }
 interface ArticleState {
   list: Article[];
@@ -52,7 +40,7 @@ export const fetchArticles = createAsyncThunk('article/fetch', async () => {
 });
 
 export const createArticle = createAsyncThunk('article/create', async (newArticle: any) => {
-  const response = await apiClient.post('/article/create', newArticle);
+  const response = await apiClient.post('/article', newArticle);
   return response.data;
 });
 
@@ -60,7 +48,7 @@ export const updateArticle = createAsyncThunk<Article, Article>(
   "article/update",
   async (data) => {
     const response = await apiClient.put<Article>(
-      `/article/${data.id}`,
+      `/article`,
       data
     );
     return response.data;
@@ -93,7 +81,7 @@ const articleSlice = createSlice({
          }
        )
        .addCase(fetchArticles.rejected, (state, action) => {
-         state.status = "failed";
+         state.status = "idle";
          state.error =
            typeof action.payload === "string"
              ? action.payload
@@ -113,6 +101,7 @@ const articleSlice = createSlice({
              ? action.payload
              : action.error.message || null;
        })
+       
        .addCase(
          createArticle.fulfilled,
          (state, action: PayloadAction<Article>) => {
@@ -150,7 +139,7 @@ const articleSlice = createSlice({
           deleteArticle.fulfilled,
          (state, action: PayloadAction<string>) => {
            state.list = state.list.filter(
-             (professional) => professional.id !== action.payload
+             (article) => article.id !== action.payload
            );
            state.status = "succeeded";
          }
