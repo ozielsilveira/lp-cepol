@@ -2,6 +2,7 @@ import { Add, Delete, Edit } from "@mui/icons-material";
 import {
   Box,
   Button,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -19,7 +20,7 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import {
   createResearch,
@@ -36,11 +37,10 @@ export const ResearchManager: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { list } = useSelector((state: IRootState) => state.research);
   const professionalList = useAppSelector((state) => state.professional.list);
-  
-  console.log(list);
-  const { register, handleSubmit, reset, setValue } = useForm<Research>();
+  const { register, handleSubmit, reset, setValue, control } = useForm<Research>();
   const [open, setOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const loading = useAppSelector((state) => state.research.loading);
 
   useEffect(() => {
     if (list.length === 0) {
@@ -65,25 +65,21 @@ export const ResearchManager: React.FC = () => {
   };
 
   const onSubmit: SubmitHandler<Research> = async (data) => {
-    try {
-      if (isEditing) {
-        if (data.id) {
-          dispatch(updateResearch(data as Required<Research>));
+      try {
+          if (isEditing) {
+            if (data.id) {
+              await dispatch(
+                updateResearch(data as Required<Research>)
+              ).unwrap();
+            }
+          } else {
+            await dispatch(createResearch(data)).unwrap();
+          }
+          handleClose();
+          dispatch(fetchResearch()); // Atualiza a lista após a ação
+        } catch (error) {
+          console.error("Erro ao salvar research:", error);
         }
-      } else {
-        await dispatch(createResearch(data)).unwrap();
-      }
-      handleClose();
-      dispatch(fetchResearch()); // Atualiza a lista após a ação
-    } catch (error) {
-      console.error("Erro ao salvar Research:", error);
-    }
-    // } else {
-    //     // Remova o id do payload para criação
-    //     const { id, ...dataWithoutId } = data;
-    //     dispatch(createResearch(dataWithoutId));
-    //   }
-    // handleClose();
   };
 
   const handleEdit = (research: Research) => {
@@ -124,7 +120,11 @@ console.log(professionalList);
           Add Research
         </Button>
       </Box>
-
+      {loading ? (
+            <Box sx={{ display: "flex", justifyContent: "center", width:"100%", my: 4 }}>
+              <CircularProgress />
+            </Box>
+          ) : (
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -187,7 +187,7 @@ console.log(professionalList);
           </TableBody>
         </Table>
       </TableContainer>
-
+)}
       <Dialog open={open} onClose={handleClose}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <DialogTitle>
@@ -256,13 +256,19 @@ console.log(professionalList);
               margin="normal"
               required
             />
+           <Controller
+              name="professionalId"
+              control={control}
+              render={({ field }) => (
             <TextField
-              {...register("professionalId")}
+            {...field}
               label="Professional"
               fullWidth
               select
               margin="normal"
               required
+              value={field.value || ""} 
+              onChange={(e) => field.onChange(e.target.value)} 
             >
               {professionalList &&
                 professionalList.map((type) => (
@@ -270,7 +276,8 @@ console.log(professionalList);
                     {type.name}
                   </MenuItem>
                 ))}
-            </TextField>
+            </TextField>)
+          } />
             {/* <TextField
                             {...register('hierarchy', { valueAsNumber: true })}
                             label="hierarchy"

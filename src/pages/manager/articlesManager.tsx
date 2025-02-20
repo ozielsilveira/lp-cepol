@@ -2,6 +2,7 @@ import { Add, Delete, Edit } from "@mui/icons-material";
 import {
   Box,
   Button,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -19,7 +20,7 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, IRootState, useAppSelector } from "../../redux/store";
 import {
@@ -33,9 +34,10 @@ import { fetchProfessionals } from "../../redux/slices/professionalSlice";
 
 export const ArticlesManager: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const professionalList = useAppSelector((state) => state.professional.list);
+  const loading = useAppSelector((state) => state.articles.loading);
   const { list } = useSelector((state: IRootState) => state.articles);
-  console.log(list);
-  const { register, handleSubmit, reset, setValue } = useForm<Article>();
+  const { register, handleSubmit, reset, setValue, control } = useForm<Article>();
   const [open, setOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -58,24 +60,25 @@ export const ArticlesManager: React.FC = () => {
     setOpen(false);
     reset();
   };
-
+ ;
   const onSubmit: SubmitHandler<Article> = async (data) => {
-    try {
-      if (isEditing) {
-        if (data.id) {
-          dispatch(updateArticle(data as Required<Article>));
+      try {
+          if (isEditing) {
+            if (data.id) {
+              await dispatch(
+                updateArticle(data as Required<Article>)
+              ).unwrap();
+            }
+          } else {
+            await dispatch(createArticle(data)).unwrap();
+          }
+          handleClose();
+          dispatch(fetchArticles()); // Atualiza a lista após a ação
+        } catch (error) {
+          console.error("Erro ao salvar article:", error);
         }
-      } else {
-        await dispatch(createArticle(data)).unwrap();
-        console.log("data", data);
-      }
-      handleClose();
-      dispatch(fetchArticles()); // Atualiza a lista após a ação
-    } catch (error) {
-      console.error("Erro ao salvar Article:", error);
-    }
   };
-  const professionalList = useAppSelector((state) => state.professional.list);
+
   const handleEdit = (article: Article) => {
     setIsEditing(true);
     setOpen(true);
@@ -119,7 +122,11 @@ export const ArticlesManager: React.FC = () => {
           Add Article
         </Button>
       </Box>
-
+ {loading ? (
+            <Box sx={{ display: "flex", justifyContent: "center", width:"100%", my: 4 }}>
+              <CircularProgress />
+            </Box>
+          ) : (
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -190,7 +197,7 @@ export const ArticlesManager: React.FC = () => {
           </TableBody>
         </Table>
       </TableContainer>
-
+)}
       <Dialog open={open} onClose={handleClose}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <DialogTitle>
@@ -281,13 +288,19 @@ export const ArticlesManager: React.FC = () => {
               margin="normal"
               required
             />
+            <Controller
+              name="professionalId"
+              control={control}
+              render={({ field }) => (
             <TextField
-              {...register("professionalId")}
+            {...field}
               label="Professional"
               fullWidth
               select
               margin="normal"
               required
+              value={field.value || ""} 
+              onChange={(e) => field.onChange(e.target.value)} 
             >
               {professionalList &&
                 professionalList.map((type) => (
@@ -295,7 +308,8 @@ export const ArticlesManager: React.FC = () => {
                     {type.name}
                   </MenuItem>
                 ))}
-            </TextField>
+            </TextField>)
+          } />
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose}>Cancel</Button>

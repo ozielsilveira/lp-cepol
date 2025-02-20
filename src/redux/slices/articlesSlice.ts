@@ -16,12 +16,14 @@ export interface Article {
 interface ArticleState {
   list: Article[];
   status: "idle" | "loading" | "succeeded" | "failed";
+  loading: boolean;
   error: string | null;
 }
 
 const initialState: ArticleState = {
   list: [],
   status: "idle",
+  loading: false,
   error: null,
 };
 
@@ -73,15 +75,20 @@ const articleSlice = createSlice({
   },
   extraReducers: (builder) => {
      builder
+      .addCase(fetchArticles.pending, (state) => {
+             state.loading = true;
+           })
        .addCase(
         fetchArticles.fulfilled,
          (state, action: PayloadAction<Article[]>) => {
            state.list = action.payload;
+           state.loading = false;
            state.status = "succeeded";
          }
        )
        .addCase(fetchArticles.rejected, (state, action) => {
          state.status = "idle";
+         state.loading = false;
          state.error =
            typeof action.payload === "string"
              ? action.payload

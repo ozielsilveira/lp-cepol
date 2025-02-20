@@ -85,6 +85,7 @@ import {
   Card,
   CardContent,
   CardHeader,
+  CircularProgress,
   Container,
   Grid,
   Typography,
@@ -115,8 +116,7 @@ export const Research: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const researchList = useAppSelector((state) => state.research.list);
-
-
+  const loading = useAppSelector((state) => state.research.loading);
   useEffect(() => {
     if (researchList.length === 0) {
       dispatch(fetchResearch());
@@ -142,27 +142,55 @@ export const Research: React.FC = () => {
             Ongoing Research
           </Typography>
         </Box>
-        <Grid container spacing={3} justifyContent="center">
-          {researchList.map((research) => (
-            <Grid item xs={12} sm={6} lg={4} key={research.id}>
-              <Card onClick={() => navigate(`/research/${research.id}`)}>
-                <CardHeader
-                  title={
-                    <Typography variant="h6" component="h3">
-                      {research.title}
+        {loading ? (
+          <Box sx={{ display: "flex", justifyContent: "center", my: 4 }}>
+            <CircularProgress />
+          </Box>
+        ) : (
+          <Grid container spacing={3} justifyContent="center">
+            {researchList.map((research) => (
+              <Grid item xs={12} sm={6} lg={4} key={research.id}>
+                <Card
+                  onClick={() => navigate(`/research/${research.id}`)}
+                  sx={{
+                    cursor: "pointer",
+                    transition: "all 0.2s ease-in-out",
+                    "&:hover": {
+                      transform: "scale(1.02)",
+                    },
+                  }}
+                >
+                  <CardHeader
+                    title={
+                      <Typography variant="h6" component="h3">
+                        {research.title}
+                      </Typography>
+                    }
+                    sx={{ textAlign: "center", pb: 0 }}
+                  />
+                  <CardContent>
+                    <Typography variant="body2" color="textSecondary">
+                      {research.description}
                     </Typography>
-                  }
-                  sx={{ textAlign: "center", pb: 0 }}
-                />
-                <CardContent>
-                  <Typography variant="body2" color="textSecondary">
-                    {research.description}
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
+                    <Box
+                      sx={{
+                        marginTop: "1rem",
+                        display: "flex",
+                        flexDirection: "column",
+                      }}
+                    >
+                      {research.professional?.name?.trim() && (
+                        <Typography variant="caption">
+                          Partners: {research.professional.name}
+                        </Typography>
+                      )}
+                    </Box>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        )}
       </Box>
     </Container>
   );

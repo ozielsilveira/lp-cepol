@@ -1,3 +1,199 @@
+// import SearchIcon from "@mui/icons-material/Search";
+// import {
+//   Box,
+//   Button,
+//   Card,
+//   CardContent,
+//   Container,
+//   TextField,
+//   Typography,
+// } from "@mui/material";
+// import { Carousel } from "../../components/carousel.tsx";
+// // import PolimerImg from "../../../public/images/poliBack.jpg";
+// import mainImg from "../../../public/images/cepolSVG.svg";
+// import { fetchArticles } from "../../redux/slices/articlesSlice.ts";
+// import { useAppDispatch, useAppSelector } from "../../redux/store.ts";
+// // import { useNavigate } from "react-router-dom";
+// import { useEffect } from "react";
+// import { fetchResearch } from "../../redux/slices/researchSlice.ts";
+// import { useNavigate } from "react-router-dom";
+
+// // Dados fictícios
+// // interface Article {
+// //   id: number;
+// //   title: string;
+// //   abstract: string;
+// //   professional: string;
+// // }
+
+// export function Home() {
+//   // const groupedArticles = useMemo(() => {
+//   //   return articles.reduce((acc, article, index) => {
+//   //     const groupIndex = Math.floor(index / 3);
+//   //     if (!acc[groupIndex]) acc[groupIndex] = [];
+//   //     acc[groupIndex].push(article);
+//   //     return acc;
+//   //   }, [] as Article[][]);
+//   // }, []);
+//   // const navigate = useNavigate();
+//   const dispatch = useAppDispatch();
+//   const articlesList = useAppSelector((state) => state.articles.list);
+//   const researchList = useAppSelector((state) => state.research.list);
+//   const navigate = useNavigate();
+//   useEffect(() => {
+//     if (researchList.length === 0) {
+//       dispatch(fetchResearch());
+//     }
+//   }, [dispatch, researchList.length]);
+
+//   useEffect(() => {
+//     if (articlesList.length === 0) {
+//       dispatch(fetchArticles());
+//     }
+//   }, [dispatch, articlesList.length]);
+
+//   return (
+//     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+//       <Box component="main" sx={{ flex: 1 }}>
+//         <Container
+//           sx={{
+//             width: "100%",
+//           }}
+//         >
+//           <Box
+//             sx={{
+//               position: "relative",
+//               display: "flex",
+//               flexDirection: { xs: "column", md: "row" },
+//               gap: 4,
+//               alignItems: "center",
+//               justifyContent: "center",
+//               mb: 6,
+//               mt: 4,
+//               padding: "4rem 2rem",
+//               textAlign: "center",
+//               overflow: "hidden",
+//             }}
+//           >
+//             <Box sx={{ flex: 1, zIndex: 1 }}>
+//               <Typography variant="h3" fontWeight="bold" gutterBottom>
+//                 Discover the Advances of Science
+//               </Typography>
+//               <Typography variant="body1" color="textSecondary" paragraph>
+//                 Explore the latest research and innovations from our laboratory.
+//                 Stay updated with the most recent discoveries.
+//               </Typography>
+//               <Box sx={{ display: "flex", gap: 2 }}>
+//                 <TextField
+//                   variant="outlined"
+//                   placeholder="Search research..."
+//                   fullWidth
+//                   sx={{ borderRadius: "15px" }}
+//                 />
+//                 <Button variant="contained" startIcon={<SearchIcon />}>
+//                   Search
+//                 </Button>
+//               </Box>
+//             </Box>
+//             <Box component={"img"} src={mainImg} width={300} height={300} />
+//           </Box>
+//           <Box
+//             display={"flex"}
+//             sx={{
+//               alignItems: "center",
+//               flexDirection: "column",
+//               mt: 6,
+//             }}
+//           >
+//             {/* Articles */}
+//             <Typography
+//               sx={{ mb: 4, mt: 2 }}
+//               variant="h4"
+//               fontWeight="bold"
+//               gutterBottom
+//             >
+//               Featured Articles
+//             </Typography>
+//             <Carousel items={articlesList} />
+//           </Box>
+//           <Box
+//             display={"flex"}
+//             sx={{ alignItems: "center", flexDirection: "column", mt: 6, mb: 6 }}
+//           >
+//             {/* Research */}
+//             <Typography
+//               variant="h4"
+//               fontWeight="bold"
+//               gutterBottom
+//               sx={{ mt: 6, mb: 4 }}
+//             >
+//               Featured Research
+//             </Typography>
+//             <Box sx={{ display: "flex", flexDirection: "row", gap: 3 }}>
+//               {/* {researchList.map((research) => (
+//                 <Card
+//                   key={research.id}
+//                   sx={{ width: "450px", height: "250px" }}
+//                 >
+//                   <CardContent>
+//                     <Typography variant="h6" gutterBottom>
+//                       {research.title}
+//                     </Typography>
+//                     <Typography variant="body2" color="textSecondary" paragraph>
+//                       {research.description}
+//                     </Typography>
+//                     <Box
+//                       sx={{
+//                         marginTop: "7rem",
+//                         display: "flex",
+//                         flexDirection: "column",
+//                       }}
+//                     >
+//                       <Typography variant="caption">
+//                         Partners: {research.professional?.name}
+//                       </Typography>
+//                       <Typography variant="caption">
+//                         Period: {research.period}
+//                       </Typography>
+//                     </Box>
+//                   </CardContent>
+//                 </Card>
+//               ))} */}
+//               {researchList.slice(0, 2).map((research) => (
+//                 <Card
+//                   onClick={() => navigate(`/research/${research.id}`)}
+//                   key={research.id}
+//                   sx={{ width: "450px", height: "250px" , cursor:"pointer"}}
+
+//                 >
+//                   <CardContent>
+//                     <Typography variant="h6" gutterBottom>
+//                       {research.title}
+//                     </Typography>
+//                     <Typography variant="body2" color="textSecondary" paragraph>
+//                       {research.description}
+//                     </Typography>
+//                     <Box
+//                       sx={{
+//                         marginTop: "7rem",
+//                         display: "flex",
+//                         flexDirection: "column",
+//                       }}
+//                     >
+//                       <Typography variant="caption">
+//                         Partners: {research.professional?.name}
+//                       </Typography>
+//                     </Box>
+//                   </CardContent>
+//                 </Card>
+//               ))}
+//             </Box>
+//           </Box>
+//         </Container>
+//       </Box>
+//     </Box>
+//   );
+// }
 import SearchIcon from "@mui/icons-material/Search";
 import {
   Box,
@@ -7,40 +203,35 @@ import {
   Container,
   TextField,
   Typography,
+  List,
+  ListItem,
+  ListItemText,
+  CircularProgress,
 } from "@mui/material";
 import { Carousel } from "../../components/carousel.tsx";
-// import PolimerImg from "../../../public/images/poliBack.jpg";
 import mainImg from "../../../public/images/cepolSVG.svg";
-import { fetchArticles } from "../../redux/slices/articlesSlice.ts";
+import { Article, fetchArticles } from "../../redux/slices/articlesSlice.ts";
 import { useAppDispatch, useAppSelector } from "../../redux/store.ts";
-// import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
-import { fetchResearch } from "../../redux/slices/researchSlice.ts";
+import { useEffect, useState } from "react";
+import { fetchResearch, Research } from "../../redux/slices/researchSlice.ts";
+import { useNavigate } from "react-router-dom";
 
-// Dados fictícios
-// interface Article {
-//   id: number;
-//   title: string;
-//   abstract: string;
-//   professional: string;
-// }
-
-
+type SearchResult = Article | Research;
 
 export function Home() {
-  // const groupedArticles = useMemo(() => {
-  //   return articles.reduce((acc, article, index) => {
-  //     const groupIndex = Math.floor(index / 3);
-  //     if (!acc[groupIndex]) acc[groupIndex] = [];
-  //     acc[groupIndex].push(article);
-  //     return acc;
-  //   }, [] as Article[][]);
-  // }, []);
-  // const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const articlesList = useAppSelector((state) => state.articles.list);
   const researchList = useAppSelector((state) => state.research.list);
+  const loadingResearchs = useAppSelector((state) => state.research.loading);
+  const loadingArticles = useAppSelector((state) => state.articles.loading);
 
+  const navigate = useNavigate();
+
+  // Estado para o termo de busca e resultados filtrados
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredResults, setFilteredResults] = useState<SearchResult[]>([]);
+
+  // Fetch dos dados
   useEffect(() => {
     if (researchList.length === 0) {
       dispatch(fetchResearch());
@@ -53,14 +244,32 @@ export function Home() {
     }
   }, [dispatch, articlesList.length]);
 
+  // Função de filtragem
+  const handleSearch = () => {
+    if (!searchTerm.trim()) {
+      setFilteredResults([]);
+      return;
+    }
+
+    const filteredArticles = articlesList.filter(
+      (article) =>
+        article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        article.description?.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    const filteredResearch = researchList.filter(
+      (research) =>
+        research.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        research.description?.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    setFilteredResults([...filteredArticles, ...filteredResearch]);
+  };
+
   return (
     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
       <Box component="main" sx={{ flex: 1 }}>
-        <Container
-          sx={{
-            width: "100%",
-          }}
-        >
+        <Container sx={{ width: "100%" }}>
           <Box
             sx={{
               position: "relative",
@@ -90,14 +299,72 @@ export function Home() {
                   placeholder="Search research..."
                   fullWidth
                   sx={{ borderRadius: "15px" }}
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onKeyPress={(e) => e.key === "Enter" && handleSearch()}
                 />
-                <Button variant="contained" startIcon={<SearchIcon />}>
+                <Button
+                  variant="contained"
+                  startIcon={<SearchIcon />}
+                  onClick={handleSearch}
+                >
                   Search
                 </Button>
               </Box>
             </Box>
             <Box component={"img"} src={mainImg} width={300} height={300} />
           </Box>
+
+          {/* Lista de resultados da busca */}
+          {filteredResults.length > 0 && (
+            <Box sx={{ mb: 4 }}>
+              {/* Título movido para fora da Box com scroll */}
+              <Typography variant="h5" gutterBottom>
+                Search Results
+              </Typography>
+              <Box
+                sx={{
+                  maxHeight: "300px",
+                  overflowY: "auto",
+                  scrollbarWidth: "none" /* Firefox */,
+                  "&::-webkit-scrollbar": {
+                    display: "none",
+                  } /* Chrome, Safari */,
+                }}
+              >
+                <List sx={{ bgcolor: "background.paper", borderRadius: 1 }}>
+                  {filteredResults.map((item) => (
+                    <ListItem
+                      key={item.id}
+                      sx={{
+                        cursor: "pointer",
+                        borderBottom: 1,
+                        borderColor: "divider",
+                        transition: "transform 0.2s ease-in-out",
+                        "&:hover": {
+                          transform: "scale(1.01)",
+                          bgcolor: "grey.100",
+                        },
+                      }}
+                      onClick={() =>
+                        navigate(
+                          `/${item.description ? "articles" : "research"}/${
+                            item.id
+                          }`
+                        )
+                      }
+                    >
+                      <ListItemText
+                        primary={item.title}
+                        secondary={item.description}
+                      />
+                    </ListItem>
+                  ))}
+                </List>
+              </Box>
+            </Box>
+          )}
+
           <Box
             display={"flex"}
             sx={{
@@ -106,7 +373,6 @@ export function Home() {
               mt: 6,
             }}
           >
-            {/* Articles */}
             <Typography
               sx={{ mb: 4, mt: 2 }}
               variant="h4"
@@ -115,13 +381,19 @@ export function Home() {
             >
               Featured Articles
             </Typography>
-            <Carousel items={articlesList} />
+            {loadingArticles ? (
+              <Box sx={{ display: "flex", justifyContent: "center", my: 4 }}>
+                <CircularProgress />
+              </Box>
+            ) : (
+              <Carousel items={articlesList} />
+            )}
           </Box>
+
           <Box
             display={"flex"}
             sx={{ alignItems: "center", flexDirection: "column", mt: 6, mb: 6 }}
           >
-            {/* Research */}
             <Typography
               variant="h4"
               fontWeight="bold"
@@ -130,63 +402,54 @@ export function Home() {
             >
               Featured Research
             </Typography>
-            <Box sx={{ display: "flex", flexDirection: "row", gap: 3 }}>
-              {/* {researchList.map((research) => (
-                <Card
-                  key={research.id}
-                  sx={{ width: "450px", height: "250px" }}
-                >
-                  <CardContent>
-                    <Typography variant="h6" gutterBottom>
-                      {research.title}
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary" paragraph>
-                      {research.description}
-                    </Typography>
-                    <Box
-                      sx={{
-                        marginTop: "7rem",
-                        display: "flex",
-                        flexDirection: "column",
-                      }}
-                    >
-                      <Typography variant="caption">
-                        Partners: {research.professional?.name}
+            {loadingResearchs ? (
+              <Box sx={{ display: "flex", justifyContent: "center", my: 4 }}>
+                <CircularProgress />
+              </Box>
+            ) : (
+              <Box sx={{ display: "flex", flexDirection: "row", gap: 3 }}>
+                {researchList.slice(0, 2).map((research) => (
+                  <Card
+                    onClick={() => navigate(`/research/${research.id}`)}
+                    key={research.id}
+                    sx={{
+                      width: "450px",
+                      height: "250px",
+                      cursor: "pointer",
+                      transition: "transform 0.2s ease-in-out",
+                      "&:hover": {
+                        transform: "scale(1.02)",
+                       
+                      },
+                    }}
+                  >
+                    <CardContent>
+                      <Typography variant="h6" gutterBottom>
+                        {research.title}
                       </Typography>
-                      <Typography variant="caption">
-                        Period: {research.period}
+                      <Typography
+                        variant="body2"
+                        color="textSecondary"
+                        paragraph
+                      >
+                        {research.description}
                       </Typography>
-                    </Box>
-                  </CardContent>
-                </Card>
-              ))} */}
-              {researchList.slice(0, 2).map((research) => (
-                <Card
-                  key={research.id}
-                  sx={{ width: "450px", height: "250px" }}
-                >
-                  <CardContent>
-                    <Typography variant="h6" gutterBottom>
-                      {research.title}
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary" paragraph>
-                      {research.description}
-                    </Typography>
-                    <Box
-                      sx={{
-                        marginTop: "7rem",
-                        display: "flex",
-                        flexDirection: "column",
-                      }}
-                    >
-                      <Typography variant="caption">
-                        Partners: {research.professional?.name}
-                      </Typography>
-                    </Box>
-                  </CardContent>
-                </Card>
-              ))}
-            </Box>
+                      <Box
+                        sx={{
+                          marginTop: "7rem",
+                          display: "flex",
+                          flexDirection: "column",
+                        }}
+                      >
+                        <Typography variant="caption">
+                          Partners: {research.professional?.name}
+                        </Typography>
+                      </Box>
+                    </CardContent>
+                  </Card>
+                ))}
+              </Box>
+            )}
           </Box>
         </Container>
       </Box>

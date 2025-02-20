@@ -18,17 +18,19 @@ export interface Research {
     id: string;
     name: string;
   };
-  professionalId: string; 
+  professionalId: string;
 }
 interface ResearchState {
   list: Research[];
   status: "idle" | "loading" | "succeeded" | "failed";
+  loading: boolean;
   error: string | null;
 }
 
 const initialState: ResearchState = {
   list: [],
   status: "idle",
+  loading: false,
   error: null,
 };
 
@@ -56,10 +58,7 @@ export const createResearch = createAsyncThunk<Research, Omit<Research, "id">>(
 export const updateResearch = createAsyncThunk<Research, Research>(
   "research/update",
   async (data) => {
-    const response = await apiClient.put<Research>(
-      `/research`,
-      data
-    );
+    const response = await apiClient.put<Research>(`/research`, data);
     return response.data;
   }
 );
@@ -82,15 +81,20 @@ const researchSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(fetchResearch.pending, (state) => {
+        state.loading = true;
+      })
       .addCase(
         fetchResearch.fulfilled,
         (state, action: PayloadAction<Research[]>) => {
           state.list = action.payload;
+          state.loading = false;
           state.status = "succeeded";
         }
       )
       .addCase(fetchResearch.rejected, (state, action) => {
         state.status = "failed";
+        state.loading = false;
         state.error =
           typeof action.payload === "string"
             ? action.payload
