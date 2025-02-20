@@ -1,4 +1,4 @@
-import { GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { GetObjectCommand, ObjectCannedACL, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { Buffer } from "buffer";
 import CryptoJS from "crypto-js";
 
@@ -26,12 +26,14 @@ const getEnvVariables = () => {
 // Inicializa o cliente S3 apenas quando necessário
 let s3Client: S3Client | null = null;
 
-const getS3Client = () => {
+const getS3Client = async () => {
     if (!s3Client) {
         const { region, endpoint, accessKeyId, secretAccessKey } = getEnvVariables();
+
         if (!accessKeyId || !secretAccessKey) {
             throw new Error("Missing required AWS credentials");
         }
+
         s3Client = new S3Client({
             region,
             endpoint,
@@ -48,6 +50,7 @@ const getS3Client = () => {
 // Função auxiliar para calcular o hash SHA-256 de um buffer usando crypto nativo
 const generateFileHash = async (buffer: Buffer): Promise<string> => {
     const wordArray = CryptoJS.lib.WordArray.create(buffer);
+
     return CryptoJS.SHA256(wordArray).toString(CryptoJS.enc.Hex);
 };
 
@@ -68,16 +71,17 @@ export const UploadFileToR2 = async (file: File, key: string): Promise<string> =
             Key: uniqueKey,
             Body: buffer,
             ContentType: file.type,
+            ACL: 'public-read' as ObjectCannedACL,
         };
 
-        const s3 = getS3Client();
-        await s3.send(new PutObjectCommand(params));
-
+        const s3 = await getS3Client();
+        const a = await s3.send(new PutObjectCommand(params));
+        console.log("retorno:", a);
         // Construir a URL no formato correto
         const endpointParts = import.meta.env.VITE_CLOUDFLARE_R2_ENDPOINT.split('.');
         const correctEndpoint = `${endpointParts[1]}.${endpointParts[2]}.${endpointParts[3]}`;
 
-        return `https://${correctEndpoint}/${bucketName}/${uniqueKey}`;
+        return `https://${correctEndpoint}/${uniqueKey}`;
     } catch (error) {
         console.error("Erro no upload para R2:", error);
         throw new Error("Falha ao fazer upload do arquivo.");
@@ -88,7 +92,7 @@ export const UploadFileToR2 = async (file: File, key: string): Promise<string> =
 export const GetFileFromR2 = async (key: string): Promise<File> => {
     try {
         const params = { Bucket: getEnvVariables().bucketName, Key: key };
-        const { Body } = await getS3Client().send(new GetObjectCommand(params));
+        const { Body } = await (await getS3Client()).send(new GetObjectCommand(params));
 
         if (!Body || !(Body instanceof ReadableStream)) {
             throw new Error("Resposta inválida do servidor.");
