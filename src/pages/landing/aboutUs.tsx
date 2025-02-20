@@ -55,12 +55,9 @@
 
 // icones
 
-import MissionIcon from "@mui/icons-material/Flag";
-import TeamIcon from "@mui/icons-material/Group";
-import VisionIcon from "@mui/icons-material/Visibility";
+
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
-import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 
 // const teamMembers = [
@@ -74,19 +71,32 @@ export const AboutUs = () => {
     <Container maxWidth="lg" sx={{ marginBottom: 4 }}>
       {/* Header Section */}
       <Box sx={{ textAlign: "center", marginBottom: 4 }}>
-        <Typography sx={{ mb: 4, mt: 2 }}
+        <Typography
+          sx={{ mb: 4, mt: 2 }}
           variant="h4"
           fontWeight="bold"
-          gutterBottom>
+          gutterBottom
+        >
           About Us
         </Typography>
+        <Typography variant="h6" color="text.secondary" sx={{ mb: 4 }}>
+          The CEPOL Laboratory has extensive experience in the production,
+          characterization, reuse, properties, structure-property relationships
+          and applications of polymers, in addition to the capacity to work in
+          any of these fields, aiming to assist companies with services
+          performed in our laboratory.
+        </Typography>
         <Typography variant="h6" color="text.secondary">
-          Learn more about our mission, vision, and the team behind our success.
+          Develop new knowledge about polymeric materials that are of interest
+          to various market sectors; Conduct scientific and technical research
+          of excellence in the polymer area; Transfer knowledge about laboratory
+          practices and equipment operation to young people who aim for a future
+          in academia and industry
         </Typography>
       </Box>
 
       {/* Mission, Vision, Values Section */}
-      <Grid container spacing={4} sx={{ marginBottom: 4 }}>
+      {/* <Grid container spacing={4} sx={{ marginBottom: 4 }}>
         <Grid item xs={12} md={4}>
           <Box textAlign="center">
             <MissionIcon sx={{ fontSize: 40, color: "primary.main" }} />
@@ -125,7 +135,7 @@ export const AboutUs = () => {
             </Typography>
           </Box>
         </Grid>
-      </Grid>
+      </Grid> */}
 
       {/* Team Section
       <Box sx={{ textAlign: "center", marginBottom: 4 }}>

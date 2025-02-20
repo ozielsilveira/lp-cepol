@@ -4,7 +4,9 @@ import {
   Card,
   CardContent,
   CardMedia,
+  CircularProgress,
   Grid,
+  Grid2,
   Typography,
 } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
@@ -102,7 +104,8 @@ const groupByHierarchy = (list: Professional[]) => {
 export const Professionals: React.FC = () => {
   const dispatch = useAppDispatch();
   const professionalList = useAppSelector((state) => state.professional.list);
-  console.log(professionalList);
+  const loading = useAppSelector((state) => state.professional.loading);
+
   const groupedProfessionals = groupByHierarchy(professionalList);
 
   useEffect(() => {
@@ -129,45 +132,50 @@ export const Professionals: React.FC = () => {
       <Typography color="text.secondary" sx={{ textAlign: "center", mb: 4 }}>
         Our dedicated team works tirelessly to deliver exceptional results.
       </Typography>
-      <Box>
-        {groupedProfessionals.map((group, index) => (
-          <Grid
-            container
-            spacing={4}
-            key={`hierarchy-${index}`}
-            sx={{
-              justifyContent: "center",
-              mb: 4,
-            }}
-          >
-            {group.map((professional) => (
-              <Grid
-                item
-                xs={12}
-                sm={6}
-                md={4}
-                key={professional.id}
-                sx={{ display: "flex", justifyContent: "center" }}
-              >
-                <Card sx={{ maxWidth: 360 }}>
-                  <CardMedia
-                    component="img"
-                    height="140"
-                    image={professional.imageUrl}
-                    alt={professional.name}
-                  />
-                  <CardContent>
-                    <Typography variant="h6" component="div">
-                      {professional.name}
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      color="text.secondary"
-                      sx={{ mt: 1 }}
-                    >
-                     { professional.role}
-                    </Typography>
-                    {/* <Typography
+      {loading ? (
+        <Box sx={{ display: "flex", justifyContent: "center", my: 4 }}>
+          <CircularProgress />
+        </Box>
+      ) : (
+        <Box>
+          {groupedProfessionals.map((group, index) => (
+            <Grid2
+              container
+              spacing={4}
+              key={`hierarchy-${index}`}
+              sx={{
+                justifyContent: "center",
+                mb: 4,
+              }}
+            >
+              {group.map((professional) => (
+                <Grid
+                  item
+                  xs={12}
+                  sm={6}
+                  md={4}
+                  key={professional.id}
+                  sx={{ display: "flex", justifyContent: "center" }}
+                >
+                  <Card sx={{ width: {xs: 240, md:360} }}>
+                    <CardMedia
+                      component="img"
+                      height="140"
+                      image={professional.imageUrl ?? ''}
+                      alt={professional.name}
+                    />
+                    <CardContent>
+                      <Typography variant="h6" component="div">
+                        {professional.name}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        sx={{ mt: 1 }}
+                      >
+                        {professional.role}
+                      </Typography>
+                      {/* <Typography
                       variant="body2"
                       color="text.secondary"
                       sx={{ mt: 1 }}
@@ -187,13 +195,14 @@ export const Professionals: React.FC = () => {
                         ? professional.articles.join(", ")
                         : "None"}
                     </Typography> */}
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-        ))}
-      </Box>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              ))}
+            </Grid2>
+          ))}
+        </Box>
+      )}
     </Box>
   );
 };

@@ -5,11 +5,13 @@ interface ProtectedRouteProps {
     children: React.ReactElement;
 }
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = () => {
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({children}) => {
     const isAuthenticated = !!localStorage.getItem("authToken");
 
     if (!isAuthenticated) {
         return <Navigate to="/auth" replace />;
+    } else {
+        return children;
     }
 };
 

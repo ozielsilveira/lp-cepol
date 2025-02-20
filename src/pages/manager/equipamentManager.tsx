@@ -2,6 +2,7 @@ import { Add, Delete, Edit } from "@mui/icons-material";
 import {
   Box,
   Button,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -19,9 +20,9 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, IRootState } from "../../redux/store";
+import { AppDispatch, IRootState, useAppSelector } from "../../redux/store";
 import {
   createEquipment,
   deleteEquipment,
@@ -35,28 +36,16 @@ const equipmentType = ["Processing", "Analytics"];
 export const EquipmentslManager: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { list } = useSelector((state: IRootState) => state.equipment);
-  const { register, handleSubmit, reset, setValue } = useForm<Equipment>();
+  const { register, handleSubmit, reset, setValue, control } = useForm<Equipment>();
   const [open, setOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-
-  // const list = [
-  //   { id: '1', name: "Espectrofotômetro", model: "UV-1800", type: "Processing" },
-  //   { id: '2', name: "Cromatógrafo Gasoso", model: "GC-2020", type: "Analytics" },
-  //   { id: '3', name: "Balança Analítica", model: "AX324", type: "Analytics" },
-  //   { id: '4', name: "Microscópio Óptico", model: "CX33", type: "Analytics" },
-  //   { id: '5', name: "Centrífuga", model: "5804R", type: "Processing" },
-  //   { id: '6', name: "Centrífuga", model: "5804R", type: "Processing" },
-  //   { id: '7', name: "Centrífuga", model: "5804R", type: "Processing" },
-  //   { id: '8', name: "Centrífuga", model: "5804R", type: "Analytics" },
-  //   { id: '9', name: "Centrífuga", model: "5804R", type: "Analytics" },
-  //   { id: '10', name: "Centrífuga", model: "5804R", type: "Processing" },
-  // ];
+  const loading = useAppSelector((state) => state.equipment.loading);
 
   useEffect(() => {
-    if (list.length === 0) {
+    if (list.length === 0 && !loading ) {
       dispatch(fetchEquipments());
     }
-  }, [dispatch, list.length]);
+  }, [dispatch, list.length, loading]);
 
   const handleOpen = () => {
     setOpen(true);
@@ -69,16 +58,26 @@ export const EquipmentslManager: React.FC = () => {
     reset();
   };
 
-  const onSubmit: SubmitHandler<Equipment> = (data) => {
-    if (isEditing) {
-      if (data.id) {
-        dispatch(updateEquipment(data as Required<Equipment>));
+  const onSubmit: SubmitHandler<Equipment> =  async (data) => {
+    try {
+      if (isEditing) {
+        if (data.id) {
+          await dispatch(
+            updateEquipment(data as Required<Equipment>)
+          ).unwrap();
+        }
+      } else {
+        await dispatch(createEquipment(data)).unwrap();
       }
-    } else {
-      dispatch(createEquipment(data));
+      handleClose();
+      dispatch(fetchEquipments()); // Atualiza a lista após a ação
+    } catch (error) {
+      console.error("Erro ao salvar equipment:", error);
     }
-    handleClose();
+
   };
+
+
 
   const handleEdit = (equipment: Equipment) => {
     setIsEditing(true);
@@ -114,7 +113,11 @@ export const EquipmentslManager: React.FC = () => {
           Add Equipment
         </Button>
       </Box>
-
+      {loading ? (
+            <Box sx={{ display: "flex", justifyContent: "center", width:"100%", my: 4 }}>
+              <CircularProgress />
+            </Box>
+          ) : (
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -126,34 +129,46 @@ export const EquipmentslManager: React.FC = () => {
               <TableCell align="right">Actions</TableCell>
             </TableRow>
           </TableHead>
-          <TableBody>
-            {Array.isArray(list) &&
-              list.map((equipment) => (
-                <TableRow key={equipment.id}>
-                  <TableCell>{equipment.name}</TableCell>
-                  <TableCell>{equipment.description}</TableCell>
-                  <TableCell>{equipment.type}</TableCell>
-                  <TableCell>{equipment.imageUrl}</TableCell>
+          
+            <TableBody>
+              {Array.isArray(list) &&
+                list.map((equipment) => (
+                  <TableRow key={equipment.id}>
+                    <TableCell>{equipment.name}</TableCell>
+                    <TableCell>{equipment.description}</TableCell>
+                    <TableCell>{equipment.type}</TableCell>
+                    <TableCell>
+                      <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', width: '120px' }}>
+                          {equipment.imageUrl && <Box component={'img'} src={`${equipment.imageUrl}`} sx={{width:'130px'}}/>}
+                          <Typography variant="caption" sx={{textAlign: 'center', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap'}}>
+                            {equipment.imageUrl || "No Image"}
+                          </Typography>
+                      </Box>
+                    </TableCell>
 
-                  <TableCell align="right">
-                    <IconButton
-                      color="primary"
-                      onClick={() => handleEdit(equipment)}
-                    >
-                      <Edit />
-                    </IconButton>
-                    <IconButton
-                      color="error"
-                      onClick={() => handleDelete(equipment.id)}
-                    >
-                      <Delete />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              ))}
-          </TableBody>
+                    <TableCell align="right">
+                      <IconButton
+                        color="primary"
+                        onClick={() => handleEdit(equipment)}
+                        disabled={loading}
+                      >
+                        <Edit />
+                      </IconButton>
+                      <IconButton
+                        color="error"
+                        onClick={() => handleDelete(equipment.id)}
+                        disabled={loading}
+                      >
+                        <Delete />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))}
+            </TableBody>
+         
         </Table>
       </TableContainer>
+       )}
 
       <Dialog open={open} onClose={handleClose}>
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -175,21 +190,28 @@ export const EquipmentslManager: React.FC = () => {
               margin="normal"
               required
             />
-            <TextField
-              {...register("type")}
-              label="type"
-              fullWidth
-              select
-              margin="normal"
-              required
-            >
-              {equipmentType &&
-                equipmentType.map((type) => (
-                  <MenuItem value={type} key={type}>
-                    {type}
-                  </MenuItem>
-                ))}
-            </TextField>
+         <Controller
+              name="type"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Type"
+                  fullWidth
+                  select
+                  margin="normal"
+                  required
+                  value={field.value || ""} // Garante que o valor inicial seja refletido
+                  onChange={(e) => field.onChange(e.target.value)} // Atualiza o valor no form
+                >
+                  {equipmentType.map((type) => (
+                    <MenuItem value={type} key={type}>
+                      {type}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              )}
+            />
             <TextField
               {...register("imageUrl")}
               label="Image URL"

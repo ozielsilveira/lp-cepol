@@ -5,6 +5,7 @@ import articlesReducer from './slices/articlesSlice';
 import equipmentReducer from './slices/equipamentSlice';
 import professionalReducer from './slices/professionalSlice';
 import researchReducer from './slices/researchSlice';
+import fileUploadSlice from './slices/fileUploadSlice'
 export const store = configureStore({
   reducer: {
     aboutUs: aboutUsReducer,
@@ -12,6 +13,7 @@ export const store = configureStore({
     equipment: equipmentReducer,
     professional: professionalReducer,
     research: researchReducer,
+    image: fileUploadSlice,
   },
 });
 

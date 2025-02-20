@@ -6,7 +6,7 @@ export interface Professional {
   name: string;
   role: string;
   bio: string;
-  imageUrl: string;
+  imageUrl: string | null;
   hierarchy: number;
   createdAt: string;
 }
@@ -14,6 +14,7 @@ export interface Professional {
 interface ProfessionalsState {
   list: Professional[];
   status: "idle" | "loading" | "succeeded" | "failed";
+  loading: boolean;
   error: string | null;
 }
 
@@ -48,10 +49,7 @@ export const createProfessional = createAsyncThunk<
 export const updateProfessional = createAsyncThunk<Professional, Professional>(
   "professionals/update",
   async (data) => {
-    const response = await apiClient.put<Professional>(
-      `/professional/${data.id}`,
-      data
-    );
+    const response = await apiClient.put<Professional>(`/professional`, data);
     return response.data;
   }
 );
@@ -68,6 +66,7 @@ export const deleteProfessional = createAsyncThunk<string, string>(
 const initialState: ProfessionalsState = {
   list: [],
   status: "idle",
+  loading: false,
   error: null,
 };
 
@@ -83,15 +82,20 @@ const professionalSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(fetchProfessionals.pending, (state) => {
+        state.loading = true;
+      })
       .addCase(
         fetchProfessionals.fulfilled,
         (state, action: PayloadAction<Professional[]>) => {
           state.list = action.payload;
+          state.loading = false;
           state.status = "succeeded";
         }
       )
       .addCase(fetchProfessionals.rejected, (state, action) => {
         state.status = "failed";
+        state.loading = false;
         state.error =
           typeof action.payload === "string"
             ? action.payload
