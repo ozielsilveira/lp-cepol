@@ -13,7 +13,7 @@ import { Carousel } from "../../components/carousel.tsx";
 import mainImg from "../../../public/images/cepolSVG.svg";
 import { fetchArticles } from "../../redux/slices/articlesSlice.ts";
 import { useAppDispatch, useAppSelector } from "../../redux/store.ts";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { fetchResearch } from "../../redux/slices/researchSlice.ts";
 
@@ -25,62 +25,7 @@ import { fetchResearch } from "../../redux/slices/researchSlice.ts";
 //   professional: string;
 // }
 
-const articles = [
-  {
-    id: 1,
-    title: "Advances in Stem Cell Research",
-    abstract: "This study presents new methods for...",
-    professional: "Dr. John Doe",
-  },
-  {
-    id: 2,
-    title: "Impact of Climate Change on Biodiversity",
-    abstract: "Our research reveals alarming patterns...",
-    professional: "Dr. Jane",
-  },
-  {
-    id: 3,
-    title: "Development of New Sustainable Materials",
-    abstract: "We present a new class of biodegradable polymers...",
-    professional: "Dr. Alice",
-  },
-  {
-    id: 4,
-    title: "Development of New Sustainable Materials",
-    abstract: "We present a new class of biodegradable polymers...",
-    professional: "Dr. Alice",
-  },
-  {
-    id: 5,
-    title: "Development of New Sustainable Materials",
-    abstract: "We present a new class of biodegradable polymers...",
-    professional: "Dr. Alice",
-  },
-  {
-    id: 6,
-    title: "Development of New Sustainable Materials",
-    abstract: "We present a new class of biodegradable polymers...",
-    professional: "Dr. Alice",
-  },
-  // Outros artigos...
-];
 
-const researchs = [
-  {
-    id: 1,
-    title: "Breakthrough in Quantum Computing",
-    description: "A novel approach to qubits...",
-    period: "2024-2025",
-    partners: "NASA, ESA",
-  },
-  {
-    id: 2,
-    title: "Exploring the Deep Ocean",
-    description: "New insights into marine biodiversity...",
-    period: "2024-2025",
-    partners: "NOAA",
-  },
-];
 
 export function Home() {
   // const groupedArticles = useMemo(() => {
@@ -91,7 +36,7 @@ export function Home() {
   //     return acc;
   //   }, [] as Article[][]);
   // }, []);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const articlesList = useAppSelector((state) => state.articles.list);
   const researchList = useAppSelector((state) => state.research.list);

@@ -15,9 +15,10 @@ export interface Research {
     }
   ];
   professional: {
-    id: number;
+    id: string;
     name: string;
   };
+  professionalId: string; 
 }
 interface ResearchState {
   list: Research[];

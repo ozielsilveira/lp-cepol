@@ -26,15 +26,15 @@ export const fetchEquipments = createAsyncThunk('equipaments/fetch', async () =>
 });
 
 export const createEquipment = createAsyncThunk('equipaments/create', async (newArticle: any) => {
-  const response = await apiClient.post('/equipaments/create', newArticle);
+  const response = await apiClient.post('/equipment', newArticle);
   return response.data;
 });
 
 export const updateEquipment = createAsyncThunk<Equipment, Equipment>(
-  "professionals/update",
+  "equipment/update",
   async (data) => {
     const response = await apiClient.put<Equipment>(
-      `/equipment/${data.id}`,
+      `/equipment`,
       data
     );
     return response.data;

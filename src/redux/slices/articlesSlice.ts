@@ -11,6 +11,7 @@ export interface Article {
   secondText: string | null;
   images?: { id: number; url: string; title: string; description: string }[];
   professional?: { id: number; name: string };
+  professionalId?: string
 }
 interface ArticleState {
   list: Article[];

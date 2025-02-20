@@ -7,6 +7,7 @@ import {
   DialogContent,
   DialogTitle,
   IconButton,
+  MenuItem,
   Paper,
   Table,
   TableBody,
@@ -27,18 +28,29 @@ import {
   Research,
   updateResearch,
 } from "../../redux/slices/researchSlice";
-import { AppDispatch, IRootState } from "../../redux/store";
+import { AppDispatch, IRootState, useAppSelector } from "../../redux/store";
+import { fetchProfessionals } from "../../redux/slices/professionalSlice";
+// import { TextFieldForms } from "../../components/texfFieldForms";
 
 export const ResearchManager: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { list } = useSelector((state: IRootState) => state.research);
+  const professionalList = useAppSelector((state) => state.professional.list);
+  
   console.log(list);
   const { register, handleSubmit, reset, setValue } = useForm<Research>();
   const [open, setOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
-    dispatch(fetchResearch());
+    if (list.length === 0) {
+      dispatch(fetchResearch());
+    }
+    if (professionalList.length === 0) {
+      dispatch(fetchProfessionals());
+    }
+    // dispatch(fetchResearch());
+    
   }, [dispatch]);
 
   const handleOpen = () => {
@@ -85,8 +97,9 @@ export const ResearchManager: React.FC = () => {
     setValue("images.0.title", research.images?.[0]?.title || "");
     setValue("images.0.description", research.images?.[0]?.description || "");
     setValue("images.0.url", research.images?.[0]?.url || "");
+    setValue("professionalId", research.professionalId || "");
   };
-
+console.log(professionalList);
   const handleDelete = (id: string) => {
     if (window.confirm("Are you sure you want to delete this research?")) {
       dispatch(deleteResearch(id));
@@ -142,6 +155,9 @@ export const ResearchManager: React.FC = () => {
                   <TableCell>
                     {research.images?.[0]?.url || "No Image"}
                   </TableCell>
+                  <TableCell>
+                    {research.professional?.name || "No Professional"}
+                  </TableCell>
                   {/* <TableCell>
                                     {new Date(research.createdAt).toLocaleString('pt-BR', {
                                         day: '2-digit',
@@ -184,6 +200,7 @@ export const ResearchManager: React.FC = () => {
               fullWidth
               margin="normal"
               required
+             
             />
             <TextField
               {...register("description")}
@@ -191,6 +208,8 @@ export const ResearchManager: React.FC = () => {
               fullWidth
               margin="normal"
               required
+              multiline
+              
             />
             <TextField
               {...register("bodyText")}
@@ -198,6 +217,14 @@ export const ResearchManager: React.FC = () => {
               fullWidth
               margin="normal"
               required
+              multiline
+              sx={{
+                height: '112px !important', 
+                '& .MuiOutlinedInput-root': {
+                  height: '100% !important', 
+                },
+                mb: 2,
+              }}
             />
             <TextField
               {...register("secondText")}
@@ -205,6 +232,8 @@ export const ResearchManager: React.FC = () => {
               fullWidth
               margin="normal"
               required
+              multiline
+              sx={{height:'45px'}}
             />
             <TextField
               {...register("images.0.title")}
@@ -227,6 +256,21 @@ export const ResearchManager: React.FC = () => {
               margin="normal"
               required
             />
+            <TextField
+              {...register("professionalId")}
+              label="Professional"
+              fullWidth
+              select
+              margin="normal"
+              required
+            >
+              {professionalList &&
+                professionalList.map((type) => (
+                  <MenuItem value={type.id} key={type.id}>
+                    {type.name}
+                  </MenuItem>
+                ))}
+            </TextField>
             {/* <TextField
                             {...register('hierarchy', { valueAsNumber: true })}
                             label="hierarchy"
