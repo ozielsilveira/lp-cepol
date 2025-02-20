@@ -2,16 +2,12 @@ import React from "react";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 
-interface CardProps {
-  article: {
-    id: number;
-    title: string;
-    abstract: string;
-    professional: string;
-  };
+import { Article } from '../redux/slices/articlesSlice';
+interface CardCarouselProps {
+  article: Article;
 }
 
-export const CardCarousel: React.FC<CardProps> = ({ article }) => {
+export const CardCarousel: React.FC<CardCarouselProps> = ({ article }) => {
   return (
     <Paper
       elevation={3}
@@ -28,10 +24,10 @@ export const CardCarousel: React.FC<CardProps> = ({ article }) => {
         {article.title}
       </Typography>
       <Typography variant="body2" noWrap>
-        {article.abstract}
+        {article.description}
       </Typography>
       <Typography variant="subtitle2" color="text.secondary" noWrap>
-        {article.professional}
+        {article.professional?.name}
       </Typography>
     </Paper>
   );

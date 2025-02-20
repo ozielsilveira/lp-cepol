@@ -49,7 +49,7 @@ export const updateProfessional = createAsyncThunk<Professional, Professional>(
   "professionals/update",
   async (data) => {
     const response = await apiClient.put<Professional>(
-      `/professional/${data.id}`,
+      `/professional`,
       data
     );
     return response.data;

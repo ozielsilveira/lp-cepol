@@ -115,7 +115,7 @@ export const Research: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const researchList = useAppSelector((state) => state.research.list);
-  console.log(researchList);
+
 
   useEffect(() => {
     if (researchList.length === 0) {

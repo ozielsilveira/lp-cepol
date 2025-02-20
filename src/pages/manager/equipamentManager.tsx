@@ -52,11 +52,7 @@ export const EquipmentslManager: React.FC = () => {
   //   { id: '10', name: "Centrífuga", model: "5804R", type: "Processing" },
   // ];
 
-  useEffect(() => {
-    if (list.length === 0) {
-      dispatch(fetchEquipments());
-    }
-  }, [dispatch, list.length]);
+  
 
   const handleOpen = () => {
     setOpen(true);
@@ -78,7 +74,14 @@ export const EquipmentslManager: React.FC = () => {
       dispatch(createEquipment(data));
     }
     handleClose();
+    dispatch(fetchEquipments());
   };
+
+  useEffect(() => {
+    if (list.length === 0) {
+      dispatch(fetchEquipments());
+    }
+  }, [dispatch, list.length, onSubmit]);
 
   const handleEdit = (equipment: Equipment) => {
     setIsEditing(true);
