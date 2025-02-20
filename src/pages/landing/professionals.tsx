@@ -175,6 +175,13 @@ export const Professionals: React.FC = () => {
                       >
                         {professional.role}
                       </Typography>
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        sx={{ mt: 1 }}
+                      >
+                        {professional.bio}
+                      </Typography>
                       {/* <Typography
                       variant="body2"
                       color="text.secondary"
