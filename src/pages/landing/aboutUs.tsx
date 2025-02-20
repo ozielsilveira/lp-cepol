@@ -55,12 +55,9 @@
 
 // icones
 
-import MissionIcon from "@mui/icons-material/Flag";
-import TeamIcon from "@mui/icons-material/Group";
-import VisionIcon from "@mui/icons-material/Visibility";
+
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
-import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 
 // const teamMembers = [

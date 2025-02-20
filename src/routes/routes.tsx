@@ -36,21 +36,23 @@ export const routes: CustomRouteObject[] = [
     type: "public",
     element: (
       <LayoutContainer>
-        <Box sx={{
-          "&::before": {
-            content: '""',
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "60%",
-            backgroundImage: `url(${PolimerImg})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            opacity: 0.2, // Define a transparência da imagem de fundo
-            zIndex: -1,
-          },
-        }}>
+        <Box
+          sx={{
+            "&::before": {
+              content: '""',
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "60%",
+              backgroundImage: `url(${PolimerImg})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              opacity: 0.2, // Define a transparência da imagem de fundo
+              zIndex: -1,
+            },
+          }}
+        >
           <Home />
         </Box>
       </LayoutContainer>
@@ -146,7 +148,8 @@ export const routes: CustomRouteObject[] = [
       <ProtectedRoute>
         <LayoutContainerPrivate>
           <ProfessionalManager />
-        </LayoutContainerPrivate></ProtectedRoute>
+        </LayoutContainerPrivate>
+      </ProtectedRoute>
     ),
   },
   {

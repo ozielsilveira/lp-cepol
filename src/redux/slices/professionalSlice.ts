@@ -6,7 +6,7 @@ export interface Professional {
   name: string;
   role: string;
   bio: string;
-  imageUrl: string;
+  imageUrl: string | null;
   hierarchy: number;
   createdAt: string;
 }

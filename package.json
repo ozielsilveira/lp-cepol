@@ -10,7 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.741.0",
+    "@aws-sdk/client-s3": "^3.750.0",
     "@emailjs/browser": "^4.4.1",
     "@emotion/react": "^11.11.0",
     "@emotion/styled": "^11.11.0",
