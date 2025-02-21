@@ -491,7 +491,8 @@ export const ArticlesManager: React.FC = () => {
     if (window.confirm("Are you sure you want to delete this article?")) {
       dispatch(deleteArticle(id));
       setSnackbarMessage("Article excluído com sucesso!");
-        setSnackbarSeverity("success");
+      setSnackbarSeverity("success");
+      setSnackbarOpen(true);
     }
   };
 

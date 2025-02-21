@@ -528,7 +528,8 @@ export const ResearchManager: React.FC = () => {
     if (window.confirm("Are you sure you want to delete this research?")) {
       dispatch(deleteResearch(id));
       setSnackbarMessage("Research excluído com sucesso!");
-        setSnackbarSeverity("success");
+      setSnackbarSeverity("success");
+      setSnackbarOpen(true);
     }
   };
 
