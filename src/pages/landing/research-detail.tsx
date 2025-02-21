@@ -37,7 +37,7 @@ export const ResearchDetailed: React.FC = () => {
     <Box sx={{ pb: 5, pl: 20, pr: 20 }}>
       {/* Título principal */}
       <Box sx={{ textAlign: "center", marginBottom: 4 }}>
-        <Typography variant="h4" sx={{ fontWeight: "bold" }}>
+        <Typography variant="h5" sx={{ fontWeight: "bold" }}>
           {detailedResearch.title}
         </Typography>
         <Typography variant="h6" sx={{ mt: 2 }}>
@@ -88,7 +88,14 @@ export const ResearchDetailed: React.FC = () => {
                 </Box>
                 <CardMedia
                   component="img"
-                  height="200"
+                  // height="200"
+                  sx={{
+                    width: "400px",
+                    height: "auto",
+                    maxHeight: "350px",
+                    objectFit: "cover",
+                    margin: "auto",
+                  }}
                   image={image.url}
                   alt={image.title}
                 />
@@ -103,7 +110,7 @@ export const ResearchDetailed: React.FC = () => {
         </Grid>
       </Grid>
       <Box ml={"13px"}>
-        <Typography variant="caption" align="center">
+        <Typography variant="h6" align="left">
           Partner: {detailedResearch.professional?.name}
         </Typography>
       </Box>

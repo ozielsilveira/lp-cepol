@@ -491,12 +491,45 @@ const ProfessionalManager: React.FC = () => {
               margin="normal"
               required
             />
+            {/* <TextField
+              {...register("bio")}
+              label="Bio"
+              fullWidth
+              margin="normal"
+              required
+            /> */}
             <TextField
               {...register("bio")}
               label="Bio"
               fullWidth
               margin="normal"
               required
+              multiline
+              rows={4} // Menor que bodyText, mas ainda espaçoso
+              variant="outlined"
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  minHeight: "120px", // Altura mínima adequada
+                  alignItems: "flex-start", // Alinha o texto no topo
+                  padding: "12px", // Mais espaço interno
+                  borderRadius: "8px", // Bordas arredondadas
+                },
+                "& .MuiInputBase-input": {
+                  fontSize: "1rem", // Tamanho de fonte confortável
+                  lineHeight: "1.5", // Espaçamento entre linhas
+                },
+                "& .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "rgba(0, 0, 0, 0.23)", // Borda padrão
+                },
+                "&:hover .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "primary.main", // Borda ao passar o mouse
+                },
+                "& .Mui-focused .MuiOutlinedInput-notchedOutline": {
+                  borderWidth: "2px", // Borda mais grossa ao focar
+                },
+                mb: 2, // Margem inferior para espaçamento
+              }}
+              placeholder="Digite a sua Biografia aqui..." // Placeholder útil
             />
             <TextField
               {...register("imageUrl")}

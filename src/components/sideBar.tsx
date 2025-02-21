@@ -31,7 +31,7 @@ const pages: Page[] = [
     icon: <HomeIcon />,
   },
   {
-    name: "Artichles",
+    name: "Articles",
     path: "/manager/articles",
     icon: <ArticleIcon />,
   },
