@@ -376,6 +376,7 @@
 // };
 import { Add, Delete, Edit } from "@mui/icons-material";
 import {
+  Alert,
   Box,
   Button,
   CircularProgress,
@@ -386,6 +387,7 @@ import {
   IconButton,
   MenuItem,
   Paper,
+  Snackbar,
   styled,
   Table,
   TableBody,
@@ -413,13 +415,19 @@ import { setImageUrls } from "../../redux/slices/fileUploadSlice"; // Importe a 
 
 export const ResearchManager: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { list } = useSelector((state: IRootState) => state.research);
+  const { list, status, loading, error } = useSelector(
+    (state: IRootState) => state.research
+  );
   const professionalList = useAppSelector((state) => state.professional.list);
   const { register, handleSubmit, reset, setValue, control } =
     useForm<Research>();
   const [open, setOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const loading = useAppSelector((state) => state.research.loading);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">(
+    "success"
+  );
   const {
     imageOneUrl,
     imageTwoUrl,
@@ -429,13 +437,13 @@ export const ResearchManager: React.FC = () => {
   );
 
   useEffect(() => {
-    if (list.length === 0) {
+    if (list.length === 0 && status === "idle") {
       dispatch(fetchResearch());
     }
     if (professionalList.length === 0) {
       dispatch(fetchProfessionals());
     }
-  }, [dispatch, list.length, professionalList.length]);
+  }, [dispatch, list.length, professionalList.length, status]);
 
   useEffect(() => {
     if (imageOneUrl) {
@@ -459,19 +467,35 @@ export const ResearchManager: React.FC = () => {
     dispatch(setImageUrls({ imageOneUrl: null, imageTwoUrl: null })); // Limpa as URLs ao fechar
   };
 
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
   const onSubmit: SubmitHandler<Research> = async (data) => {
     try {
       if (isEditing) {
         if (data.id) {
           await dispatch(updateResearch(data as Required<Research>)).unwrap();
+          setSnackbarMessage("Research atualizado com sucesso!");
+          setSnackbarSeverity("success");
         }
       } else {
         await dispatch(createResearch(data)).unwrap();
+        setSnackbarMessage("Research cadastrado com sucesso!");
+        setSnackbarSeverity("success");
       }
       handleClose();
       dispatch(fetchResearch());
+      setSnackbarOpen(true);
     } catch (error) {
-      console.error("Erro ao salvar research:", error);
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Erro desconhecido ao salvar Research";
+      setSnackbarMessage(`Erro: ${errorMessage}`);
+      setSnackbarSeverity("error");
+      setSnackbarOpen(true);
+      console.error("Erro ao salvar Research:", error);
     }
   };
 
@@ -503,11 +527,10 @@ export const ResearchManager: React.FC = () => {
   const handleDelete = (id: string) => {
     if (window.confirm("Are you sure you want to delete this research?")) {
       dispatch(deleteResearch(id));
+      setSnackbarMessage("Research excluído com sucesso!");
+        setSnackbarSeverity("success");
     }
   };
-
-  console.log("imageOneUrl", imageOneUrl);
-  console.log("imageTwoUrl", imageTwoUrl);
 
   return (
     <Box p={3}>
@@ -524,7 +547,11 @@ export const ResearchManager: React.FC = () => {
           startIcon={<Add />}
           onClick={handleOpen}
         >
-          Add Research
+          {loading ? (
+            <CircularProgress size={24} color="inherit" />
+          ) : (
+            "Add Research"
+          )}
         </Button>
       </Box>
       {loading ? (
@@ -586,6 +613,12 @@ export const ResearchManager: React.FC = () => {
                         {research.images?.[0]?.url ? (
                           <Box
                             component={"img"}
+                            onClick={() =>
+                              window.open(
+                                `${research.images?.[0]?.url}`,
+                                "_blank"
+                              )
+                            }
                             src={research.images[0].url}
                             sx={{
                               width: "130px",
@@ -612,19 +645,6 @@ export const ResearchManager: React.FC = () => {
                             </Typography>
                           </Box>
                         )}
-                        <Typography
-                          variant="caption"
-                          sx={{
-                            textAlign: "center",
-                            textOverflow: "ellipsis",
-                            overflow: "hidden",
-                            whiteSpace: "nowrap",
-                            maxWidth: "130px", // Mesmo width da imagem para consistência
-                            mt: 1, // Margem superior para espaçamento
-                          }}
-                        >
-                          {research.images?.[0]?.url || "No Image"}
-                        </Typography>
                       </Box>
                     </TableCell>
                     <TableCell>{research.images?.[1]?.title || ""}</TableCell>
@@ -644,6 +664,12 @@ export const ResearchManager: React.FC = () => {
                         {research.images?.[1]?.url ? (
                           <Box
                             component={"img"}
+                            onClick={() =>
+                              window.open(
+                                `${research.images?.[1]?.url}`,
+                                "_blank"
+                              )
+                            }
                             src={research.images[1].url}
                             sx={{
                               width: "130px",
@@ -670,19 +696,6 @@ export const ResearchManager: React.FC = () => {
                             </Typography>
                           </Box>
                         )}
-                        <Typography
-                          variant="caption"
-                          sx={{
-                            textAlign: "center",
-                            textOverflow: "ellipsis",
-                            overflow: "hidden",
-                            whiteSpace: "nowrap",
-                            maxWidth: "130px", // Mesmo width da imagem para consistência
-                            mt: 1, // Margem superior para espaçamento
-                          }}
-                        >
-                          {research.images?.[1]?.url || ""}
-                        </Typography>
                       </Box>
                     </TableCell>
                     <TableCell>
@@ -690,12 +703,14 @@ export const ResearchManager: React.FC = () => {
                     </TableCell>
                     <TableCell align="right">
                       <IconButton
+                        disabled={loading}
                         color="primary"
                         onClick={() => handleEdit(research)}
                       >
                         <Edit />
                       </IconButton>
                       <IconButton
+                        disabled={loading}
                         color="error"
                         onClick={() => handleDelete(research.id)}
                       >
@@ -707,6 +722,11 @@ export const ResearchManager: React.FC = () => {
             </TableBody>
           </Table>
         </TableContainer>
+      )}
+      {error && (
+        <Typography color="error" sx={{ mt: 2, textAlign: "center" }}>
+          {error}
+        </Typography>
       )}
       {/* <Dialog
         open={open}
@@ -1008,6 +1028,20 @@ export const ResearchManager: React.FC = () => {
           </DialogActions>
         </form>
       </Dialog>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert
+          onClose={handleSnackbarClose}
+          severity={snackbarSeverity}
+          sx={{ width: "100%" }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };
