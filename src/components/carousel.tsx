@@ -130,7 +130,7 @@
 import { useTheme } from "@emotion/react";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
-import { IconButton, ThemeProvider } from "@mui/material";
+import { IconButton, Theme, ThemeProvider, useMediaQuery } from "@mui/material";
 import Box from "@mui/material/Box";
 import Slide from "@mui/material/Slide";
 import Stack from "@mui/material/Stack";
@@ -147,8 +147,8 @@ export const Carousel: React.FC<CarouselProps> = ({ items }) => {
   const [slideDirection, setSlideDirection] = useState<"right" | "left">(
     "left"
   );
-
-  const cardsPerPage = 3;
+  const isXs = useMediaQuery((theme: Theme) => theme.breakpoints.down("md"));
+  const cardsPerPage = isXs == true ? 1 : 3;
   const containerWidth = cardsPerPage * 300; // Ajuste do tamanho do container
   const pageCount = Math.ceil(items.length / cardsPerPage);
 
@@ -174,7 +174,7 @@ export const Carousel: React.FC<CarouselProps> = ({ items }) => {
   return (
     <ThemeProvider theme={theme}>
       <Box
-        sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}
+        sx={{ display: "flex", flexDirection: "column", alignItems: "center",  width: { xs: "100vw !important", md: "80%" }, }}
       >
         <Box
           sx={{
@@ -183,13 +183,13 @@ export const Carousel: React.FC<CarouselProps> = ({ items }) => {
             alignItems: "center",
             justifyContent: "center",
             height: "350px",
-            width: "100%",
+            width:"100%",
             marginTop: "40px",
           }}
         >
           <IconButton
             onClick={handlePrevPage}
-            sx={{ margin: 5, color: "primary.main" }}
+            sx={{ margin: {md:5, xs:1}, color: "primary.main" }}
             disabled={currentPage === 0}
           >
             <NavigateBeforeIcon />
@@ -225,7 +225,7 @@ export const Carousel: React.FC<CarouselProps> = ({ items }) => {
           </Box>
           <IconButton
             onClick={handleNextPage}
-            sx={{ margin: 5, color: "primary.main" }}
+            sx={{ margin: {md:5, xs:1}, color: "primary.main" }}
             disabled={currentPage >= pageCount - 1}
           >
             <NavigateNextIcon />

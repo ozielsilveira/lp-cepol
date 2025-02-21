@@ -207,6 +207,8 @@ import {
   ListItem,
   ListItemText,
   CircularProgress,
+  useMediaQuery,
+  Theme,
 } from "@mui/material";
 import { Carousel } from "../../components/carousel.tsx";
 import mainImg from "../../../public/images/cepolSVG.svg";
@@ -230,7 +232,7 @@ export function Home() {
   // Estado para o termo de busca e resultados filtrados
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredResults, setFilteredResults] = useState<SearchResult[]>([]);
-
+  const isXs = useMediaQuery((theme: Theme) => theme.breakpoints.down("md"));
   // Fetch dos dados
   useEffect(() => {
     if (researchList.length === 0) {
@@ -305,14 +307,18 @@ export function Home() {
                 />
                 <Button
                   variant="contained"
-                  startIcon={<SearchIcon />}
+                  sx={{ width: {xs: "25px", md:"40px"} }}
+                  startIcon={<SearchIcon sx={{ml:{xs:"0px", md:"4px"}, mr:{xs:"0px", md:"8px"}}}/>}
                   onClick={handleSearch}
                 >
-                  Search
+                  {isXs ? "" : "Search"}
+                  
                 </Button>
               </Box>
             </Box>
-            <Box component={"img"} src={mainImg} width={300} height={300} />
+            {!isXs && (
+            <Box component={"img"} src={mainImg} sx={{width:{xs: "300px", md: "300px"}, height:{xs: "200px", md:"300px"}}} />
+          )}
           </Box>
 
           {/* Lista de resultados da busca */}
@@ -374,7 +380,7 @@ export function Home() {
             }}
           >
             <Typography
-              sx={{ mb: 4, mt: 2 }}
+              sx={{ mb: 4, mt: 2 , fontSize: {md:"h5", xs:"1.5rem"}}}
               variant="h4"
               fontWeight="bold"
               gutterBottom
@@ -395,10 +401,11 @@ export function Home() {
             sx={{ alignItems: "center", flexDirection: "column", mt: 6, mb: 6 }}
           >
             <Typography
-              variant="h4"
+              // variant={"h4"}
+              
               fontWeight="bold"
               gutterBottom
-              sx={{ mt: 6, mb: 4 }}
+              sx={{ mt: 6, mb: 4, fontSize: {md:"h5", xs:"1.5rem"} }}
             >
               Featured Research
             </Typography>
@@ -413,7 +420,7 @@ export function Home() {
                     onClick={() => navigate(`/research/${research.id}`)}
                     key={research.id}
                     sx={{
-                      width: "450px",
+                      width: {md: "450px", xs: "310px"},
                       height: "250px",
                       cursor: "pointer",
                       transition: "transform 0.2s ease-in-out",
@@ -424,7 +431,7 @@ export function Home() {
                     }}
                   >
                     <CardContent>
-                      <Typography variant="h6" gutterBottom>
+                      <Typography variant="h6" gutterBottom sx={{fontSize: {xs: "14px", md: "18px"}}}>
                         {research.title}
                       </Typography>
                       <Typography
