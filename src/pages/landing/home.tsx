@@ -1,4 +1,3 @@
-
 import SearchIcon from "@mui/icons-material/Search";
 import {
   Box,
@@ -17,14 +16,17 @@ import {
 } from "@mui/material";
 import { Carousel } from "../../components/carousel.tsx";
 import mainImg from "../../../public/images/cepolSVG.svg";
-import { Article, fetchArticles } from "../../redux/slices/articlesSlice.ts";
+import { fetchArticles } from "../../redux/slices/articlesSlice.ts";
 import { useAppDispatch, useAppSelector } from "../../redux/store.ts";
 import { useEffect, useState } from "react";
-import { fetchResearch, Research } from "../../redux/slices/researchSlice.ts";
+import { fetchResearch } from "../../redux/slices/researchSlice.ts";
 import { useNavigate } from "react-router-dom";
-
-type SearchResult = Article | Research;
-
+interface ISearchResult {
+  id: string;
+  title: string;
+  description?: string;
+  type: "articles" | "research"; // Adiciona o tipo do item
+}
 export function Home() {
   const dispatch = useAppDispatch();
   const articlesList = useAppSelector((state) => state.articles.list);
@@ -36,7 +38,7 @@ export function Home() {
 
   // Estado para o termo de busca e resultados filtrados
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredResults, setFilteredResults] = useState<SearchResult[]>([]);
+  const [filteredResults, setFilteredResults] = useState<ISearchResult[]>([]);
   const isXs = useMediaQuery((theme: Theme) => theme.breakpoints.down("md"));
   // Fetch dos dados
   useEffect(() => {
@@ -58,17 +60,31 @@ export function Home() {
       return;
     }
 
-    const filteredArticles = articlesList.filter(
-      (article) =>
-        article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        article.description?.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const filteredArticles = articlesList
+      .filter(
+        (article) =>
+          article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          article.description?.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+      .map((article) => ({
+        id: article.id,
+        title: article.title,
+        description: article.description,
+        type: "articles" as const, // Define o tipo como "article"
+      }));
 
-    const filteredResearch = researchList.filter(
-      (research) =>
-        research.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        research.description?.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const filteredResearch = researchList
+      .filter(
+        (research) =>
+          research.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          research.description?.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+      .map((research) => ({
+        id: research.id,
+        title: research.title,
+        description: research.description,
+        type: "research" as const, // Define o tipo como "research"
+      }));
 
     setFilteredResults([...filteredArticles, ...filteredResearch]);
   };
@@ -93,7 +109,12 @@ export function Home() {
             }}
           >
             <Box sx={{ flex: 1, zIndex: 1 }}>
-              <Typography variant="h3" fontWeight="bold" gutterBottom sx={{fontSize: {md:"h4", xs:"2.8rem"}}}>
+              <Typography
+                variant="h3"
+                fontWeight="bold"
+                gutterBottom
+                sx={{ fontSize: { md: "h4", xs: "2.8rem" } }}
+              >
                 Discover the Advances of Science
               </Typography>
               <Typography variant="body1" color="textSecondary" paragraph>
@@ -112,18 +133,31 @@ export function Home() {
                 />
                 <Button
                   variant="contained"
-                  sx={{ width: {xs: "25px", md:"140px"} }}
-                  startIcon={<SearchIcon sx={{ml:{xs:"0px", md:"4px"}, mr:{xs:"0px", md:"8px"}}}/>}
+                  sx={{ width: { xs: "25px", md: "140px" } }}
+                  startIcon={
+                    <SearchIcon
+                      sx={{
+                        ml: { xs: "0px", md: "4px" },
+                        mr: { xs: "0px", md: "8px" },
+                      }}
+                    />
+                  }
                   onClick={handleSearch}
                 >
                   {isXs ? "" : "Search"}
-                  
                 </Button>
               </Box>
             </Box>
             {!isXs && (
-            <Box component={"img"} src={mainImg} sx={{width:{xs: "300px", md: "300px"}, height:{xs: "200px", md:"300px"}}} />
-          )}
+              <Box
+                component={"img"}
+                src={mainImg}
+                sx={{
+                  width: { xs: "300px", md: "300px" },
+                  height: { xs: "200px", md: "300px" },
+                }}
+              />
+            )}
           </Box>
 
           {/* Lista de resultados da busca */}
@@ -157,12 +191,8 @@ export function Home() {
                           bgcolor: "grey.100",
                         },
                       }}
-                      onClick={() =>
-                        navigate(
-                          `/${item.description ? "articles" : "research"}/${
-                            item.id
-                          }`
-                        )
+                      onClick={
+                        () => navigate(`/${item.type}/${item.id}`) // Usa o type para determinar a rota
                       }
                     >
                       <ListItemText
@@ -185,7 +215,7 @@ export function Home() {
             }}
           >
             <Typography
-              sx={{ mb: 4, mt: 2 , fontSize: {md:"h5", xs:"1.5rem"}}}
+              sx={{ mb: 4, mt: 2, fontSize: { md: "h5", xs: "1.5rem" } }}
               variant="h4"
               fontWeight="bold"
               gutterBottom
@@ -207,10 +237,10 @@ export function Home() {
           >
             <Typography
               // variant={"h4"}
-              
+
               fontWeight="bold"
               gutterBottom
-              sx={{ mt: 6, mb: 4, fontSize: {md:"h5", xs:"1.5rem"} }}
+              sx={{ mt: 6, mb: 4, fontSize: { md: "h5", xs: "1.5rem" } }}
             >
               Featured Research
             </Typography>
@@ -219,24 +249,33 @@ export function Home() {
                 <CircularProgress />
               </Box>
             ) : (
-              <Box sx={{ display: "flex", flexDirection: {xs:"column", md: "row"}, gap: 3 }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: { xs: "column", md: "row" },
+                  gap: 3,
+                }}
+              >
                 {researchList.slice(0, 2).map((research) => (
                   <Card
                     onClick={() => navigate(`/research/${research.id}`)}
                     key={research.id}
                     sx={{
-                      width: {md: "450px", xs: "310px"},
+                      width: { md: "450px", xs: "310px" },
                       height: "250px",
                       cursor: "pointer",
                       transition: "transform 0.2s ease-in-out",
                       "&:hover": {
                         transform: "scale(1.02)",
-                       
                       },
                     }}
                   >
                     <CardContent>
-                      <Typography variant="h6" gutterBottom sx={{fontSize: {xs: "14px", md: "18px"}}}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        sx={{ fontSize: { xs: "14px", md: "18px" } }}
+                      >
                         {research.title}
                       </Typography>
                       <Typography

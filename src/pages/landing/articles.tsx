@@ -12,15 +12,6 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchArticles } from "../../redux/slices/articlesSlice";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
-// import { BookOpen } from "@mui/icons-material";
-
-// interface Article {
-//   id: number;
-//   title: string;
-//   abstract: string;
-//   author: string;
-//   publishedDate: string;
-// }
 
 export const Articles: React.FC = () => {
   const navigate = useNavigate();
@@ -55,11 +46,10 @@ export const Articles: React.FC = () => {
           ) : (
             <Grid container spacing={4} mb={2}>
               {" "}
-              {/* Similar ao gap-8 */}
               {articlesList.map((article) => (
                 <Grid item xs={12} md={6} key={article.id}>
                   {" "}
-                  {/* xs=12 ocupa toda a linha em telas pequenas, md=6 divide em 2 colunas em telas médias */}
+                
                   <Card
                     sx={{
                       boxShadow: 3,
@@ -89,7 +79,7 @@ export const Articles: React.FC = () => {
                       <p className="text-xs text-gray-500 mb-4">
                         <strong>Author:</strong> {article.author} {" "}
                         <strong>Published:</strong> {article.published} {" "}
-                        {/* {new Date(article.publishedDate).toLocaleDateString()} */}
+                    
                       </p>
                     </CardContent>
                   </Card>
