@@ -19,7 +19,9 @@ import {
   TableHead,
   TableRow,
   TextField,
+  Theme,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
@@ -173,26 +175,27 @@ export const ArticlesManager: React.FC = () => {
       setSnackbarOpen(true);
     }
   };
-
+  const isXs = useMediaQuery((theme: Theme) => theme.breakpoints.down("md"));
   return (
-    <Box p={3}>
+    <Box sx={{p: {xs: 0, md: 3},pt: {xs: 2}}}>
       <Box
         display="flex"
         justifyContent="space-between"
         alignItems="center"
         mb={3}
       >
-        <Typography variant="h4">Article Manager</Typography>
+        <Typography variant="h4" sx={{fontSize: {xs: "22px", md: "2rem"}}}>Article Manager</Typography>
         <Button
           variant="contained"
           color="primary"
           startIcon={<Add />}
           onClick={handleOpen}
         >
+          
           {loading ? (
             <CircularProgress size={24} color="inherit" />
           ) : (
-            "Add Article"
+            !isXs && ("Add Article")
           )}
         </Button>
       </Box>
