@@ -23,7 +23,6 @@ export const ResearchDetailed: React.FC = () => {
       dispatch(fetchResearch());
     }
   }, [dispatch, researchList.length]);
-  // Filtra a research que tem o mesmo id recebido via URL
   const detailedResearch = researchList.find(
     (research) => research.id.toString() === id
   );
@@ -34,13 +33,13 @@ export const ResearchDetailed: React.FC = () => {
   }
 
   return (
-    <Box sx={{ pb: 5, pl: 20, pr: 20 }}>
+    <Box sx={{ pb: {xs:0.5, md:4}, pl:{xs:0 , md:20}, pr: {xs:0 , md:20},pt: {xs:1 , md:3} }}>
       {/* Título principal */}
       <Box sx={{ textAlign: "center", marginBottom: 4 }}>
-        <Typography variant="h5" sx={{ fontWeight: "bold" }}>
+        <Typography sx={{ fontWeight: "bold" ,  fontSize: {md:"h5", xs:"1.2rem"} , textAlign:{xs:"justify", md:"start"}}} variant="h5">
           {detailedResearch.title}
         </Typography>
-        <Typography variant="h6" sx={{ mt: 2 }}>
+        <Typography variant="h6" sx={{ mt: 2, textAlign:"justify" }}>
           {detailedResearch.description}
         </Typography>
       </Box>
@@ -57,7 +56,7 @@ export const ResearchDetailed: React.FC = () => {
               // backgroundColor: "#f9f9f9",
             }}
           >
-            <Typography variant="body1">{detailedResearch.bodyText}</Typography>
+            <Typography variant="body1" sx={{ textAlign:"justify"}}>{detailedResearch.bodyText}</Typography>
           </Box>
           <Box
             sx={{
@@ -68,7 +67,7 @@ export const ResearchDetailed: React.FC = () => {
               // backgroundColor: "#f9f9f9",
             }}
           >
-            <Typography variant="body1">
+            <Typography variant="body1" sx={{ textAlign:"justify"}}>
               {detailedResearch.secondText}
             </Typography>
           </Box>

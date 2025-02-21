@@ -157,7 +157,7 @@ export const ImageInput = ({ imageUrl, uploadLoading, imageType }: ImageInputPro
   };
 
   return (
-    <Box sx={{ width: "300px", height: "auto", margin: "0 auto" }}>
+    <Box sx={{ width: {md: "300px", xs:"100%"}, height: "auto", margin: "0 auto" }}>
       <Box position="relative" width="100%" height="180px">
         {hasImage ? (
           <Box component="a" width="100%">
