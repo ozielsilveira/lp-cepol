@@ -1,9 +1,11 @@
 import ArticleIcon from "@mui/icons-material/Article";
 import BiotechIcon from "@mui/icons-material/Biotech";
+import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import HomeIcon from "@mui/icons-material/Home";
 import HomeRepairServiceIcon from "@mui/icons-material/HomeRepairService";
 import MenuIcon from "@mui/icons-material/Menu";
 import PeopleIcon from "@mui/icons-material/People";
+
 import {
   Box,
   Drawer,
@@ -27,7 +29,7 @@ interface Page {
 const pages: Page[] = [
   {
     name: "Home",
-    path: "/",
+    path: "/manager",
     icon: <HomeIcon />,
   },
   {
@@ -49,6 +51,11 @@ const pages: Page[] = [
     name: "Researchs",
     path: "/manager/researchs",
     icon: <BiotechIcon />,
+  },
+  {
+    name: "View Pages",
+    path: "/",
+    icon: <FullscreenIcon />,
   },
 ];
 
