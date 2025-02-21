@@ -32,13 +32,23 @@ export const ArticleDetailed: React.FC = () => {
   }
 
   return (
-    <Box sx={{ pb: 5, pl: 20, pr: 20 }}>
+    <Box
+      sx={{
+        pb: { xs: 0.5, md: 4 },
+        pl: { xs: 0, md: 20 },
+        pr: { xs: 0, md: 20 },
+        pt: { xs: 1, md: 3 },
+      }}
+    >
       {/* Título principal */}
       <Box sx={{ textAlign: "center", marginBottom: 4 }}>
-        <Typography variant="h5" sx={{ fontWeight: "bold" }}>
+        <Typography
+          variant="h5"
+          sx={{ fontWeight: "bold", textAlign: "justify" }}
+        >
           {detailedArticle.title}
         </Typography>
-        <Typography variant="h6" sx={{ mt: 2 }}>
+        <Typography variant="h6" sx={{ mt: 2, textAlign: "justify" }}>
           {detailedArticle.description}
         </Typography>
       </Box>
@@ -55,7 +65,9 @@ export const ArticleDetailed: React.FC = () => {
               // backgroundColor: "#f9f9f9",
             }}
           >
-            <Typography variant="body1">{detailedArticle.bodyText}</Typography>
+            <Typography variant="body1" sx={{ textAlign: "justify" }}>
+              {detailedArticle.bodyText}
+            </Typography>
           </Box>
           <Box
             sx={{
@@ -66,7 +78,7 @@ export const ArticleDetailed: React.FC = () => {
               // backgroundColor: "#f9f9f9",
             }}
           >
-            <Typography variant="body1">
+            <Typography variant="body1" sx={{ textAlign: "justify" }}>
               {detailedArticle.secondText}
             </Typography>
           </Box>
@@ -107,11 +119,9 @@ export const ArticleDetailed: React.FC = () => {
           )}
         </Grid>
       </Grid>
-      <Box display={"flex"} flexDirection={'column'} alignItems={'start'}>
-        <Typography  sx={{ mt: 2 }}>
-          Author: {detailedArticle.author}
-        </Typography>
-        <Typography  sx={{ mt: 2 }}>
+      <Box display={"flex"} flexDirection={"column"} alignItems={"start"}>
+        <Typography sx={{ mt: 2 }}>Author: {detailedArticle.author}</Typography>
+        <Typography sx={{ mt: 2 }}>
           Published Date: {detailedArticle.published}
         </Typography>
       </Box>

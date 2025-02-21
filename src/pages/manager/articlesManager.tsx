@@ -719,7 +719,7 @@ export const ArticlesManager: React.FC = () => {
         onClose={handleClose}
         sx={{
           "& .MuiDialog-paper": {
-            width: "60vw",
+            width: {xs:"85vw", md: "60vw"},
             maxWidth: "none",
             borderRadius: "8px",
           },

@@ -45,7 +45,7 @@ export const routes: CustomRouteObject[] = [
               top: 0,
               left: 0,
               width: "100%",
-              height: "60%",
+              height: { xs: "50%", md: "60%" },
               backgroundImage: `url(${PolimerImg})`,
               backgroundSize: "cover",
               backgroundPosition: "center",
