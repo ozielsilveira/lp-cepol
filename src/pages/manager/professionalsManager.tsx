@@ -29,12 +29,17 @@
 //   updateProfessional,
 // } from "../../redux/slices/professionalSlice";
 // import { AppDispatch, IRootState, useAppSelector } from "../../redux/store";
+// import { ImageInput } from "../../components/imageInput";
+// import { setImageUrls } from "../../redux/slices/fileUploadSlice";
 
 // const ProfessionalManager: React.FC = () => {
 //   const dispatch = useDispatch<AppDispatch>();
 //   const { list } = useSelector((state: IRootState) => state.professional);
 //   const loading = useAppSelector((state) => state.professional.loading);
-//   const uploadedImageUrl = useAppSelector((state) => state.image.result);
+//   const { imageOneUrl, loading: uploadLoading } = useAppSelector(
+//     (state) => state.image
+//   );
+
 //   const { register, handleSubmit, reset, setValue } = useForm<Professional>();
 //   const [open, setOpen] = useState(false);
 //   const [isEditing, setIsEditing] = useState(false);
@@ -45,20 +50,28 @@
 //     }
 //   }, [dispatch, list.length]);
 
+//   useEffect(() => {
+//     if (imageOneUrl) {
+//       setValue("imageUrl", imageOneUrl); // Atualiza o campo imageUrl quando o upload é concluído
+//     }
+//   }, [imageOneUrl, setValue]);
+
+//   // const handleImage = (url: string) => {
+//   //   setValue("imageUrl", url);
+//   // }
+
 //   const handleOpen = () => {
 //     setOpen(true);
 //     setIsEditing(false);
 //     reset();
+//     dispatch(setImageUrls({ imageOneUrl: null, imageTwoUrl: null }));
 //   };
 
 //   const handleClose = () => {
 //     setOpen(false);
 //     reset();
-
+//     dispatch(setImageUrls({ imageOneUrl: null, imageTwoUrl: null }));
 //   };
-// const setImageUrl = (url: string) => {
-//     setValue("imageUrl", uploadedImageUrl);
-// }
 
 //   const onSubmit: SubmitHandler<Professional> = async (data) => {
 //     try {
@@ -72,7 +85,7 @@
 //         await dispatch(createProfessional(data)).unwrap();
 //       }
 //       handleClose();
-//       dispatch(fetchProfessionals()); // Atualiza a lista após a ação
+//       dispatch(fetchProfessionals());
 //     } catch (error) {
 //       console.error("Erro ao salvar profissional:", error);
 //     }
@@ -89,6 +102,11 @@
 //     setValue("imageUrl", professional.imageUrl);
 //     setValue("createdAt", professional.createdAt);
 
+//     dispatch(
+//       setImageUrls({
+//         imageOneUrl: professional.imageUrl || null,
+//       })
+//     );
 //   };
 
 //   const handleDelete = (id: string) => {
@@ -96,6 +114,12 @@
 //       dispatch(deleteProfessional(id));
 //     }
 //   };
+
+//   // const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+//   //   if (e.target.files && e.target.files[0]) {
+//   //     dispatch(uploadFile(e.target.files[0]));
+//   //   }
+//   // };
 
 //   return (
 //     <Box p={3}>
@@ -133,7 +157,6 @@
 //                 <TableCell align="right">Ações</TableCell>
 //               </TableRow>
 //             </TableHead>
-
 //             <TableBody>
 //               {Array.isArray(list) &&
 //                 list.map((professional) => (
@@ -141,9 +164,24 @@
 //                     <TableCell>{professional.name}</TableCell>
 //                     <TableCell>{professional.role}</TableCell>
 //                     <TableCell>{professional.bio}</TableCell>
-//                     <TableCell>{professional.imageUrl}</TableCell>
+//                     <TableCell>
+//                       <Box
+//                         sx={{
+//                           display: "flex",
+//                           justifyContent: "center",
+//                           flexDirection: "column",
+//                           width: "120px",
+//                         }}
+//                       >
+//                         <Box
+//                           onClick={() => window.open(`${professional.imageUrl}`, "_blank")}
+//                           component={"img"}
+//                           src={`${professional.imageUrl}`}
+//                           sx={{ width: "130px" }}
+//                         />
+//                       </Box>
+//                     </TableCell>
 //                     <TableCell>{professional.hierarchy}</TableCell>
-
 //                     <TableCell>
 //                       {new Date(professional.createdAt).toLocaleString(
 //                         "pt-BR",
@@ -197,42 +235,95 @@
 //               margin="normal"
 //               required
 //             />
+//             {/* <TextField
+//               {...register("bio")}
+//               label="Bio"
+//               fullWidth
+//               margin="normal"
+//               required
+//             /> */}
 //             <TextField
 //               {...register("bio")}
 //               label="Bio"
 //               fullWidth
 //               margin="normal"
 //               required
+//               multiline
+//               rows={4} // Menor que bodyText, mas ainda espaçoso
+//               variant="outlined"
+//               sx={{
+//                 "& .MuiOutlinedInput-root": {
+//                   minHeight: "120px", // Altura mínima adequada
+//                   alignItems: "flex-start", // Alinha o texto no topo
+//                   padding: "12px", // Mais espaço interno
+//                   borderRadius: "8px", // Bordas arredondadas
+//                 },
+//                 "& .MuiInputBase-input": {
+//                   fontSize: "1rem", // Tamanho de fonte confortável
+//                   lineHeight: "1.5", // Espaçamento entre linhas
+//                 },
+//                 "& .MuiOutlinedInput-notchedOutline": {
+//                   borderColor: "rgba(0, 0, 0, 0.23)", // Borda padrão
+//                 },
+//                 "&:hover .MuiOutlinedInput-notchedOutline": {
+//                   borderColor: "primary.main", // Borda ao passar o mouse
+//                 },
+//                 "& .Mui-focused .MuiOutlinedInput-notchedOutline": {
+//                   borderWidth: "2px", // Borda mais grossa ao focar
+//                 },
+//                 mb: 2, // Margem inferior para espaçamento
+//               }}
+//               placeholder="Digite a sua Biografia aqui..." // Placeholder útil
 //             />
-//             {/* <TextField
+//             <TextField
 //               {...register("imageUrl")}
 //               label="Image URL"
 //               fullWidth
 //               margin="normal"
-//               required
-//               // disabled
-//             /> */}
+//               value={imageOneUrl || ""}
+//               InputProps={{
+//                 readOnly: true,
+//               }}
+//             />
+//             <ImageInput
+//               imageUrl={imageOneUrl}
+//               imageType="imageOne"
+//               // handleImage={handleImage}
+//               uploadLoading={uploadLoading}
+//             ></ImageInput>
+//             {/* <Box display="flex" alignItems="center" justifyContent="center" gap={2} margin="normal">
+//               <Button
+//                 variant="outlined"
+//                 component="label"
+//                 disabled={uploadLoading}
+//               >
+//                 {uploadLoading ? "Uploading..." : "Upload Image"}
+//                 <input
+//                   type="file"
+//                   hidden
+//                   accept="image/*"
+//                   onChange={handleFileChange}
+//                 />
+//               </Button>
+//               {uploadLoading && <CircularProgress size={24} />}
+//             </Box> */}
 //             <TextField
 //               {...register("hierarchy", { valueAsNumber: true })}
-//               label="hierarchy"
+//               label="Hierarchy"
 //               fullWidth
 //               margin="normal"
 //               required
 //               type="number"
 //             />
-//             {/* <input
-//                             type="file"
-//                             accept="image/*"
-//                             onChange={(e) => {
-//                                 if (e.target.files && e.target.files[0]) {
-//                                     setSelectedFile(e.target.files[0]);
-//                                 }
-//                             }}
-//                         /> */}
 //           </DialogContent>
 //           <DialogActions>
 //             <Button onClick={handleClose}>Cancel</Button>
-//             <Button type="submit" variant="contained" color="primary">
+//             <Button
+//               type="submit"
+//               variant="contained"
+//               color="primary"
+//               disabled={uploadLoading}
+//             >
 //               {isEditing ? "Update" : "Add"}
 //             </Button>
 //           </DialogActions>
@@ -263,6 +354,8 @@ import {
   TableRow,
   TextField,
   Typography,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -280,8 +373,9 @@ import { setImageUrls } from "../../redux/slices/fileUploadSlice";
 
 const ProfessionalManager: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { list } = useSelector((state: IRootState) => state.professional);
-  const loading = useAppSelector((state) => state.professional.loading);
+  const { list, status, loading, error } = useSelector(
+    (state: IRootState) => state.professional
+  );
   const { imageOneUrl, loading: uploadLoading } = useAppSelector(
     (state) => state.image
   );
@@ -289,22 +383,23 @@ const ProfessionalManager: React.FC = () => {
   const { register, handleSubmit, reset, setValue } = useForm<Professional>();
   const [open, setOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">(
+    "success"
+  );
 
   useEffect(() => {
-    if (list.length === 0) {
+    if (list.length === 0 && status === "idle") {
       dispatch(fetchProfessionals());
     }
-  }, [dispatch, list.length]);
+  }, [dispatch, list.length, status]);
 
   useEffect(() => {
     if (imageOneUrl) {
       setValue("imageUrl", imageOneUrl); // Atualiza o campo imageUrl quando o upload é concluído
     }
   }, [imageOneUrl, setValue]);
-
-  // const handleImage = (url: string) => {
-  //   setValue("imageUrl", url);
-  // }
 
   const handleOpen = () => {
     setOpen(true);
@@ -319,6 +414,10 @@ const ProfessionalManager: React.FC = () => {
     dispatch(setImageUrls({ imageOneUrl: null, imageTwoUrl: null }));
   };
 
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
   const onSubmit: SubmitHandler<Professional> = async (data) => {
     try {
       if (isEditing) {
@@ -326,13 +425,25 @@ const ProfessionalManager: React.FC = () => {
           await dispatch(
             updateProfessional(data as Required<Professional>)
           ).unwrap();
+          setSnackbarMessage("Profissional atualizado com sucesso!");
+          setSnackbarSeverity("success");
         }
       } else {
         await dispatch(createProfessional(data)).unwrap();
+        setSnackbarMessage("Profissional cadastrado com sucesso!");
+        setSnackbarSeverity("success");
       }
       handleClose();
       dispatch(fetchProfessionals());
+      setSnackbarOpen(true);
     } catch (error) {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Erro desconhecido ao salvar profissional";
+      setSnackbarMessage(`Erro: ${errorMessage}`);
+      setSnackbarSeverity("error");
+      setSnackbarOpen(true);
       console.error("Erro ao salvar profissional:", error);
     }
   };
@@ -345,7 +456,7 @@ const ProfessionalManager: React.FC = () => {
     setValue("role", professional.role);
     setValue("bio", professional.bio);
     setValue("hierarchy", professional.hierarchy);
-    setValue("imageUrl", professional.imageUrl);
+    setValue("imageUrl", professional.imageUrl || "");
     setValue("createdAt", professional.createdAt);
 
     dispatch(
@@ -358,14 +469,10 @@ const ProfessionalManager: React.FC = () => {
   const handleDelete = (id: string) => {
     if (window.confirm("Are you sure you want to delete this professional?")) {
       dispatch(deleteProfessional(id));
+      setSnackbarMessage("Profissional excluído com sucesso!");
+        setSnackbarSeverity("success");
     }
   };
-
-  // const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   if (e.target.files && e.target.files[0]) {
-  //     dispatch(uploadFile(e.target.files[0]));
-  //   }
-  // };
 
   return (
     <Box p={3}>
@@ -381,8 +488,13 @@ const ProfessionalManager: React.FC = () => {
           color="primary"
           startIcon={<Add />}
           onClick={handleOpen}
+          disabled={loading || uploadLoading}
         >
-          Add Professional
+          {loading ? (
+            <CircularProgress size={24} color="inherit" />
+          ) : (
+            "Add Professional"
+          )}
         </Button>
       </Box>
       {loading ? (
@@ -417,24 +529,45 @@ const ProfessionalManager: React.FC = () => {
                           justifyContent: "center",
                           flexDirection: "column",
                           width: "120px",
+                          alignItems: "center",
+
                         }}
                       >
-                        <Box
-                          component={"img"}
-                          src={`${professional.imageUrl}`}
-                          sx={{ width: "130px" }}
-                        />
-                        <Typography
-                          variant="caption"
-                          sx={{
-                            textAlign: "center",
-                            textOverflow: "ellipsis",
-                            overflow: "hidden",
-                            whiteSpace: "nowrap",
-                          }}
-                        >
-                          {professional.imageUrl || "No Image"}
-                        </Typography>
+                        {professional.imageUrl ? (
+                          <Box
+                            component={"img"}
+                            onClick={() =>
+                              window.open(
+                                `${professional?.imageUrl || ""}`,
+                                "_blank"
+                              )
+                            }
+                            src={professional.imageUrl}
+                            sx={{
+                              width: "130px",
+                              maxHeight: "100px", // Altura fixa para consistência
+                              objectFit: "cover", // Mantém a proporção da imagem
+                              borderRadius: "4px", // Opcional: para estética
+                            }}
+                            onError={(e) => (e.currentTarget.src = "")} // Caso a imagem falhe ao carregar
+                          />
+                        ) : (
+                          <Box
+                            sx={{
+                              width: "130px",
+                              height: "100px", // Altura fixa igual à da imagem
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              border: "1px dashed gray", // Visual de placeholder
+                              borderRadius: "4px",
+                            }}
+                          >
+                            <Typography variant="caption" color="textSecondary">
+                              No Image
+                            </Typography>
+                          </Box>
+                        )}
                       </Box>
                     </TableCell>
                     <TableCell>{professional.hierarchy}</TableCell>
@@ -455,14 +588,24 @@ const ProfessionalManager: React.FC = () => {
                       <IconButton
                         color="primary"
                         onClick={() => handleEdit(professional)}
+                        disabled={loading}
                       >
-                        <Edit />
+                        {loading ? (
+                          <CircularProgress size={20} color="inherit" />
+                        ) : (
+                          <Edit />
+                        )}
                       </IconButton>
                       <IconButton
                         color="error"
                         onClick={() => handleDelete(professional.id)}
+                        disabled={loading}
                       >
-                        <Delete />
+                        {loading ? (
+                          <CircularProgress size={20} color="inherit" />
+                        ) : (
+                          <Delete />
+                        )}
                       </IconButton>
                     </TableCell>
                   </TableRow>
@@ -470,6 +613,11 @@ const ProfessionalManager: React.FC = () => {
             </TableBody>
           </Table>
         </TableContainer>
+      )}
+      {error && (
+        <Typography color="error" sx={{ mt: 2, textAlign: "center" }}>
+          {error}
+        </Typography>
       )}
       <Dialog open={open} onClose={handleClose}>
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -491,13 +639,6 @@ const ProfessionalManager: React.FC = () => {
               margin="normal"
               required
             />
-            {/* <TextField
-              {...register("bio")}
-              label="Bio"
-              fullWidth
-              margin="normal"
-              required
-            /> */}
             <TextField
               {...register("bio")}
               label="Bio"
@@ -505,64 +646,37 @@ const ProfessionalManager: React.FC = () => {
               margin="normal"
               required
               multiline
-              rows={4} // Menor que bodyText, mas ainda espaçoso
+              rows={4}
               variant="outlined"
               sx={{
                 "& .MuiOutlinedInput-root": {
-                  minHeight: "120px", // Altura mínima adequada
-                  alignItems: "flex-start", // Alinha o texto no topo
-                  padding: "12px", // Mais espaço interno
-                  borderRadius: "8px", // Bordas arredondadas
+                  minHeight: "120px",
+                  alignItems: "flex-start",
+                  padding: "12px",
+                  borderRadius: "8px",
                 },
                 "& .MuiInputBase-input": {
-                  fontSize: "1rem", // Tamanho de fonte confortável
-                  lineHeight: "1.5", // Espaçamento entre linhas
+                  fontSize: "1rem",
+                  lineHeight: "1.5",
                 },
                 "& .MuiOutlinedInput-notchedOutline": {
-                  borderColor: "rgba(0, 0, 0, 0.23)", // Borda padrão
+                  borderColor: "rgba(0, 0, 0, 0.23)",
                 },
                 "&:hover .MuiOutlinedInput-notchedOutline": {
-                  borderColor: "primary.main", // Borda ao passar o mouse
+                  borderColor: "primary.main",
                 },
                 "& .Mui-focused .MuiOutlinedInput-notchedOutline": {
-                  borderWidth: "2px", // Borda mais grossa ao focar
+                  borderWidth: "2px",
                 },
-                mb: 2, // Margem inferior para espaçamento
+                mb: 2,
               }}
-              placeholder="Digite a sua Biografia aqui..." // Placeholder útil
-            />
-            <TextField
-              {...register("imageUrl")}
-              label="Image URL"
-              fullWidth
-              margin="normal"
-              value={imageOneUrl || ""}
-              InputProps={{
-                readOnly: true,
-              }}
+              placeholder="Digite a sua Biografia aqui..."
             />
             <ImageInput
               imageUrl={imageOneUrl}
               imageType="imageOne"
-              // handleImage={handleImage}
               uploadLoading={uploadLoading}
-            ></ImageInput>
-            {/* <Box display="flex" alignItems="center" justifyContent="center" gap={2} margin="normal">
-              <Button
-                variant="outlined"
-                component="label"
-                disabled={uploadLoading}
-              >
-                {uploadLoading ? "Uploading..." : "Upload Image"}
-                <input
-                  type="file"
-                  hidden
-                  accept="image/*"
-                  onChange={handleFileChange}
-                />
-              </Button>
-              {uploadLoading && <CircularProgress size={24} />}
-            </Box> */}
+            />
             <TextField
               {...register("hierarchy", { valueAsNumber: true })}
               label="Hierarchy"
@@ -578,13 +692,33 @@ const ProfessionalManager: React.FC = () => {
               type="submit"
               variant="contained"
               color="primary"
-              disabled={uploadLoading}
+              disabled={loading || uploadLoading}
             >
-              {isEditing ? "Update" : "Add"}
+              {loading ? (
+                <CircularProgress size={24} color="inherit" />
+              ) : isEditing ? (
+                "Update"
+              ) : (
+                "Add"
+              )}
             </Button>
           </DialogActions>
         </form>
       </Dialog>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert
+          onClose={handleSnackbarClose}
+          severity={snackbarSeverity}
+          sx={{ width: "100%" }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

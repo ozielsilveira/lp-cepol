@@ -339,6 +339,7 @@
 
 import { Add, Delete, Edit } from "@mui/icons-material";
 import {
+  Alert,
   Box,
   Button,
   CircularProgress,
@@ -349,6 +350,7 @@ import {
   IconButton,
   MenuItem,
   Paper,
+  Snackbar,
   Table,
   TableBody,
   TableCell,
@@ -377,13 +379,19 @@ import { setImageUrls } from "../../redux/slices/fileUploadSlice";
 export const ArticlesManager: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const professionalList = useAppSelector((state) => state.professional.list);
-  const loading = useAppSelector((state) => state.articles.loading);
-  const { list } = useSelector((state: IRootState) => state.articles);
+  const { list, status, loading, error } = useSelector(
+    (state: IRootState) => state.articles
+  );
   const {
     imageOneUrl,
     imageTwoUrl,
     loading: uploadLoading,
   } = useAppSelector((state) => state.image);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">(
+    "success"
+  );
 
   const { register, handleSubmit, reset, setValue, control } =
     useForm<Article>();
@@ -391,13 +399,13 @@ export const ArticlesManager: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
-    if (!list || list.length === 0) {
+    if (!list || (list.length === 0 && status === "idle")) {
       dispatch(fetchArticles());
     }
     if (professionalList.length === 0) {
       dispatch(fetchProfessionals());
     }
-  }, [dispatch, list]);
+  }, [dispatch, list, status]);
 
   useEffect(() => {
     if (imageOneUrl) {
@@ -412,13 +420,17 @@ export const ArticlesManager: React.FC = () => {
     setOpen(true);
     setIsEditing(false);
     reset();
-     dispatch(setImageUrls({ imageOneUrl: null, imageTwoUrl: null }));
+    dispatch(setImageUrls({ imageOneUrl: null, imageTwoUrl: null }));
   };
 
   const handleClose = () => {
     setOpen(false);
     reset();
-     dispatch(setImageUrls({ imageOneUrl: null, imageTwoUrl: null }));
+    dispatch(setImageUrls({ imageOneUrl: null, imageTwoUrl: null }));
+  };
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
   };
 
   const onSubmit: SubmitHandler<Article> = async (data) => {
@@ -426,14 +438,26 @@ export const ArticlesManager: React.FC = () => {
       if (isEditing) {
         if (data.id) {
           await dispatch(updateArticle(data as Required<Article>)).unwrap();
+          setSnackbarMessage("Article atualizado com sucesso!");
+          setSnackbarSeverity("success");
         }
       } else {
         await dispatch(createArticle(data)).unwrap();
+        setSnackbarMessage("Article cadastrado com sucesso!");
+        setSnackbarSeverity("success");
       }
       handleClose();
       dispatch(fetchArticles());
+      setSnackbarOpen(true);
     } catch (error) {
-      console.error("Erro ao salvar article:", error);
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Erro desconhecido ao salvar Article";
+      setSnackbarMessage(`Erro: ${errorMessage}`);
+      setSnackbarSeverity("error");
+      setSnackbarOpen(true);
+      console.error("Erro ao salvar Article:", error);
     }
   };
 
@@ -455,17 +479,19 @@ export const ArticlesManager: React.FC = () => {
     setValue("images.1.url", article.images?.[1]?.url || "");
     setValue("professionalId", article.professionalId || "");
 
-     dispatch(
-          setImageUrls({
-            imageOneUrl: article.images?.[0]?.url || null,
-            imageTwoUrl: article.images?.[1]?.url || null,
-          })
-        );
+    dispatch(
+      setImageUrls({
+        imageOneUrl: article.images?.[0]?.url || null,
+        imageTwoUrl: article.images?.[1]?.url || null,
+      })
+    );
   };
 
   const handleDelete = (id: string) => {
     if (window.confirm("Are you sure you want to delete this article?")) {
       dispatch(deleteArticle(id));
+      setSnackbarMessage("Article excluído com sucesso!");
+        setSnackbarSeverity("success");
     }
   };
 
@@ -484,7 +510,11 @@ export const ArticlesManager: React.FC = () => {
           startIcon={<Add />}
           onClick={handleOpen}
         >
-          Add Article
+          {loading ? (
+            <CircularProgress size={24} color="inherit" />
+          ) : (
+            "Add Article"
+          )}
         </Button>
       </Box>
       {loading ? (
@@ -562,6 +592,12 @@ export const ArticlesManager: React.FC = () => {
                         {articles.images?.[0]?.url ? (
                           <Box
                             component={"img"}
+                            onClick={() =>
+                              window.open(
+                                `${articles?.images?.[0].url || ""}`,
+                                "_blank"
+                              )
+                            }
                             src={articles.images[0].url}
                             sx={{
                               width: "130px",
@@ -588,19 +624,6 @@ export const ArticlesManager: React.FC = () => {
                             </Typography>
                           </Box>
                         )}
-                        <Typography
-                          variant="caption"
-                          sx={{
-                            textAlign: "center",
-                            textOverflow: "ellipsis",
-                            overflow: "hidden",
-                            whiteSpace: "nowrap",
-                            maxWidth: "130px", // Mesmo width da imagem para consistência
-                            mt: 1, // Margem superior para espaçamento
-                          }}
-                        >
-                          {articles.images?.[0]?.url || ""}
-                        </Typography>
                       </Box>
                     </TableCell>
                     <TableCell>{articles.images?.[1]?.title || ""}</TableCell>
@@ -620,6 +643,12 @@ export const ArticlesManager: React.FC = () => {
                         {articles.images?.[1]?.url ? (
                           <Box
                             component={"img"}
+                            onClick={() =>
+                              window.open(
+                                `${articles.images?.[1]?.description || ""}`,
+                                "_blank"
+                              )
+                            }
                             src={articles.images[1].url}
                             sx={{
                               width: "130px",
@@ -646,19 +675,6 @@ export const ArticlesManager: React.FC = () => {
                             </Typography>
                           </Box>
                         )}
-                        <Typography
-                          variant="caption"
-                          sx={{
-                            textAlign: "center",
-                            textOverflow: "ellipsis",
-                            overflow: "hidden",
-                            whiteSpace: "nowrap",
-                            maxWidth: "130px", // Mesmo width da imagem para consistência
-                            mt: 1, // Margem superior para espaçamento
-                          }}
-                        >
-                          {articles.images?.[1]?.url || ""}
-                        </Typography>
                       </Box>
                     </TableCell>
                     <TableCell>{articles.professional?.name}</TableCell>
@@ -666,14 +682,24 @@ export const ArticlesManager: React.FC = () => {
                       <IconButton
                         color="primary"
                         onClick={() => handleEdit(articles)}
+                        disabled={loading}
                       >
-                        <Edit />
+                        {loading ? (
+                          <CircularProgress size={20} color="inherit" />
+                        ) : (
+                          <Edit />
+                        )}
                       </IconButton>
                       <IconButton
                         color="error"
                         onClick={() => handleDelete(articles.id)}
+                        disabled={loading}
                       >
-                        <Delete />
+                        {loading ? (
+                          <CircularProgress size={20} color="inherit" />
+                        ) : (
+                          <Delete />
+                        )}
                       </IconButton>
                     </TableCell>
                   </TableRow>
@@ -682,115 +708,11 @@ export const ArticlesManager: React.FC = () => {
           </Table>
         </TableContainer>
       )}
-      {/* <Dialog open={open} onClose={handleClose}>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <DialogTitle>
-            {isEditing ? "Edit Article" : "Add Article"}
-          </DialogTitle>
-          <DialogContent>
-            <TextField
-              {...register("title")}
-              label="title"
-              fullWidth
-              margin="normal"
-              required
-            />
-            <TextField
-              {...register("description")}
-              label="Description"
-              fullWidth
-              margin="normal"
-              required
-            />
-            <TextField
-              {...register("bodyText")}
-              label="Body text"
-              fullWidth
-              margin="normal"
-              required
-            />
-            <TextField
-              {...register("secondText")}
-              label="Second Text"
-              fullWidth
-              margin="normal"
-              required
-            />
-            <TextField
-              {...register("images.0.title")}
-              label="Image One Title"
-              fullWidth
-              margin="normal"
-              required
-            />
-            <TextField
-              {...register("images.0.description")}
-              label="Image One Description"
-              fullWidth
-              margin="normal"
-              required
-            />
-            <ImageInput
-              imageUrl={imageOneUrl}
-              uploadLoading={uploadLoading}
-              imageType="imageOne"
-            />
-            <TextField
-              {...register("images.1.title")}
-              label="Image Two Title"
-              fullWidth
-              margin="normal"
-              required
-            />
-            <TextField
-              {...register("images.1.description")}
-              label="Image Two Description"
-              fullWidth
-              margin="normal"
-              required
-            />
-            <ImageInput
-              imageUrl={imageTwoUrl}
-              uploadLoading={uploadLoading}
-              imageType="imageTwo"
-            />
-            <Controller
-              name="professionalId"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="Professional"
-                  fullWidth
-                  select
-                  margin="normal"
-                  required
-                  value={field.value || ""}
-                  onChange={(e) => field.onChange(e.target.value)}
-                >
-                  {professionalList &&
-                    professionalList.map((type) => (
-                      <MenuItem value={type.id} key={type.id}>
-                        {type.name}
-                      </MenuItem>
-                    ))}
-                </TextField>
-              )}
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose}>Cancel</Button>
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              disabled={uploadLoading}
-            >
-              {isEditing ? "Update" : "Add"}
-            </Button>
-          </DialogActions>
-        </form>
-      </Dialog> */}
+      {error && (
+        <Typography color="error" sx={{ mt: 2, textAlign: "center" }}>
+          {error}
+        </Typography>
+      )}
       <Dialog
         open={open}
         onClose={handleClose}
@@ -977,6 +899,20 @@ export const ArticlesManager: React.FC = () => {
           </DialogActions>
         </form>
       </Dialog>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert
+          onClose={handleSnackbarClose}
+          severity={snackbarSeverity}
+          sx={{ width: "100%" }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };
