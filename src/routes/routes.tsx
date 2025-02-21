@@ -8,6 +8,7 @@ import {
   LayoutContainerPrivate,
 } from "../components/layoutBox";
 import ProtectedRoute from "../components/protectedRoutes";
+import UserIsLogged from "../components/userIsLogged";
 import { AboutUs } from "../pages/landing/aboutUs";
 import { Articles } from "../pages/landing/articles";
 import { ArticleDetailed } from "../pages/landing/articles-detail";
@@ -189,9 +190,11 @@ export const routes: CustomRouteObject[] = [
     path: "/auth",
     type: "auth",
     element: (
-      <ErrorBoundary>
-        <Login />
-      </ErrorBoundary>
+      <UserIsLogged>
+        <ErrorBoundary>
+          <Login />
+        </ErrorBoundary>
+      </UserIsLogged>
     ),
   },
 ];
