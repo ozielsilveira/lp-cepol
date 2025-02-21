@@ -84,7 +84,7 @@ export const SideBar: React.FC = () => {
               setOpen(false);
             }}
           >
-            <ListItemIcon>{page.icon}</ListItemIcon>
+            <ListItemIcon sx={{ color: 'primary.main' }}>{page.icon}</ListItemIcon>
             <ListItemText primary={page.name} />
           </ListItemButton>
         ))}
