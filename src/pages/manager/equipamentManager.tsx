@@ -160,7 +160,7 @@ export const EquipmentslManager: React.FC = () => {
           {loading ? (
             <CircularProgress size={24} color="inherit" />
           ) : (
-            !isXs && ("Add Professional")
+            !isXs && ("Add Equipment")
           )}
         </Button>
       </Box>
