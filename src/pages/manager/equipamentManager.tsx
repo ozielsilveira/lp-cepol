@@ -19,7 +19,9 @@ import {
   TableHead,
   TableRow,
   TextField,
+  Theme,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
@@ -138,16 +140,16 @@ export const EquipmentslManager: React.FC = () => {
       setSnackbarOpen(true);
     }
   };
-
+  const isXs = useMediaQuery((theme: Theme) => theme.breakpoints.down("md"));
   return (
-    <Box p={3}>
+    <Box sx={{p: {xs: 0, md: 3},pt: {xs: 2}}}>
       <Box
         display="flex"
         justifyContent="space-between"
         alignItems="center"
         mb={3}
       >
-        <Typography variant="h4">Equipment Manager</Typography>
+        <Typography variant="h4" sx={{fontSize: {xs: "22px", md: "2rem"}}}>Equipment Manager</Typography>
         <Button
           variant="contained"
           color="primary"
@@ -158,7 +160,7 @@ export const EquipmentslManager: React.FC = () => {
           {loading ? (
             <CircularProgress size={24} color="inherit" />
           ) : (
-            "Add Equipment"
+            !isXs && ("Add Professional")
           )}
         </Button>
       </Box>
