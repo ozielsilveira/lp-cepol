@@ -107,11 +107,11 @@ export const ArticleDetailed: React.FC = () => {
           )}
         </Grid>
       </Grid>
-      <Box display={"flex"}>
-        <Typography  sx={{ mt: 2, mr: 2 }}>
+      <Box display={"flex"} flexDirection={'column'} alignItems={'start'}>
+        <Typography  sx={{ mt: 2 }}>
           Author: {detailedArticle.author}
         </Typography>
-        <Typography  sx={{ mt: 2, ml: 2 }}>
+        <Typography  sx={{ mt: 2 }}>
           Published Date: {detailedArticle.published}
         </Typography>
       </Box>

@@ -162,7 +162,7 @@ export const Research: React.FC = () => {
                 >
                   <CardHeader
                     title={
-                      <Typography variant="h6" component="h3" sx={{textAlign: "justify"}}>
+                      <Typography variant="h6" component="h3" sx={{textAlign: "start"}}>
                         {research.title}
                       </Typography>
                     }
