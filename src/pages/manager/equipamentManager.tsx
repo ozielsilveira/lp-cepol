@@ -135,6 +135,7 @@ export const EquipmentslManager: React.FC = () => {
       dispatch(deleteEquipment(id));
       setSnackbarMessage("Equipment excluído com sucesso!");
       setSnackbarSeverity("success");
+      setSnackbarOpen(true);
     }
   };
 
