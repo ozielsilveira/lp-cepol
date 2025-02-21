@@ -470,7 +470,8 @@ const ProfessionalManager: React.FC = () => {
     if (window.confirm("Are you sure you want to delete this professional?")) {
       dispatch(deleteProfessional(id));
       setSnackbarMessage("Profissional excluído com sucesso!");
-        setSnackbarSeverity("success");
+      setSnackbarSeverity("success");
+      setSnackbarOpen(true);
     }
   };
 
