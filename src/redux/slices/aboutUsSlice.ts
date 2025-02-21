@@ -1,5 +1,5 @@
-import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
-import apiClient from '../../services/api/axiosConfig';// Instância do Axios
+import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
+import apiClient from "../../services/api/axiosConfig"; // Instância do Axios
 
 // Tipagem para o estado
 interface AboutUsState {
@@ -15,21 +15,26 @@ const initialState: AboutUsState = {
   error: null,
 };
 
-
 // Thunks para operações assíncronas
-export const fetchAboutUs = createAsyncThunk('aboutUs/fetch_aboutUs', async () => {
-  const response = await apiClient.get('/aboutus');
-  return response.data;
-});
+export const fetchAboutUs = createAsyncThunk(
+  "aboutUs/fetch_aboutUs",
+  async () => {
+    const response = await apiClient.get("/aboutus");
+    return response.data;
+  }
+);
 
-export const createAboutUs = createAsyncThunk('aboutUs/create', async (newItem: any) => {
-  const response = await apiClient.post('/aboutus/create', newItem);
-  return response.data;
-});
+export const createAboutUs = createAsyncThunk(
+  "aboutUs/create",
+  async (newItem: any) => {
+    const response = await apiClient.post("/aboutus/create", newItem);
+    return response.data;
+  }
+);
 
 // Slice
 const aboutUsSlice = createSlice({
-  name: 'aboutUs',
+  name: "aboutUs",
   initialState,
   reducers: {
     clearError(state) {
@@ -41,13 +46,16 @@ const aboutUsSlice = createSlice({
       .addCase(fetchAboutUs.pending, (state) => {
         state.loading = true;
       })
-      .addCase(fetchAboutUs.fulfilled, (state, action: PayloadAction<any[]>) => {
-        state.loading = false;
-        state.data = action.payload;
-      })
+      .addCase(
+        fetchAboutUs.fulfilled,
+        (state, action: PayloadAction<any[]>) => {
+          state.loading = false;
+          state.data = action.payload;
+        }
+      )
       .addCase(fetchAboutUs.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || 'Erro ao buscar dados';
+        state.error = action.error.message || "Erro ao buscar dados";
       })
       .addCase(createAboutUs.fulfilled, (state, action: PayloadAction<any>) => {
         state.data.push(action.payload);

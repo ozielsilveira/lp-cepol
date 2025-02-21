@@ -15,17 +15,15 @@ export const ArticleDetailed: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const dispatch = useAppDispatch();
   const articlesList = useAppSelector((state) => state.articles.list);
-  console.log("Lista", articlesList);
   useEffect(() => {
     if (articlesList.length === 0) {
       dispatch(fetchArticles());
     }
   }, [dispatch, articlesList.length]);
-  // Simula a busca dos dados de pesquisa detalhada
+ 
   const detailedArticle = articlesList.find(
     (research) => research.id.toString() === id
   );
-  console.log(detailedArticle);
 
   if (!detailedArticle) {
     return <p>No research details found.</p>;

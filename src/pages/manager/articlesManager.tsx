@@ -108,7 +108,7 @@ export const ArticlesManager: React.FC = () => {
       }
 
       if (cleanedData.images) {
-        cleanedData.images = cleanedData.images.filter(img => img?.url);
+        cleanedData.images = cleanedData.images.filter((img) => img?.url);
 
         if (cleanedData.images.length === 0) {
           delete cleanedData.images;
@@ -117,7 +117,9 @@ export const ArticlesManager: React.FC = () => {
 
       if (isEditing) {
         if (data.id) {
-          await dispatch(updateArticle(cleanedData as Required<Article>)).unwrap();
+          await dispatch(
+            updateArticle(cleanedData as Required<Article>)
+          ).unwrap();
           setSnackbarMessage("Article atualizado com sucesso!");
           setSnackbarSeverity("success");
         }
@@ -177,25 +179,26 @@ export const ArticlesManager: React.FC = () => {
   };
   const isXs = useMediaQuery((theme: Theme) => theme.breakpoints.down("md"));
   return (
-    <Box sx={{p: {xs: 0, md: 3},pt: {xs: 2}}}>
+    <Box sx={{ p: { xs: 0, md: 3 }, pt: { xs: 2 } }}>
       <Box
         display="flex"
         justifyContent="space-between"
         alignItems="center"
         mb={3}
       >
-        <Typography variant="h4" sx={{fontSize: {xs: "22px", md: "2rem"}}}>Article Manager</Typography>
+        <Typography variant="h4" sx={{ fontSize: { xs: "22px", md: "2rem" } }}>
+          Article Manager
+        </Typography>
         <Button
           variant="contained"
           color="primary"
           startIcon={<Add />}
           onClick={handleOpen}
         >
-          
           {loading ? (
             <CircularProgress size={24} color="inherit" />
           ) : (
-            !isXs && ("Add Article")
+            !isXs && "Add Article"
           )}
         </Button>
       </Box>
@@ -400,7 +403,7 @@ export const ArticlesManager: React.FC = () => {
         onClose={handleClose}
         sx={{
           "& .MuiDialog-paper": {
-            width: {xs:"85vw", md: "60vw"},        
+            width: { xs: "85vw", md: "60vw" },
             maxWidth: "none",
             borderRadius: "8px",
           },

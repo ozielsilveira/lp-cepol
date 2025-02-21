@@ -95,7 +95,7 @@ export const ResearchManager: React.FC = () => {
       const cleanedData = { ...data };
 
       if (cleanedData.images) {
-        cleanedData.images = cleanedData.images.filter(img => img?.url);
+        cleanedData.images = cleanedData.images.filter((img) => img?.url);
 
         if (cleanedData.images.length === 0) {
           delete cleanedData.images;
@@ -104,7 +104,9 @@ export const ResearchManager: React.FC = () => {
 
       if (isEditing) {
         if (data.id) {
-          await dispatch(updateResearch(cleanedData as Required<Research>)).unwrap();
+          await dispatch(
+            updateResearch(cleanedData as Required<Research>)
+          ).unwrap();
           setSnackbarMessage("Research atualizado com sucesso!");
           setSnackbarSeverity("success");
         }
@@ -172,14 +174,16 @@ export const ResearchManager: React.FC = () => {
   };
   const isXs = useMediaQuery((theme: Theme) => theme.breakpoints.down("md"));
   return (
-    <Box sx={{p: {xs: 0, md: 3},pt: {xs: 2}}}>
+    <Box sx={{ p: { xs: 0, md: 3 }, pt: { xs: 2 } }}>
       <Box
         display="flex"
         justifyContent="space-between"
         alignItems="center"
         mb={3}
       >
-        <Typography variant="h4" sx={{fontSize: {xs: "22px", md: "2rem"}}}>Research Manager</Typography>
+        <Typography variant="h4" sx={{ fontSize: { xs: "22px", md: "2rem" } }}>
+          Research Manager
+        </Typography>
         <Button
           variant="contained"
           color="primary"
@@ -189,7 +193,7 @@ export const ResearchManager: React.FC = () => {
           {loading ? (
             <CircularProgress size={24} color="inherit" />
           ) : (
-            !isXs && ("Add Research")
+            !isXs && "Add Research"
           )}
         </Button>
       </Box>

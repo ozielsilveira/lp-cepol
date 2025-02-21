@@ -15,76 +15,6 @@ import {
   Professional,
 } from "../../redux/slices/professionalSlice";
 
-// interface Professional {
-//   id: number;
-//   name: string;
-//   photo: string;
-//   research: string[];
-//   articles: string[];
-//   hierarchy: string; // Define o nível do profissional
-// }
-
-// const professionals: Professional[] = [
-//   {
-//     id: 1,
-//     name: "Dr. Alice Johnson",
-//     photo:
-//       "https://s2.glbimg.com/D7ouiVhAn1BVaU3wfp-zSgvWDTg=/600x0/filters:quality(70)/i.s3.glbimg.com/v1/AUTH_da025474c0c44edd99332dddb09cabe8/internal_photos/bs/2022/d/v/kFDwF0T3q2wkwvGH0DjA/whatsapp-image-2022-10-03-at-15.34.37.jpeg",
-//     research: ["Genetics", "Molecular Biology"],
-//     articles: [
-//       "Understanding DNA Replication",
-//       "Innovations in Genome Editing",
-//     ],
-//     hierarchy: "1",
-//   },
-//   {
-//     id: 2,
-//     name: "Dr. Robert Smith",
-//     photo:
-//       "https://www.qualityformationsblog.co.uk/wp-content/uploads/2019/07/who-can-be-a-company-director.jpg",
-//     research: ["Neuroscience", "Cognitive Psychology"],
-//     articles: ["The Brain and Behavior", "Advances in Neural Networks"],
-//     hierarchy: "2",
-//   },
-//   {
-//     id: 3,
-//     name: "Dr. Robert Peterson",
-//     photo:
-//       "https://www.1stformationsblog.co.uk/wp-content/uploads/2022/09/Shutterstock_1361250623-2.jpg",
-//     research: ["Neuroscience", "Cognitive Psychology"],
-//     articles: ["The Brain and Behavior", "Advances in Neural Networks"],
-//     hierarchy: "2",
-//   },
-//   {
-//     id: 4,
-//     name: "Dr. Emily White",
-//     photo:
-//       "https://i.pinimg.com/736x/35/44/a4/3544a4adf0d2b8d6f6b9e71e003fda3f.jpg",
-//     research: ["Biochemistry"],
-//     articles: ["Protein Folding Mechanisms"],
-//     hierarchy: "3",
-//   },
-//   {
-//     id: 5,
-//     name: "Dr. Michael Brown",
-//     photo:
-//       "https://www.ucl.ac.uk/news/sites/news/files/styles/teaser_image/public/teaser_images/news_professor.png",
-//     research: ["Microbiology"],
-//     articles: ["Antibiotic Resistance Evolution"],
-//     hierarchy: "3",
-//   },
-//   {
-//     id: 6,
-//     name: "Dr. Jane Wilson",
-//     photo:
-//       "https://st3.depositphotos.com/9998432/13335/i/450/depositphotos_133351428-stock-photo-portrait-of-a-confident-doctor.jpg",
-//     research: ["Immunology"],
-//     articles: ["Vaccination Strategies"],
-//     hierarchy: "4",
-//   },
-// ];
-
-// Função para organizar os profissionais em grupos por hierarquia
 const groupByHierarchy = (list: Professional[]) => {
   const grouped: { [key: string]: Professional[] } = {};
 
@@ -95,7 +25,6 @@ const groupByHierarchy = (list: Professional[]) => {
     grouped[professional.hierarchy].push(professional);
   });
 
-  // Retorna os grupos ordenados pela hierarquia (como array de arrays)
   return Object.entries(grouped)
     .sort(([a], [b]) => parseInt(a) - parseInt(b))
     .map(([, professionals]) => professionals);
@@ -159,14 +88,13 @@ export const Professionals: React.FC = () => {
                 >
                   <Card sx={{ width: { xs: 240, md: 360 } }}>
                     <CardMedia
-
                       component="img"
                       sx={{
                         width: "300px",
                         height: "220px",
                         objectFit: "cover",
                         margin: "auto",
-                        borderRadius: '10px'
+                        borderRadius: "10px",
                       }}
                       image={professional.imageUrl ?? ""}
                       alt={professional.name}

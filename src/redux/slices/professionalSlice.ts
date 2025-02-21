@@ -24,7 +24,6 @@ export const fetchProfessionals = createAsyncThunk<Professional[]>(
   async (_, { rejectWithValue }) => {
     try {
       const response = await apiClient.get("/public/professional");
-      console.log(response.data);
       if (!response.data.success) {
         return rejectWithValue("Failed to fetch professionals");
       }
@@ -53,7 +52,10 @@ export const updateProfessional = createAsyncThunk<Professional, Professional>(
   async (data) => {
     const { imageUrl, ...rest } = data;
     const payload = imageUrl ? { ...rest, imageUrl } : rest;
-    const response = await apiClient.put<Professional>(`/professional`, payload);
+    const response = await apiClient.put<Professional>(
+      `/professional`,
+      payload
+    );
     return response.data;
   }
 );

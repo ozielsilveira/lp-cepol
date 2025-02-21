@@ -15,8 +15,6 @@ export const ResearchDetailed: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const dispatch = useAppDispatch();
   const researchList = useAppSelector((state) => state.research.list);
-  console.log("Lista", researchList);
-  console.log("id", id);
 
   useEffect(() => {
     if (researchList.length === 0) {
@@ -26,7 +24,6 @@ export const ResearchDetailed: React.FC = () => {
   const detailedResearch = researchList.find(
     (research) => research.id.toString() === id
   );
-  console.log(detailedResearch);
 
   if (!detailedResearch) {
     return <p>No research details found.</p>;

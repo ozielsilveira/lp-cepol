@@ -48,24 +48,6 @@ export const Footer: React.FC = () => {
             </Box>
           </Grid>
           <Grid item xs={12} sm={4}>
-            {/* <Typography variant="h6" gutterBottom>
-              Ajuda
-            </Typography>
-            <Box>
-              <Link href="/faq" color="inherit" underline="hover">
-                FAQ
-              </Link>
-            </Box>
-            <Box>
-              <Link href="/support" color="inherit" underline="hover">
-                Suporte
-              </Link>
-            </Box>
-            <Box>
-              <Link href="/terms" color="inherit" underline="hover">
-                Termos de Serviço
-              </Link>
-            </Box> */}
           </Grid>
           <Grid item xs={12} sm={4}>
             <Typography variant="h6" gutterBottom>

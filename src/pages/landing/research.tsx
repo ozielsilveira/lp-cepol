@@ -95,24 +95,6 @@ import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { fetchResearch } from "../../redux/slices/researchSlice";
 
 export const Research: React.FC = () => {
-  // const researchs = [
-  //   {
-  //     id: 1,
-  //     title: "Development of Next-Generation Vaccines",
-  //     description: "We are working on a revolutionary approach...",
-  //   },
-  //   {
-  //     id: 2,
-  //     title: "Restoration of Degraded Ecosystems",
-  //     description: "Our team is developing innovative techniques...",
-  //   },
-  //   {
-  //     id: 3,
-  //     title: "Quantum Materials for Computing",
-  //     description: "We investigate new materials with quantum properties...",
-  //   },
-  // ];
-
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const researchList = useAppSelector((state) => state.research.list);
@@ -130,7 +112,6 @@ export const Research: React.FC = () => {
         hidden={false}
         id="research-tab"
         aria-labelledby="research-tab-label"
-        // sx={{ py: { xs: 3, md: 6, lg: 8 }, bgcolor: "white" }}
       >
         <Box sx={{ textAlign: "center", mb: 4 }}>
           <Typography
@@ -162,7 +143,11 @@ export const Research: React.FC = () => {
                 >
                   <CardHeader
                     title={
-                      <Typography variant="h6" component="h3" sx={{textAlign: "start"}}>
+                      <Typography
+                        variant="h6"
+                        component="h3"
+                        sx={{ textAlign: "start" }}
+                      >
                         {research.title}
                       </Typography>
                     }
