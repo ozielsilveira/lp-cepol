@@ -42,14 +42,18 @@ export const createProfessional = createAsyncThunk<
   Professional,
   Omit<Professional, "id">
 >("professionals/create", async (data) => {
-  const response = await apiClient.post<Professional>("/professional", data);
+  const { imageUrl, ...rest } = data;
+  const payload = imageUrl ? { ...rest, imageUrl } : rest;
+  const response = await apiClient.post<Professional>("/professional", payload);
   return response.data;
 });
 
 export const updateProfessional = createAsyncThunk<Professional, Professional>(
   "professionals/update",
   async (data) => {
-    const response = await apiClient.put<Professional>(`/professional`, data);
+    const { imageUrl, ...rest } = data;
+    const payload = imageUrl ? { ...rest, imageUrl } : rest;
+    const response = await apiClient.put<Professional>(`/professional`, payload);
     return response.data;
   }
 );
