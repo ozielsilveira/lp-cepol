@@ -1,4 +1,3 @@
-import React, { useEffect } from "react";
 import {
   Box,
   Card,
@@ -9,11 +8,12 @@ import {
   Grid2,
   Typography,
 } from "@mui/material";
-import { useAppDispatch, useAppSelector } from "../../redux/store";
+import React, { useEffect } from "react";
 import {
   fetchProfessionals,
   Professional,
 } from "../../redux/slices/professionalSlice";
+import { useAppDispatch, useAppSelector } from "../../redux/store";
 
 const groupByHierarchy = (list: Professional[]) => {
   const grouped: { [key: string]: Professional[] } = {};
@@ -58,9 +58,6 @@ export const Professionals: React.FC = () => {
       >
         Meet the Team
       </Typography>
-      <Typography color="text.secondary" sx={{ textAlign: "center", mb: 4 }}>
-        Our dedicated team works tirelessly to deliver exceptional results.
-      </Typography>
       {loading ? (
         <Box sx={{ display: "flex", justifyContent: "center", my: 4 }}>
           <CircularProgress />
@@ -86,11 +83,11 @@ export const Professionals: React.FC = () => {
                   key={professional.id}
                   sx={{ display: "flex", justifyContent: "center" }}
                 >
-                  <Card sx={{ width: { xs: 240, md: 360 } }}>
+                  <Card sx={{ width: { xs: 240, md: 420 } }}>
                     <CardMedia
                       component="img"
                       sx={{
-                        width: "300px",
+                        width: "350px",
                         height: "220px",
                         objectFit: "cover",
                         margin: "auto",
@@ -113,7 +110,7 @@ export const Professionals: React.FC = () => {
                       <Typography
                         variant="body2"
                         color="text.secondary"
-                        sx={{ mt: 1 }}
+                        sx={{ mt: 1, textAlign: "justify" }}
                       >
                         {professional.bio}
                       </Typography>
