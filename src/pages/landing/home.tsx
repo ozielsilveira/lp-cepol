@@ -4,23 +4,23 @@ import {
   Button,
   Card,
   CardContent,
+  CircularProgress,
   Container,
-  TextField,
-  Typography,
   List,
   ListItem,
   ListItemText,
-  CircularProgress,
-  useMediaQuery,
+  TextField,
   Theme,
+  Typography,
+  useMediaQuery,
 } from "@mui/material";
-import { Carousel } from "../../components/carousel.tsx";
-import mainImg from "../../../public/images/cepolSVG.svg";
-import { fetchArticles } from "../../redux/slices/articlesSlice.ts";
-import { useAppDispatch, useAppSelector } from "../../redux/store.ts";
 import { useEffect, useState } from "react";
-import { fetchResearch } from "../../redux/slices/researchSlice.ts";
 import { useNavigate } from "react-router-dom";
+import mainImg from "../../../public/images/cepolSVG.svg";
+import { Carousel } from "../../components/carousel.tsx";
+import { fetchArticles } from "../../redux/slices/articlesSlice.ts";
+import { fetchResearch } from "../../redux/slices/researchSlice.ts";
+import { useAppDispatch, useAppSelector } from "../../redux/store.ts";
 interface ISearchResult {
   id: string;
   title: string;
@@ -115,7 +115,7 @@ export function Home() {
                 gutterBottom
                 sx={{ fontSize: { md: "h4", xs: "2.8rem" } }}
               >
-                Discover the Advances of Science
+                Discover the Advances of Polymer Science and Engineering
               </Typography>
               <Typography variant="body1" color="textSecondary" paragraph>
                 Explore the latest research and innovations from our laboratory.

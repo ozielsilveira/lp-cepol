@@ -68,7 +68,7 @@ export const Footer: React.FC = () => {
             </Box>
             <Box display={"flex"} alignItems={"center"}>
               <IconButton
-                href="mailto:matheus.vgz@unesc.net"
+                href="mailto:matheus.vgz@gmail.com"
                 target="_blank"
                 rel="noopener noreferrer"
                 color="inherit"
@@ -76,7 +76,7 @@ export const Footer: React.FC = () => {
                 <EmailIcon />
               </IconButton>
               <Typography variant="h6" gutterBottom fontSize={"small"}>
-                matheus.vgz@unesc.net
+                 matheus.vgz@gmail.com
               </Typography>
             </Box>
 
