@@ -4,6 +4,7 @@ import {
   People as ProfessionalIcon,
   Search as ResearchIcon
 } from '@mui/icons-material'; // Ícones do Material-UI
+import InfoIcon from '@mui/icons-material/Info';
 import {
   Box,
   Card,
@@ -25,6 +26,7 @@ export const Manager: React.FC = () => {
     { id: 2, title: 'Researchs', route: '/manager/researchs', icon: <ResearchIcon /> },
     { id: 3, title: 'Equipments', route: '/manager/equipments', icon: <EquipmentIcon /> },
     { id: 4, title: 'Professionals', route: '/manager/professionals', icon: <ProfessionalIcon /> },
+    { id: 5, title: 'AboutUs', route: '/manager/aboutUs', icon: <InfoIcon /> },
   ];
 
   // Função para navegar para a rota desejada

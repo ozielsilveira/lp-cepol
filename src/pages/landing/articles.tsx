@@ -1,4 +1,3 @@
-import MenuBookIcon from "@mui/icons-material/MenuBook";
 import {
   Box,
   Card,
@@ -44,25 +43,25 @@ export const Articles: React.FC = () => {
               <CircularProgress />
             </Box>
           ) : (
-            <Grid container spacing={4} mb={2}>
+            <Grid container spacing={1} mb={2}>
               {" "}
               {articlesList.map((article) => (
-                <Grid item xs={12} md={6} key={article.id}>
+                <Grid item xs={12} md={12} key={article.id}>
                   {" "}
                 
                   <Card
                     sx={{
-                      boxShadow: 3,
-                      borderRadius: 2,
-                      "&:hover": { boxShadow: 6, cursor: "pointer" },
+                      // boxShadow: 3,
+                      // borderRadius: 2,
+                      // "&:hover": { boxShadow: 6, cursor: "pointer" },
                       transition: "all 0.3s",
                     }}
                     onClick={() => navigate(`/articles/${article.id}`)}
                   >
-                    <CardContent>
-                      <MenuBookIcon
+                    <CardContent sx={{ textAlign: "left" }}>
+                      {/* <MenuBookIcon
                         sx={{ fontSize: 40, color: "blue", marginBottom: 2 }}
-                      />
+                      /> */}
                       <h3
                         className="text-2xl font-semibold text-gray-900 hover:text-blue-600 transition-colors"
                         style={{
@@ -92,3 +91,5 @@ export const Articles: React.FC = () => {
     </Container>
   );
 };
+
+

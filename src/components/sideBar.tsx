@@ -6,6 +6,7 @@ import HomeRepairServiceIcon from "@mui/icons-material/HomeRepairService";
 import MenuIcon from "@mui/icons-material/Menu";
 import PeopleIcon from "@mui/icons-material/People";
 
+import InfoIcon from '@mui/icons-material/Info';
 import {
   Box,
   Drawer,
@@ -51,6 +52,11 @@ const pages: Page[] = [
     name: "Researchs",
     path: "/manager/researchs",
     icon: <BiotechIcon />,
+  },
+   {
+    name: "About Us",
+    path: "/manager/aboutUs",
+    icon: <InfoIcon />,
   },
   {
     name: "View Pages",

@@ -1,3 +1,4 @@
+
 import SearchIcon from "@mui/icons-material/Search";
 import {
   Box,
@@ -17,6 +18,8 @@ import {
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import mainImg from "../../../public/images/cepolSVG.svg";
+import secondImg from "../../../public/images/unesc_logo_plus.svg";
+
 import { Carousel } from "../../components/carousel.tsx";
 import { fetchArticles } from "../../redux/slices/articlesSlice.ts";
 import { fetchResearch } from "../../redux/slices/researchSlice.ts";
@@ -98,26 +101,71 @@ export function Home() {
               position: "relative",
               display: "flex",
               flexDirection: { xs: "column", md: "row" },
-              gap: 4,
               alignItems: "center",
-              justifyContent: "center",
+              justifyContent: "space-between",
               mb: 6,
               mt: 4,
               padding: "4rem 2rem",
               textAlign: "center",
               overflow: "hidden",
+              maxWidth: "1200px",
+              margin: "0 auto",
             }}
           >
-            <Box sx={{ flex: 1, zIndex: 1 }}>
+            {/* Logo CEPOL */}
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                minWidth: { xs: "200px", md: "250px" },
+                order: { xs: 1, md: 1 },
+              }}
+            >
+              {!isXs && (
+              <Box
+                component={"img"}
+                src={mainImg}
+                sx={{
+                  width: { xs: "200px", md: "250px" },
+                  height: { xs: "160px", md: "200px" },
+                  objectFit: "contain",
+                }}
+            />)}
+            </Box>
+
+            {/* Conteúdo central */}
+            <Box 
+              sx={{ 
+                flex: 1, 
+                zIndex: 1, 
+                mx: { xs: 2, md: 4 },
+                order: { xs: 3, md: 2 },
+                maxWidth: { xs: "100%", md: "500px" },
+              }}
+            >
               <Typography
                 variant="h3"
                 fontWeight="bold"
                 gutterBottom
-                sx={{ fontSize: { md: "h4", xs: "2.8rem" } }}
+                sx={{ 
+                  fontSize: { xs: "1.8rem", md: "2.5rem" },
+                  lineHeight: 1.2,
+                  mb: 3,
+                }}
               >
-                Discover the Advances of Polymer Science and Engineering
+                Polymer Science and Engineering
               </Typography>
-              <Typography variant="body1" color="textSecondary" paragraph>
+              <Typography 
+                variant="body1" 
+                color="textSecondary" 
+                paragraph
+                sx={{
+                  fontSize: { xs: "0.9rem", md: "1rem" },
+                  mb: 4,
+                  lineHeight: 1.5,
+                }}
+              >
                 Explore the latest research and innovations from our laboratory.
                 Stay updated with the most recent discoveries.
               </Typography>
@@ -148,16 +196,29 @@ export function Home() {
                 </Button>
               </Box>
             </Box>
-            {!isXs && (
+
+            {/* Logo UNESC */}
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                minWidth: { xs: "200px", md: "250px" },
+                order: { xs: 2, md: 3 },
+              }}
+            >
+              {!isXs && (
               <Box
                 component={"img"}
-                src={mainImg}
+                src={secondImg}
                 sx={{
-                  width: { xs: "300px", md: "300px" },
-                  height: { xs: "200px", md: "300px" },
+                  width: { xs: "200px", md: "250px" },
+                  height: { xs: "160px", md: "200px" },
+                  objectFit: "contain",
                 }}
               />
-            )}
+              )}
+            </Box>
           </Box>
 
           {/* Lista de resultados da busca */}
@@ -263,6 +324,7 @@ export function Home() {
                     sx={{
                       width: { md: "450px", xs: "310px" },
                       height: "250px",
+                      
                       cursor: "pointer",
                       transition: "transform 0.2s ease-in-out",
                       "&:hover": {
@@ -287,7 +349,7 @@ export function Home() {
                       </Typography>
                       <Box
                         sx={{
-                          marginTop: "7rem",
+                          marginTop: "5rem",
                           display: "flex",
                           flexDirection: "column",
                         }}

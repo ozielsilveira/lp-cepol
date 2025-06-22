@@ -18,6 +18,7 @@ import { Home } from "../pages/landing/home";
 import { Professionals } from "../pages/landing/professionals";
 import { Research } from "../pages/landing/research";
 import { ResearchDetailed } from "../pages/landing/research-detail";
+import { AboutUsManager } from "../pages/manager/aboutUsManager";
 import { ArticlesManager } from "../pages/manager/articlesManager";
 import { EquipmentslManager } from "../pages/manager/equipamentManager";
 import { Login } from "../pages/manager/login";
@@ -182,6 +183,17 @@ export const routes: CustomRouteObject[] = [
       <ProtectedRoute>
         <LayoutContainerPrivate>
           <ResearchManager />
+        </LayoutContainerPrivate>
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/manager/aboutUs",
+    type: "private",
+    element: (
+      <ProtectedRoute>
+        <LayoutContainerPrivate>
+          <AboutUsManager />
         </LayoutContainerPrivate>
       </ProtectedRoute>
     ),

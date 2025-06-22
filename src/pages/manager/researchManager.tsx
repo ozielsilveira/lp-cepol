@@ -90,6 +90,7 @@ export const ResearchManager: React.FC = () => {
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
   };
+  
   const onSubmit: SubmitHandler<Research> = async (data) => {
     try {
       const cleanedData = { ...data };
