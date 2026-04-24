@@ -63,6 +63,7 @@ export const ArticlesManager: React.FC = () => {
     "success"
   );
   const [searchTerm, setSearchTerm] = useState("");
+  const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
 
   const { register, handleSubmit, reset, setValue, control } =
     useForm<Article>();
@@ -140,12 +141,12 @@ export const ArticlesManager: React.FC = () => {
           await dispatch(
             updateArticle(cleanedData as Required<Article>)
           ).unwrap();
-          setSnackbarMessage("Article atualizado com sucesso!");
+          setSnackbarMessage("Article updated successfully!");
           setSnackbarSeverity("success");
         }
       } else {
         await dispatch(createArticle(cleanedData)).unwrap();
-        setSnackbarMessage("Article cadastrado com sucesso!");
+        setSnackbarMessage("Article created successfully!");
         setSnackbarSeverity("success");
       }
       handleClose();
@@ -155,8 +156,8 @@ export const ArticlesManager: React.FC = () => {
       const errorMessage =
         error instanceof Error
           ? error.message
-          : "Erro desconhecido ao salvar Article";
-      setSnackbarMessage(`Erro: ${errorMessage}`);
+          : "Unknown error while saving Article";
+      setSnackbarMessage(`Error: ${errorMessage}`);
       setSnackbarSeverity("error");
       setSnackbarOpen(true);
       console.error("Erro ao salvar Article:", error);
@@ -190,11 +191,16 @@ export const ArticlesManager: React.FC = () => {
   };
 
   const handleDelete = (id: string) => {
-    if (window.confirm("Are you sure you want to delete this article?")) {
-      dispatch(deleteArticle(id));
-      setSnackbarMessage("Article excluído com sucesso!");
+    setDeleteConfirmId(id);
+  };
+
+  const confirmDelete = () => {
+    if (deleteConfirmId) {
+      dispatch(deleteArticle(deleteConfirmId));
+      setSnackbarMessage("Article deleted successfully!");
       setSnackbarSeverity("success");
       setSnackbarOpen(true);
+      setDeleteConfirmId(null);
     }
   };
 
@@ -222,10 +228,10 @@ export const ArticlesManager: React.FC = () => {
               letterSpacing: "-0.02em",
             }}
           >
-            Artigos
+            Articles
           </Typography>
           <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-            {Array.isArray(list) ? list.length : 0} artigo(s) cadastrado(s)
+            {Array.isArray(list) ? list.length : 0} article(s) registered
           </Typography>
         </Box>
         <Button
@@ -248,14 +254,14 @@ export const ArticlesManager: React.FC = () => {
           {loading ? (
             <CircularProgress size={22} color="inherit" />
           ) : (
-            "Novo Artigo"
+            "New Article"
           )}
         </Button>
       </Box>
 
       {/* Search */}
       <TextField
-        placeholder="Buscar por título, autor ou descrição..."
+        placeholder="Search by title, author or description..."
         size="small"
         fullWidth
         value={searchTerm}
@@ -299,12 +305,12 @@ export const ArticlesManager: React.FC = () => {
         >
           <ImageOutlined sx={{ fontSize: 56, mb: 2, opacity: 0.4 }} />
           <Typography variant="h6" sx={{ fontWeight: 500 }}>
-            {searchTerm ? "Nenhum artigo encontrado" : "Nenhum artigo cadastrado"}
+            {searchTerm ? "No articles found" : "No articles registered"}
           </Typography>
           <Typography variant="body2" sx={{ mt: 1 }}>
             {searchTerm
-              ? "Tente buscar com outros termos."
-              : 'Clique em "Novo Artigo" para começar.'}
+              ? "Try searching with different terms."
+              : 'Click "New Article" to get started.'}
           </Typography>
         </Box>
       ) : (
@@ -351,7 +357,7 @@ export const ArticlesManager: React.FC = () => {
               borderBottom: `1px solid ${theme.palette.divider}`,
             }}
           >
-            {isEditing ? "Editar Artigo" : "Novo Artigo"}
+            {isEditing ? "Edit Article" : "New Article"}
           </DialogTitle>
           <DialogContent sx={{ pt: "24px !important" }}>
             {/* Basic Info */}
@@ -360,13 +366,13 @@ export const ArticlesManager: React.FC = () => {
               color="text.secondary"
               sx={{ fontWeight: 600, letterSpacing: 1 }}
             >
-              Informações Básicas
+              Basic Information
             </Typography>
             <Grid container spacing={2} sx={{ mt: 0.5 }}>
               <Grid item xs={12} sm={8}>
                 <TextField
                   {...register("title")}
-                  label="Título"
+                  label="Title"
                   fullWidth
                   required
                   size="small"
@@ -375,7 +381,7 @@ export const ArticlesManager: React.FC = () => {
               <Grid item xs={12} sm={4}>
                 <TextField
                   {...register("author")}
-                  label="Autor"
+                  label="Author"
                   fullWidth
                   required
                   size="small"
@@ -384,7 +390,7 @@ export const ArticlesManager: React.FC = () => {
               <Grid item xs={12} sm={6}>
                 <TextField
                   {...register("published")}
-                  label="Data de Publicação"
+                  label="Published Date"
                   fullWidth
                   required
                   size="small"
@@ -397,7 +403,7 @@ export const ArticlesManager: React.FC = () => {
                   render={({ field }) => (
                     <TextField
                       {...field}
-                      label="Profissional"
+                      label="Professional"
                       fullWidth
                       select
                       size="small"
@@ -405,7 +411,7 @@ export const ArticlesManager: React.FC = () => {
                       onChange={(e) => field.onChange(e.target.value)}
                     >
                       <MenuItem value="">
-                        <em>Nenhum</em>
+                        <em>None</em>
                       </MenuItem>
                       {professionalList &&
                         professionalList.map((type) => (
@@ -420,7 +426,7 @@ export const ArticlesManager: React.FC = () => {
               <Grid item xs={12}>
                 <TextField
                   {...register("description")}
-                  label="Descrição"
+                  label="Description"
                   fullWidth
                   required
                   multiline
@@ -438,29 +444,29 @@ export const ArticlesManager: React.FC = () => {
               color="text.secondary"
               sx={{ fontWeight: 600, letterSpacing: 1 }}
             >
-              Conteúdo
+              Content
             </Typography>
             <Box sx={{ mt: 1.5 }}>
               <TextField
                 {...register("bodyText")}
-                label="Texto Principal"
+                label="Body Text"
                 fullWidth
                 required
                 multiline
                 rows={6}
                 size="small"
-                placeholder="Digite o texto principal aqui..."
+                placeholder="Enter the main text here..."
                 sx={{ mb: 2 }}
               />
               <TextField
                 {...register("secondText")}
-                label="Texto Secundário"
+                label="Second Text"
                 fullWidth
                 required
                 multiline
                 rows={3}
                 size="small"
-                placeholder="Digite o texto secundário aqui..."
+                placeholder="Enter the secondary text here..."
               />
             </Box>
 
@@ -472,7 +478,7 @@ export const ArticlesManager: React.FC = () => {
               color="text.secondary"
               sx={{ fontWeight: 600, letterSpacing: 1 }}
             >
-              Imagens
+              Images
             </Typography>
             <Grid container spacing={3} sx={{ mt: 0.5 }}>
               <Grid item xs={12} md={6}>
@@ -487,18 +493,18 @@ export const ArticlesManager: React.FC = () => {
                     variant="subtitle2"
                     sx={{ mb: 1.5, fontWeight: 600 }}
                   >
-                    Imagem Principal
+                    Main Image
                   </Typography>
                   <TextField
                     {...register("images.0.title")}
-                    label="Título"
+                    label="Title"
                     fullWidth
                     size="small"
                     sx={{ mb: 1.5 }}
                   />
                   <TextField
                     {...register("images.0.description")}
-                    label="Descrição"
+                    label="Description"
                     fullWidth
                     size="small"
                     sx={{ mb: 1.5 }}
@@ -522,18 +528,18 @@ export const ArticlesManager: React.FC = () => {
                     variant="subtitle2"
                     sx={{ mb: 1.5, fontWeight: 600 }}
                   >
-                    Imagem Secundária
+                    Secondary Image
                   </Typography>
                   <TextField
                     {...register("images.1.title")}
-                    label="Título"
+                    label="Title"
                     fullWidth
                     size="small"
                     sx={{ mb: 1.5 }}
                   />
                   <TextField
                     {...register("images.1.description")}
-                    label="Descrição"
+                    label="Description"
                     fullWidth
                     size="small"
                     sx={{ mb: 1.5 }}
@@ -559,7 +565,7 @@ export const ArticlesManager: React.FC = () => {
               onClick={handleClose}
               sx={{ borderRadius: "8px", textTransform: "none" }}
             >
-              Cancelar
+              Cancel
             </Button>
             <Button
               type="submit"
@@ -572,7 +578,7 @@ export const ArticlesManager: React.FC = () => {
                 px: 3,
               }}
             >
-              {isEditing ? "Atualizar" : "Adicionar"}
+              {isEditing ? "Update" : "Add"}
             </Button>
           </DialogActions>
         </form>
@@ -592,6 +598,38 @@ export const ArticlesManager: React.FC = () => {
           {snackbarMessage}
         </Alert>
       </Snackbar>
+
+      {/* Delete Confirm Dialog */}
+      <Dialog
+        open={!!deleteConfirmId}
+        onClose={() => setDeleteConfirmId(null)}
+        sx={{ "& .MuiDialog-paper": { borderRadius: "12px", maxWidth: 400 } }}
+      >
+        <DialogTitle sx={{ fontWeight: 700, fontSize: "1.1rem" }}>
+          Delete Article
+        </DialogTitle>
+        <DialogContent>
+          <Typography variant="body2" color="text.secondary">
+            Are you sure you want to delete this article? This action cannot be undone.
+          </Typography>
+        </DialogContent>
+        <DialogActions sx={{ px: 3, pb: 2, gap: 1 }}>
+          <Button
+            onClick={() => setDeleteConfirmId(null)}
+            sx={{ borderRadius: "8px", textTransform: "none" }}
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={confirmDelete}
+            variant="contained"
+            color="error"
+            sx={{ borderRadius: "8px", textTransform: "none", fontWeight: 600 }}
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };
@@ -765,7 +803,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
                 color="text.secondary"
                 sx={{ fontWeight: 600, textTransform: "uppercase", letterSpacing: 0.5 }}
               >
-                Ver conteúdo
+                View content
               </Typography>
             </AccordionSummary>
             <AccordionDetails sx={{ px: 0, pt: 0 }}>
@@ -796,7 +834,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
           gap: 0.5,
         }}
       >
-        <Tooltip title="Editar" arrow>
+        <Tooltip title="Edit" arrow>
           <IconButton
             size="small"
             onClick={() => onEdit(article)}
@@ -813,10 +851,10 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
             <Edit sx={{ fontSize: 18 }} />
           </IconButton>
         </Tooltip>
-        <Tooltip title="Excluir" arrow>
+        <Tooltip title="Delete" arrow>
           <IconButton
             size="small"
-            onClick={() => handleDelete(article.id)}
+            onClick={() => onDelete(article.id)}
             disabled={loading}
             sx={{
               color: theme.palette.error.main,
@@ -833,10 +871,4 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
       </CardActions>
     </Card>
   );
-
-  function handleDelete(id: string) {
-    if (window.confirm("Tem certeza que deseja excluir este artigo?")) {
-      onDelete(id);
-    }
-  }
 };
