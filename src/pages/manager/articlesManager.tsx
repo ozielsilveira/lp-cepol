@@ -1,29 +1,36 @@
-import { Add, Delete, Edit } from "@mui/icons-material";
+import { Add, Delete, Edit, Search, CalendarToday, Person, ImageOutlined, ExpandMore } from "@mui/icons-material";
 import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
   Alert,
+  alpha,
   Box,
   Button,
+  Card,
+  CardActions,
+  CardContent,
+  Chip,
   CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
+  Divider,
+  Grid,
   IconButton,
+  InputAdornment,
   MenuItem,
-  Paper,
   Snackbar,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
+  Stack,
   TextField,
   Theme,
+  Tooltip,
   Typography,
   useMediaQuery,
+  useTheme,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { ImageInput } from "../../components/imageInput";
@@ -37,10 +44,10 @@ import {
 import { setImageUrls } from "../../redux/slices/fileUploadSlice";
 import { fetchProfessionals } from "../../redux/slices/professionalSlice";
 import { AppDispatch, IRootState, useAppSelector } from "../../redux/store";
-import { TypographyStyled } from "./researchManager";
 
 export const ArticlesManager: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const theme = useTheme();
   const professionalList = useAppSelector((state) => state.professional.list);
   const { list, status, loading, error } = useSelector(
     (state: IRootState) => state.articles
@@ -55,6 +62,7 @@ export const ArticlesManager: React.FC = () => {
   const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">(
     "success"
   );
+  const [searchTerm, setSearchTerm] = useState("");
 
   const { register, handleSubmit, reset, setValue, control } =
     useForm<Article>();
@@ -78,6 +86,18 @@ export const ArticlesManager: React.FC = () => {
       setValue("images.1.url", imageTwoUrl);
     }
   }, [imageOneUrl, imageTwoUrl, setValue]);
+
+  const filteredList = useMemo(() => {
+    if (!Array.isArray(list)) return [];
+    if (!searchTerm.trim()) return list;
+    const lower = searchTerm.toLowerCase();
+    return list.filter(
+      (a) =>
+        a.title?.toLowerCase().includes(lower) ||
+        a.author?.toLowerCase().includes(lower) ||
+        a.description?.toLowerCase().includes(lower)
+    );
+  }, [list, searchTerm]);
 
   const handleOpen = () => {
     setOpen(true);
@@ -177,405 +197,382 @@ export const ArticlesManager: React.FC = () => {
       setSnackbarOpen(true);
     }
   };
+
   const isXs = useMediaQuery((theme: Theme) => theme.breakpoints.down("md"));
+
   return (
-    <Box sx={{ p: { xs: 0, md: 3 }, pt: { xs: 2 } }}>
+    <Box sx={{ p: { xs: 2, md: 3 }, maxWidth: 1400, mx: "auto" }}>
+      {/* Header */}
       <Box
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-        mb={3}
+        sx={{
+          display: "flex",
+          flexDirection: { xs: "column", sm: "row" },
+          justifyContent: "space-between",
+          alignItems: { xs: "stretch", sm: "center" },
+          gap: 2,
+          mb: 4,
+        }}
       >
-        <Typography variant="h4" sx={{ fontSize: { xs: "22px", md: "2rem" } }}>
-          Article Manager
-        </Typography>
+        <Box>
+          <Typography
+            variant="h4"
+            sx={{
+              fontWeight: 700,
+              fontSize: { xs: "1.4rem", md: "1.8rem" },
+              letterSpacing: "-0.02em",
+            }}
+          >
+            Artigos
+          </Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+            {Array.isArray(list) ? list.length : 0} artigo(s) cadastrado(s)
+          </Typography>
+        </Box>
         <Button
           variant="contained"
-          color="primary"
           startIcon={<Add />}
           onClick={handleOpen}
+          disabled={loading}
+          sx={{
+            borderRadius: "10px",
+            textTransform: "none",
+            fontWeight: 600,
+            px: 3,
+            py: 1.2,
+            boxShadow: `0 4px 14px ${alpha(theme.palette.primary.main, 0.35)}`,
+            "&:hover": {
+              boxShadow: `0 6px 20px ${alpha(theme.palette.primary.main, 0.45)}`,
+            },
+          }}
         >
           {loading ? (
-            <CircularProgress size={24} color="inherit" />
+            <CircularProgress size={22} color="inherit" />
           ) : (
-            !isXs && "Add Article"
+            "Novo Artigo"
           )}
         </Button>
       </Box>
+
+      {/* Search */}
+      <TextField
+        placeholder="Buscar por título, autor ou descrição..."
+        size="small"
+        fullWidth
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <Search sx={{ color: "text.secondary", fontSize: 20 }} />
+            </InputAdornment>
+          ),
+        }}
+        sx={{
+          mb: 3,
+          maxWidth: 480,
+          "& .MuiOutlinedInput-root": {
+            borderRadius: "10px",
+            backgroundColor: alpha(theme.palette.background.paper, 0.8),
+          },
+        }}
+      />
+
+      {/* Content */}
       {loading ? (
         <Box
           sx={{
             display: "flex",
             justifyContent: "center",
-            width: "100%",
-            my: 4,
+            alignItems: "center",
+            minHeight: 300,
           }}
         >
           <CircularProgress />
         </Box>
+      ) : filteredList.length === 0 ? (
+        <Box
+          sx={{
+            textAlign: "center",
+            py: 8,
+            color: "text.secondary",
+          }}
+        >
+          <ImageOutlined sx={{ fontSize: 56, mb: 2, opacity: 0.4 }} />
+          <Typography variant="h6" sx={{ fontWeight: 500 }}>
+            {searchTerm ? "Nenhum artigo encontrado" : "Nenhum artigo cadastrado"}
+          </Typography>
+          <Typography variant="body2" sx={{ mt: 1 }}>
+            {searchTerm
+              ? "Tente buscar com outros termos."
+              : 'Clique em "Novo Artigo" para começar.'}
+          </Typography>
+        </Box>
       ) : (
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Title</TableCell>
-                <TableCell>Description</TableCell>
-                <TableCell>Author</TableCell>
-                <TableCell>PublishedDate</TableCell>
-                <TableCell>BodyText</TableCell>
-                <TableCell>SecondText</TableCell>
-                <TableCell>Image One Title</TableCell>
-                <TableCell>Image One Description</TableCell>
-                <TableCell>Image One url</TableCell>
-                <TableCell>Image Two Title</TableCell>
-                <TableCell>Image Two Description</TableCell>
-                <TableCell>Image Two url</TableCell>
-                <TableCell>Professional</TableCell>
-                <TableCell align="right">Ações</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {Array.isArray(list) &&
-                list.map((articles) => (
-                  <TableRow key={articles.id}>
-                    <TableCell>{articles.title}</TableCell>
-                    <TableCell>
-                      <Typography
-                        sx={{
-                          whiteSpace: "nowrap",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          maxWidth: "200px",
-                          maxHeight: "300px",
-                        }}
-                      >
-                        {articles.description}
-                      </Typography>
-                    </TableCell>
-                    <TableCell>{articles.author}</TableCell>
-                    <TableCell>{articles.published}</TableCell>
-                    <TableCell>
-                      <TypographyStyled>{articles.bodyText}</TypographyStyled>
-                    </TableCell>
-                    <TableCell>
-                      <TypographyStyled>{articles.secondText}</TypographyStyled>
-                    </TableCell>
-                    <TableCell>{articles.images?.[0]?.title || ""}</TableCell>
-                    <TableCell>
-                      {articles.images?.[0]?.description || ""}
-                    </TableCell>
-                    <TableCell>
-                      <Box
-                        sx={{
-                          display: "flex",
-                          justifyContent: "center",
-                          flexDirection: "column",
-                          width: "120px",
-                          alignItems: "center",
-                        }}
-                      >
-                        {articles.images?.[0]?.url ? (
-                          <Box
-                            component={"img"}
-                            onClick={() =>
-                              window.open(
-                                `${articles?.images?.[0].url || ""}`,
-                                "_blank"
-                              )
-                            }
-                            src={articles.images[0].url}
-                            sx={{
-                              width: "130px",
-                              maxHeight: "100px", // Altura fixa para consistência
-                              objectFit: "cover", // Mantém a proporção da imagem
-                              borderRadius: "4px", // Opcional: para estética
-                            }}
-                            onError={(e) => (e.currentTarget.src = "")} // Caso a imagem falhe ao carregar
-                          />
-                        ) : (
-                          <Box
-                            sx={{
-                              width: "130px",
-                              height: "100px", // Altura fixa igual à da imagem
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                              border: "1px dashed gray", // Visual de placeholder
-                              borderRadius: "4px",
-                            }}
-                          >
-                            <Typography variant="caption" color="textSecondary">
-                              No Image
-                            </Typography>
-                          </Box>
-                        )}
-                      </Box>
-                    </TableCell>
-                    <TableCell>{articles.images?.[1]?.title || ""}</TableCell>
-                    <TableCell>
-                      {articles.images?.[1]?.description || ""}
-                    </TableCell>
-                    <TableCell>
-                      <Box
-                        sx={{
-                          display: "flex",
-                          justifyContent: "center",
-                          flexDirection: "column",
-                          width: "120px",
-                          alignItems: "center",
-                        }}
-                      >
-                        {articles.images?.[1]?.url ? (
-                          <Box
-                            component={"img"}
-                            onClick={() =>
-                              window.open(
-                                `${articles.images?.[1]?.description || ""}`,
-                                "_blank"
-                              )
-                            }
-                            src={articles.images[1].url}
-                            sx={{
-                              width: "130px",
-                              maxHeight: "100px", // Altura fixa para consistência
-                              objectFit: "cover", // Mantém a proporção da imagem
-                              borderRadius: "4px", // Opcional: para estética
-                            }}
-                            onError={(e) => (e.currentTarget.src = "")} // Caso a imagem falhe ao carregar
-                          />
-                        ) : (
-                          <Box
-                            sx={{
-                              width: "130px",
-                              height: "100px", // Altura fixa igual à da imagem
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                              border: "1px dashed gray", // Visual de placeholder
-                              borderRadius: "4px",
-                            }}
-                          >
-                            <Typography variant="caption" color="textSecondary">
-                              No Image
-                            </Typography>
-                          </Box>
-                        )}
-                      </Box>
-                    </TableCell>
-                    <TableCell>{articles.professional?.name}</TableCell>
-                    <TableCell align="right">
-                      <IconButton
-                        color="primary"
-                        onClick={() => handleEdit(articles)}
-                        disabled={loading}
-                      >
-                        {loading ? (
-                          <CircularProgress size={20} color="inherit" />
-                        ) : (
-                          <Edit />
-                        )}
-                      </IconButton>
-                      <IconButton
-                        color="error"
-                        onClick={() => handleDelete(articles.id)}
-                        disabled={loading}
-                      >
-                        {loading ? (
-                          <CircularProgress size={20} color="inherit" />
-                        ) : (
-                          <Delete />
-                        )}
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        <Grid container spacing={2.5}>
+          {filteredList.map((article) => (
+            <Grid item xs={12} sm={6} lg={4} key={article.id}>
+              <ArticleCard
+                article={article}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+                loading={loading}
+                theme={theme}
+              />
+            </Grid>
+          ))}
+        </Grid>
       )}
+
       {error && (
         <Typography color="error" sx={{ mt: 2, textAlign: "center" }}>
           {error}
         </Typography>
       )}
+
+      {/* Dialog Form */}
       <Dialog
         open={open}
         onClose={handleClose}
+        maxWidth="md"
+        fullWidth
+        fullScreen={isXs}
         sx={{
           "& .MuiDialog-paper": {
-            width: { xs: "85vw", md: "60vw" },
-            maxWidth: "none",
-            borderRadius: "8px",
+            borderRadius: isXs ? 0 : "16px",
           },
         }}
       >
         <form onSubmit={handleSubmit(onSubmit)}>
-          <DialogTitle>
-            {isEditing ? "Edit Article" : "Add Article"}
+          <DialogTitle
+            sx={{
+              fontWeight: 700,
+              fontSize: "1.3rem",
+              pb: 1,
+              borderBottom: `1px solid ${theme.palette.divider}`,
+            }}
+          >
+            {isEditing ? "Editar Artigo" : "Novo Artigo"}
           </DialogTitle>
-          <DialogContent>
-            <TextField
-              {...register("title")}
-              label="Title"
-              fullWidth
-              margin="normal"
-              required
-            />
-            <TextField
-              {...register("description")}
-              label="Description"
-              fullWidth
-              margin="normal"
-              required
-              multiline
-            />
-            <TextField
-              {...register("author")}
-              label="Author"
-              fullWidth
-              margin="normal"
-              required
-            />
-            <TextField
-              {...register("published")}
-              label="Published Date"
-              fullWidth
-              margin="normal"
-              required
-            />
-            <TextField
-              {...register("bodyText")}
-              label="Body Text"
-              fullWidth
-              margin="normal"
-              required
-              multiline
-              rows={8} // Aumenta o número de linhas visíveis
-              variant="outlined"
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  minHeight: "200px", // Altura mínima maior
-                  alignItems: "flex-start", // Alinha o texto no topo
-                  padding: "12px", // Mais espaço interno
-                  borderRadius: "8px", // Bordas arredondadas
-                },
-                "& .MuiInputBase-input": {
-                  fontSize: "1rem", // Tamanho de fonte confortável
-                  lineHeight: "1.5", // Espaçamento entre linhas
-                },
-                "& .MuiOutlinedInput-notchedOutline": {
-                  borderColor: "rgba(0, 0, 0, 0.23)", // Borda padrão
-                },
-                "&:hover .MuiOutlinedInput-notchedOutline": {
-                  borderColor: "primary.main", // Borda ao passar o mouse
-                },
-                "& .Mui-focused .MuiOutlinedInput-notchedOutline": {
-                  borderWidth: "2px", // Borda mais grossa ao focar
-                },
-                mb: 2, // Margem inferior para espaçamento
-              }}
-              placeholder="Digite o texto principal aqui..." // Placeholder útil
-            />
-            <TextField
-              {...register("secondText")}
-              label="Second Text"
-              fullWidth
-              margin="normal"
-              required
-              multiline
-              rows={4} // Menor que bodyText, mas ainda espaçoso
-              variant="outlined"
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  minHeight: "120px", // Altura mínima adequada
-                  alignItems: "flex-start", // Alinha o texto no topo
-                  padding: "12px", // Mais espaço interno
-                  borderRadius: "8px", // Bordas arredondadas
-                },
-                "& .MuiInputBase-input": {
-                  fontSize: "1rem", // Tamanho de fonte confortável
-                  lineHeight: "1.5", // Espaçamento entre linhas
-                },
-                "& .MuiOutlinedInput-notchedOutline": {
-                  borderColor: "rgba(0, 0, 0, 0.23)", // Borda padrão
-                },
-                "&:hover .MuiOutlinedInput-notchedOutline": {
-                  borderColor: "primary.main", // Borda ao passar o mouse
-                },
-                "& .Mui-focused .MuiOutlinedInput-notchedOutline": {
-                  borderWidth: "2px", // Borda mais grossa ao focar
-                },
-                mb: 2, // Margem inferior para espaçamento
-              }}
-              placeholder="Digite o texto secundário aqui..." // Placeholder útil
-            />
-            <TextField
-              {...register("images.0.title")}
-              label="Image One Title"
-              fullWidth
-              margin="normal"
-            />
-            <TextField
-              {...register("images.0.description")}
-              label="Image One Description"
-              fullWidth
-              margin="normal"
-            />
-            <ImageInput
-              imageUrl={imageOneUrl}
-              uploadLoading={uploadLoading}
-              imageType="imageOne"
-            />
-            <TextField
-              {...register("images.1.title")}
-              label="Image Two Title"
-              fullWidth
-              margin="normal"
-            />
-            <TextField
-              {...register("images.1.description")}
-              label="Image Two Description"
-              fullWidth
-              margin="normal"
-            />
-            <ImageInput
-              imageUrl={imageTwoUrl}
-              uploadLoading={uploadLoading}
-              imageType="imageTwo"
-            />
-            <Controller
-              name="professionalId"
-              control={control}
-              render={({ field }) => (
+          <DialogContent sx={{ pt: "24px !important" }}>
+            {/* Basic Info */}
+            <Typography
+              variant="overline"
+              color="text.secondary"
+              sx={{ fontWeight: 600, letterSpacing: 1 }}
+            >
+              Informações Básicas
+            </Typography>
+            <Grid container spacing={2} sx={{ mt: 0.5 }}>
+              <Grid item xs={12} sm={8}>
                 <TextField
-                  {...field}
-                  label="Professional"
+                  {...register("title")}
+                  label="Título"
                   fullWidth
-                  select
-                  margin="normal"
-                  // required
-                  value={field.value || ""}
-                  onChange={(e) => field.onChange(e.target.value)}
-                >
-                  {professionalList &&
-                    professionalList.map((type) => (
-                      <MenuItem value={type.id} key={type.id}>
-                        {type.name}
+                  required
+                  size="small"
+                />
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <TextField
+                  {...register("author")}
+                  label="Autor"
+                  fullWidth
+                  required
+                  size="small"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  {...register("published")}
+                  label="Data de Publicação"
+                  fullWidth
+                  required
+                  size="small"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Controller
+                  name="professionalId"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      label="Profissional"
+                      fullWidth
+                      select
+                      size="small"
+                      value={field.value || ""}
+                      onChange={(e) => field.onChange(e.target.value)}
+                    >
+                      <MenuItem value="">
+                        <em>Nenhum</em>
                       </MenuItem>
-                    ))}
-                </TextField>
-              )}
-            />
+                      {professionalList &&
+                        professionalList.map((type) => (
+                          <MenuItem value={type.id} key={type.id}>
+                            {type.name}
+                          </MenuItem>
+                        ))}
+                    </TextField>
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  {...register("description")}
+                  label="Descrição"
+                  fullWidth
+                  required
+                  multiline
+                  rows={2}
+                  size="small"
+                />
+              </Grid>
+            </Grid>
+
+            <Divider sx={{ my: 3 }} />
+
+            {/* Texts */}
+            <Typography
+              variant="overline"
+              color="text.secondary"
+              sx={{ fontWeight: 600, letterSpacing: 1 }}
+            >
+              Conteúdo
+            </Typography>
+            <Box sx={{ mt: 1.5 }}>
+              <TextField
+                {...register("bodyText")}
+                label="Texto Principal"
+                fullWidth
+                required
+                multiline
+                rows={6}
+                size="small"
+                placeholder="Digite o texto principal aqui..."
+                sx={{ mb: 2 }}
+              />
+              <TextField
+                {...register("secondText")}
+                label="Texto Secundário"
+                fullWidth
+                required
+                multiline
+                rows={3}
+                size="small"
+                placeholder="Digite o texto secundário aqui..."
+              />
+            </Box>
+
+            <Divider sx={{ my: 3 }} />
+
+            {/* Images */}
+            <Typography
+              variant="overline"
+              color="text.secondary"
+              sx={{ fontWeight: 600, letterSpacing: 1 }}
+            >
+              Imagens
+            </Typography>
+            <Grid container spacing={3} sx={{ mt: 0.5 }}>
+              <Grid item xs={12} md={6}>
+                <Box
+                  sx={{
+                    border: `1px solid ${theme.palette.divider}`,
+                    borderRadius: "12px",
+                    p: 2,
+                  }}
+                >
+                  <Typography
+                    variant="subtitle2"
+                    sx={{ mb: 1.5, fontWeight: 600 }}
+                  >
+                    Imagem Principal
+                  </Typography>
+                  <TextField
+                    {...register("images.0.title")}
+                    label="Título"
+                    fullWidth
+                    size="small"
+                    sx={{ mb: 1.5 }}
+                  />
+                  <TextField
+                    {...register("images.0.description")}
+                    label="Descrição"
+                    fullWidth
+                    size="small"
+                    sx={{ mb: 1.5 }}
+                  />
+                  <ImageInput
+                    imageUrl={imageOneUrl}
+                    uploadLoading={uploadLoading}
+                    imageType="imageOne"
+                  />
+                </Box>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <Box
+                  sx={{
+                    border: `1px solid ${theme.palette.divider}`,
+                    borderRadius: "12px",
+                    p: 2,
+                  }}
+                >
+                  <Typography
+                    variant="subtitle2"
+                    sx={{ mb: 1.5, fontWeight: 600 }}
+                  >
+                    Imagem Secundária
+                  </Typography>
+                  <TextField
+                    {...register("images.1.title")}
+                    label="Título"
+                    fullWidth
+                    size="small"
+                    sx={{ mb: 1.5 }}
+                  />
+                  <TextField
+                    {...register("images.1.description")}
+                    label="Descrição"
+                    fullWidth
+                    size="small"
+                    sx={{ mb: 1.5 }}
+                  />
+                  <ImageInput
+                    imageUrl={imageTwoUrl}
+                    uploadLoading={uploadLoading}
+                    imageType="imageTwo"
+                  />
+                </Box>
+              </Grid>
+            </Grid>
           </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose}>Cancel</Button>
+          <DialogActions
+            sx={{
+              px: 3,
+              py: 2,
+              borderTop: `1px solid ${theme.palette.divider}`,
+              gap: 1,
+            }}
+          >
+            <Button
+              onClick={handleClose}
+              sx={{ borderRadius: "8px", textTransform: "none" }}
+            >
+              Cancelar
+            </Button>
             <Button
               type="submit"
               variant="contained"
-              color="primary"
               disabled={uploadLoading}
+              sx={{
+                borderRadius: "8px",
+                textTransform: "none",
+                fontWeight: 600,
+                px: 3,
+              }}
             >
-              {isEditing ? "Update" : "Add"}
+              {isEditing ? "Atualizar" : "Adicionar"}
             </Button>
           </DialogActions>
         </form>
@@ -589,11 +586,257 @@ export const ArticlesManager: React.FC = () => {
         <Alert
           onClose={handleSnackbarClose}
           severity={snackbarSeverity}
-          sx={{ width: "100%" }}
+          sx={{ width: "100%", borderRadius: "10px" }}
+          variant="filled"
         >
           {snackbarMessage}
         </Alert>
       </Snackbar>
     </Box>
   );
+};
+
+/* ─── Article Card Component ─── */
+
+interface ArticleCardProps {
+  article: Article;
+  onEdit: (article: Article) => void;
+  onDelete: (id: string) => void;
+  loading: boolean;
+  theme: any;
+}
+
+const ArticleCard: React.FC<ArticleCardProps> = ({
+  article,
+  onEdit,
+  onDelete,
+  loading,
+  theme,
+}) => {
+  const hasImage = !!article.images?.[0]?.url;
+
+  return (
+    <Card
+      sx={{
+        borderRadius: "14px",
+        border: `1px solid ${theme.palette.divider}`,
+        boxShadow: "none",
+        transition: "all 0.2s ease",
+        display: "flex",
+        flexDirection: "column",
+        height: "100%",
+        "&:hover": {
+          borderColor: theme.palette.primary.main,
+          boxShadow: `0 4px 20px ${alpha(theme.palette.primary.main, 0.1)}`,
+          transform: "translateY(-2px)",
+        },
+      }}
+    >
+      {/* Image thumbnail */}
+      {hasImage && (
+        <Box
+          sx={{
+            height: 160,
+            overflow: "hidden",
+            borderBottom: `1px solid ${theme.palette.divider}`,
+            cursor: "pointer",
+          }}
+          onClick={() => window.open(article.images![0].url, "_blank")}
+        >
+          <Box
+            component="img"
+            src={article.images![0].url}
+            alt={article.images?.[0]?.title || article.title}
+            sx={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              transition: "transform 0.3s ease",
+              "&:hover": { transform: "scale(1.05)" },
+            }}
+            onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
+              e.currentTarget.style.display = "none";
+            }}
+          />
+        </Box>
+      )}
+
+      <CardContent sx={{ flex: 1, p: 2.5, pb: 1 }}>
+        {/* Title */}
+        <Typography
+          variant="subtitle1"
+          sx={{
+            fontWeight: 700,
+            lineHeight: 1.3,
+            mb: 0.5,
+            display: "-webkit-box",
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden",
+          }}
+        >
+          {article.title}
+        </Typography>
+
+        {/* Description */}
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{
+            mb: 1.5,
+            display: "-webkit-box",
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden",
+            lineHeight: 1.5,
+          }}
+        >
+          {article.description}
+        </Typography>
+
+        {/* Meta info */}
+        <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap sx={{ mb: 1 }}>
+          {article.author && (
+            <Chip
+              icon={<Person sx={{ fontSize: 14 }} />}
+              label={article.author}
+              size="small"
+              variant="outlined"
+              sx={{
+                borderRadius: "6px",
+                fontSize: "0.72rem",
+                height: 26,
+                "& .MuiChip-icon": { ml: "4px" },
+              }}
+            />
+          )}
+          {article.published && (
+            <Chip
+              icon={<CalendarToday sx={{ fontSize: 12 }} />}
+              label={article.published}
+              size="small"
+              variant="outlined"
+              sx={{
+                borderRadius: "6px",
+                fontSize: "0.72rem",
+                height: 26,
+                "& .MuiChip-icon": { ml: "4px" },
+              }}
+            />
+          )}
+        </Stack>
+
+        {article.professional?.name && (
+          <Chip
+            label={article.professional.name}
+            size="small"
+            color="primary"
+            variant="outlined"
+            sx={{
+              borderRadius: "6px",
+              fontSize: "0.72rem",
+              height: 24,
+              mt: 0.5,
+            }}
+          />
+        )}
+
+        {/* Expandable body text */}
+        {article.bodyText && (
+          <Accordion
+            disableGutters
+            elevation={0}
+            sx={{
+              mt: 1.5,
+              "&:before": { display: "none" },
+              backgroundColor: "transparent",
+            }}
+          >
+            <AccordionSummary
+              expandIcon={<ExpandMore sx={{ fontSize: 18 }} />}
+              sx={{
+                minHeight: 32,
+                px: 0,
+                "& .MuiAccordionSummary-content": { my: 0 },
+              }}
+            >
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                sx={{ fontWeight: 600, textTransform: "uppercase", letterSpacing: 0.5 }}
+              >
+                Ver conteúdo
+              </Typography>
+            </AccordionSummary>
+            <AccordionDetails sx={{ px: 0, pt: 0 }}>
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{
+                  fontSize: "0.78rem",
+                  lineHeight: 1.6,
+                  maxHeight: 120,
+                  overflow: "auto",
+                }}
+              >
+                {article.bodyText}
+              </Typography>
+            </AccordionDetails>
+          </Accordion>
+        )}
+      </CardContent>
+
+      {/* Actions */}
+      <CardActions
+        sx={{
+          px: 2.5,
+          py: 1.5,
+          borderTop: `1px solid ${theme.palette.divider}`,
+          justifyContent: "flex-end",
+          gap: 0.5,
+        }}
+      >
+        <Tooltip title="Editar" arrow>
+          <IconButton
+            size="small"
+            onClick={() => onEdit(article)}
+            disabled={loading}
+            sx={{
+              color: theme.palette.primary.main,
+              backgroundColor: alpha(theme.palette.primary.main, 0.08),
+              borderRadius: "8px",
+              "&:hover": {
+                backgroundColor: alpha(theme.palette.primary.main, 0.16),
+              },
+            }}
+          >
+            <Edit sx={{ fontSize: 18 }} />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Excluir" arrow>
+          <IconButton
+            size="small"
+            onClick={() => handleDelete(article.id)}
+            disabled={loading}
+            sx={{
+              color: theme.palette.error.main,
+              backgroundColor: alpha(theme.palette.error.main, 0.08),
+              borderRadius: "8px",
+              "&:hover": {
+                backgroundColor: alpha(theme.palette.error.main, 0.16),
+              },
+            }}
+          >
+            <Delete sx={{ fontSize: 18 }} />
+          </IconButton>
+        </Tooltip>
+      </CardActions>
+    </Card>
+  );
+
+  function handleDelete(id: string) {
+    if (window.confirm("Tem certeza que deseja excluir este artigo?")) {
+      onDelete(id);
+    }
+  }
 };
