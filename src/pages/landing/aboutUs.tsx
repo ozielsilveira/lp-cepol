@@ -1,147 +1,200 @@
-
-import { Alert, Box, CircularProgress, Theme, Typography, useMediaQuery } from "@mui/material";
+import {
+  Alert,
+  alpha,
+  Box,
+  CircularProgress,
+  Container,
+  Divider,
+  Grid,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { AboutUs as IAboutUs, fetchAboutUs } from "../../redux/slices/aboutUsSlice";
+import {
+  AboutUs as IAboutUs,
+  fetchAboutUs,
+} from "../../redux/slices/aboutUsSlice";
 import { AppDispatch, IRootState } from "../../redux/store";
 
 export const AboutUs: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const theme = useTheme();
   const { list, status, loading, error } = useSelector(
     (state: IRootState) => state.aboutUs
   );
 
-  const isXs = useMediaQuery((theme: Theme) => theme.breakpoints.down("md"));
-
   useEffect(() => {
-    // Fetch About Us data only if it hasn't been fetched yet or is in an idle state
     if (list.length === 0 && !loading && status === "idle") {
       dispatch(fetchAboutUs());
     }
   }, [dispatch, list.length, loading, status]);
 
-  // Display loading state
   if (loading) {
     return (
-      <Box display="flex" justifyContent="center" alignItems="center" sx={{ height: '300px' }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: 400,
+        }}
+      >
         <CircularProgress />
-        <Typography variant="h6" sx={{ ml: 2 }}>Loading ...</Typography>
       </Box>
     );
   }
 
-  // Display error state
   if (status === "failed" || error) {
     return (
-      <Box sx={{ p: 3 }}>
-        <Alert severity="error">
-          Erro ao carregar o conteúdo "Sobre Nós": {error || "Erro desconhecido."}
+      <Container maxWidth="md" sx={{ py: 6 }}>
+        <Alert
+          severity="error"
+          sx={{ borderRadius: "10px" }}
+          variant="outlined"
+        >
+          Failed to load "About Us" content: {error || "Unknown error."}
         </Alert>
-      </Box>
+      </Container>
     );
   }
 
-  // If no content is available after loading, show a message
   if (list.length === 0) {
     return (
-      <Box sx={{ p: 3, textAlign: 'center' }}>
-        <Typography variant="h6" color="textSecondary">
-         No "About Us" content available at this time.
+      <Container maxWidth="md" sx={{ py: 8, textAlign: "center" }}>
+        <Typography variant="h6" color="text.secondary" sx={{ fontWeight: 500 }}>
+          No "About Us" content available at this time.
         </Typography>
-      </Box>
+      </Container>
     );
   }
 
-
-  const aboutUsContent: IAboutUs = list[0];
+  const content: IAboutUs = list[0];
+  const hasImages =
+    content.images && content.images.length > 0;
+  const hasTwoImages =
+    hasImages && content.images!.length > 1 && !!content.images![1]?.url;
 
   return (
-    <Box sx={{ p: { xs: 2, md: 4 }, maxWidth: '960px', margin: 'auto' }}>
-      <Typography variant={isXs ? "h5" : "h4"} component="h1" gutterBottom sx={{ mb: 4, textAlign: 'center' }}>
-        About Us
-      </Typography>
-
-      <Typography variant="body1" paragraph sx={{ lineHeight: 1.8 }}>
-        {aboutUsContent.bodyText}
-      </Typography>
-
-      {/* Displaying up to two images */}
-      {aboutUsContent.images && aboutUsContent.images.length > 0 && (
-        <Box
+    <Container maxWidth="md" sx={{ py: { xs: 4, md: 8 } }}>
+      {/* Header */}
+      <Box sx={{ textAlign: "center", mb: { xs: 4, md: 5 } }}>
+        <Typography
+          variant="h4"
+          component="h1"
           sx={{
-            display: "flex",
-            flexDirection: isXs ? "column" : "row",
-            gap: 3,
-            my: 4,
-            justifyContent: 'center',
-            alignItems: 'center',
+            fontWeight: 700,
+            mb: 1.5,
+            letterSpacing: "-0.02em",
+            fontSize: { xs: "1.6rem", md: "2rem" },
           }}
         >
-          {aboutUsContent.images[0]?.url && (
-            <Box sx={{ flex: 1, textAlign: 'center' }}>
-              <Box
-                component="img"
-                src={aboutUsContent.images[0].url}
-                alt={aboutUsContent.images[0].title || "Imagem 1 sobre nós"}
-                sx={{
-                  width: '100%',
-                  height: 'auto',
-                  maxHeight: '350px',
-                  objectFit: 'cover',
-                  borderRadius: '8px',
-                  boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
-                  display: 'block', // Ensures no extra space below image
-                  margin: '0 auto', // Center image
-                }}
-              />
-              {aboutUsContent.images[0].title && (
-                <Typography variant="subtitle1" sx={{ mt: 1, fontWeight: 'bold' }}>
-                  {aboutUsContent.images[0].title}
-                </Typography>
-              )}
-              {aboutUsContent.images[0].description && (
-                <Typography variant="body2" color="textSecondary">
-                  {aboutUsContent.images[0].description}
-                </Typography>
-              )}
-            </Box>
-          )}
+          About Us
+        </Typography>
+        <Divider
+          sx={{
+            width: 48,
+            mx: "auto",
+            borderWidth: 2,
+            borderColor: theme.palette.primary.main,
+            borderRadius: 1,
+          }}
+        />
+      </Box>
 
-          {aboutUsContent.images[1]?.url && (
-            <Box sx={{ flex: 1, textAlign: 'center' }}>
-              <Box
-                component="img"
-                src={aboutUsContent.images[1].url}
-                alt={aboutUsContent.images[1].title || "Imagem 2 sobre nós"}
-                sx={{
-                  width: '100%',
-                  height: 'auto',
-                  maxHeight: '350px',
-                  objectFit: 'cover',
-                  borderRadius: '8px',
-                  boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
-                  display: 'block',
-                  margin: '0 auto',
-                }}
-              />
-              {aboutUsContent.images[1].title && (
-                <Typography variant="subtitle1" sx={{ mt: 1, fontWeight: 'bold' }}>
-                  {aboutUsContent.images[1].title}
-                </Typography>
-              )}
-              {aboutUsContent.images[1].description && (
-                <Typography variant="body2" color="textSecondary">
-                  {aboutUsContent.images[1].description}
-                </Typography>
-              )}
-            </Box>
+      {/* Body Text */}
+      <Typography
+        variant="body1"
+        color="text.secondary"
+        sx={{
+          lineHeight: 1.85,
+          fontSize: { xs: "0.95rem", md: "1.05rem" },
+          mb: { xs: 3, md: 4 },
+          whiteSpace: "pre-line",
+        }}
+      >
+        {content.bodyText}
+      </Typography>
+
+      {/* Images */}
+      {hasImages && (
+        <Grid
+          container
+          spacing={3}
+          sx={{ my: { xs: 2, md: 3 } }}
+        >
+          {content.images!.slice(0, 2).map((img, idx) =>
+            img?.url ? (
+              <Grid item xs={12} md={hasTwoImages ? 6 : 12} key={img.id || idx}>
+                <Box
+                  sx={{
+                    borderRadius: "14px",
+                    overflow: "hidden",
+                    border: `1px solid ${theme.palette.divider}`,
+                    transition: "all 0.25s ease",
+                    "&:hover": {
+                      boxShadow: `0 4px 20px ${alpha(theme.palette.primary.main, 0.1)}`,
+                      transform: "translateY(-2px)",
+                    },
+                  }}
+                >
+                  <Box
+                    component="img"
+                    src={img.url}
+                    alt={img.title || `About us image ${idx + 1}`}
+                    sx={{
+                      width: "100%",
+                      height: { xs: 220, md: 300 },
+                      objectFit: "cover",
+                      display: "block",
+                    }}
+                    onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
+                      e.currentTarget.style.display = "none";
+                    }}
+                  />
+                  {(img.title || img.description) && (
+                    <Box sx={{ p: 2 }}>
+                      {img.title && (
+                        <Typography
+                          variant="subtitle2"
+                          sx={{ fontWeight: 700, mb: 0.3 }}
+                        >
+                          {img.title}
+                        </Typography>
+                      )}
+                      {img.description && (
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          sx={{ lineHeight: 1.5 }}
+                        >
+                          {img.description}
+                        </Typography>
+                      )}
+                    </Box>
+                  )}
+                </Box>
+              </Grid>
+            ) : null
           )}
-        </Box>
+        </Grid>
       )}
 
-      <Typography variant="body1" paragraph sx={{ lineHeight: 1.8 }}>
-        {aboutUsContent.secondText}
-      </Typography>
-    </Box>
+      {/* Second Text */}
+      {content.secondText && (
+        <Typography
+          variant="body1"
+          color="text.secondary"
+          sx={{
+            lineHeight: 1.85,
+            fontSize: { xs: "0.95rem", md: "1.05rem" },
+            mt: { xs: 2, md: 3 },
+            whiteSpace: "pre-line",
+          }}
+        >
+          {content.secondText}
+        </Typography>
+      )}
+    </Container>
   );
 };
